@@ -1,0 +1,40 @@
+name: Generate GitHub Stats
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # daily at 02:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run GitHub stats generator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_STATS_USER: ${{ secrets.GITHUB_STATS_USER || 'H0ussamCl4p' }}
+          YEAR: ${{ github.event.inputs.year || github.run_date || format('yyyy', github.event.created_at) }}
+        run: |
+          node ./scripts/fetch-github-stats.js
+
+      - name: Upload generated stats artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-stats
+          path: public/github-stats.json

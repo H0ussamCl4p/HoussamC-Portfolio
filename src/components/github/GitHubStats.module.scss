@@ -1,0 +1,30 @@
+.container {
+  margin-top: 20px;
+}
+
+.card {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: #0f1724; /* dark card like screenshot */
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: none;
+  text-decoration: none;
+  color: #e6eef8;
+}
+
+.content { display: flex; width: 100%; gap: 18px }
+.left { flex: 1 }
+.right { width: 110px; display:flex; align-items:center; justify-content:center }
+
+.title { font-weight: 700; color: #fff; margin-bottom: 8px }
+.list { display:flex; flex-direction: column; gap:10px }
+.item { display:flex; justify-content:space-between; align-items:center }
+.label { color:#9aa6bf; font-size:13px }
+.value { font-weight:700; color:#fff }
+
+.grade { width:86px; height:86px; display:inline-grid; place-items:center; border-radius:999px }
+.grade .score { font-weight:700; color:#dbeafe }
+.muted { color:#9aa6bf; font-size:12px }

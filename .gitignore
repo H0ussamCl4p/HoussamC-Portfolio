@@ -1,0 +1,13 @@
+﻿# local env and secrets
+.env.local
+google-service-account.json
+
+# node / build
+node_modules
+.next
+dist
+public/github-stats.json
+
+# system
+.DS_Store
+Thumbs.db
