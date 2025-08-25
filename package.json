@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run gen:github-stats && next build",
+  "build": "next build",
     "start": "next start",
     "gen:github-stats": "node ./scripts/fetch-github-stats.js",
     "sync-designs": "node sync-and-generate.js"

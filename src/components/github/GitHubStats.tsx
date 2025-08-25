@@ -25,6 +25,7 @@ type MetricsSummary = {
   topContributors?: TopContributor[];
   participationAll?: number;
   participationOwner?: number;
+  weeklySeries?: number[];
 };
 
 function useAnimatedNumber(target: number, duration = 700) {
@@ -61,6 +62,8 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
   const [stats, setStats] = useState<Stats | null>(null);
   // extend Stats with optional internal summary storage
   type StatsWithTop = Stats & { _topContributors?: TopContributor[] };
+  // internal extension for weekly series cached on the stats object
+  type StatsWithSeries = StatsWithTop & { __weeklySeries?: number[] };
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const cacheKey = `ghstats:${owner}/${repo}`;
@@ -114,6 +117,12 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
               // attach top contributors count as contributors length hint
               if (Array.isArray(sum.topContributors)) {
                 s.contributors = sum.topContributors.length;
+              }
+              if (Array.isArray(sum.weeklySeries)) {
+                const arr: number[] = sum.weeklySeries.map((n: unknown) =>
+                  Number((n as number) || 0)
+                );
+                (s as StatsWithSeries).__weeklySeries = arr;
               }
             } catch (e) {
               // ignore
@@ -198,6 +207,13 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
                   (s as StatsWithTop)._topContributors = top;
                   s.contributors = s.contributors ?? top.length;
                 }
+                if (Array.isArray((summary as MetricsSummary).weeklySeries)) {
+                  const ws = (summary as MetricsSummary).weeklySeries;
+                  if (ws) {
+                    const arr: number[] = ws.map((n) => Number(n || 0));
+                    (s as StatsWithSeries).__weeklySeries = arr;
+                  }
+                }
               }
             }
           }
@@ -242,7 +258,41 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
     <div className={styles.container}>
       <section className={styles.cardClean} aria-label="GitHub stats">
         <div className={styles.header}>
-          <div className={styles.title}>{owner}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div className={styles.title}>{owner}</div>
+            {/* sparkline: small SVG using summary weekly series when available */}
+            {(stats as StatsWithTop)?._topContributors ? null : null}
+            {(() => {
+              // try to read weekly series from cached localStorage or static JSON that populated stats
+              const maybe = (stats as StatsWithSeries)?.__weeklySeries;
+              // also support inline: if stats totalCommitContributions equals weekly sum, we may not have series
+              return maybe && maybe.length > 0 ? (
+                <svg
+                  width="70"
+                  height="20"
+                  viewBox={`0 0 ${maybe.length} 20`}
+                  preserveAspectRatio="none"
+                  aria-hidden
+                >
+                  <title>Weekly commits</title>
+                  <polyline
+                    fill="none"
+                    stroke="#9fbff7"
+                    strokeWidth={1.2}
+                    points={maybe
+                      .map(
+                        (v, i) =>
+                          `${i},${
+                            20 -
+                            Math.round((v / (Math.max(...maybe) || 1)) * 16)
+                          }`
+                      )
+                      .join(" ")}
+                  />
+                </svg>
+              ) : null;
+            })()}
+          </div>
           <div className={styles.sub}>GitHub overview</div>
         </div>
 

@@ -10,10 +10,13 @@ function summarizeMetrics({ commitActivity = [], contributors = [], participatio
     ? contributors.map((c) => ({ login: c?.author?.login || c?.login || '<unknown>', total: c?.total || 0 }))
     : [];
 
-  const topContributors = flatContribs
-    .slice()
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 5);
+  const sorted = flatContribs.slice().sort((a, b) => b.total - a.total);
+  const totalByContribs = sorted.reduce((s, c) => s + (c.total || 0), 0) || 0;
+  const topContributors = sorted.slice(0, 5).map((c) => ({
+    login: c.login,
+    total: c.total,
+    pct: totalByContribs ? Math.round((100 * (c.total || 0)) / totalByContribs) : 0,
+  }));
 
   // participation: { all: [weekCounts], owner: [weekCounts] }
   let participationOwner = 0;
@@ -25,11 +28,20 @@ function summarizeMetrics({ commitActivity = [], contributors = [], participatio
     participationOwner = owner.reduce((s, n) => s + (Number(n) || 0), 0);
   }
 
+  // weekly series for sparklines: prefer commitActivity totals, fallback to participation.all
+  let weeklySeries = [];
+  if (Array.isArray(commitActivity) && commitActivity.length) {
+    weeklySeries = commitActivity.map((w) => Number(w?.total || 0));
+  } else if (participation && Array.isArray(participation.all)) {
+    weeklySeries = participation.all.map((n) => Number(n || 0));
+  }
+
   return {
     totalCommitsLastYear,
     topContributors,
     participationAll,
     participationOwner,
+  weeklySeries,
   };
 }
 
