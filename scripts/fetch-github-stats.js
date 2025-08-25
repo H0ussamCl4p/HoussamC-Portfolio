@@ -82,8 +82,15 @@ async function run() {
     };
 
     // fetch repo-level stats for this repo as well
-    const owner = process.env.GITHUB_STATS_OWNER || user;
-    const repoName = process.env.GITHUB_STATS_REPO || 'magic-portfolio';
+    // prefer explicit env vars, otherwise derive from GITHUB_REPOSITORY (owner/repo) when available
+    let owner = process.env.GITHUB_STATS_OWNER || user;
+    let repoName = process.env.GITHUB_STATS_REPO || 'magic-portfolio';
+    const repoSlug = process.env.GITHUB_REPOSITORY;
+    if (repoSlug && typeof repoSlug === 'string' && repoSlug.includes('/')) {
+      const parts = repoSlug.split('/');
+      owner = parts[0] || owner;
+      repoName = parts[1] || repoName;
+    }
     const repoUrl = `https://api.github.com/repos/${owner}/${repoName}`;
     const repoResp = await fetch(repoUrl, {
       headers: { Authorization: `token ${token}`, 'User-Agent': 'magic-portfolio' },

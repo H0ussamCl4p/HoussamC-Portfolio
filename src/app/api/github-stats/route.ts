@@ -59,8 +59,14 @@ export async function GET(req: Request) {
     };
 
     // Try to fetch REST metrics for the user's primary repo if specified via env
-    const owner = process.env.GITHUB_STATS_OWNER || user;
-    const repoName = process.env.GITHUB_STATS_REPO || 'magic-portfolio';
+    let owner = process.env.GITHUB_STATS_OWNER || user;
+    let repoName = process.env.GITHUB_STATS_REPO || 'magic-portfolio';
+    const repoSlug = process.env.GITHUB_REPOSITORY;
+    if (repoSlug?.includes('/')) {
+      const parts = repoSlug.split('/');
+      owner = parts[0] || owner;
+      repoName = parts[1] || repoName;
+    }
     const base = `https://api.github.com/repos/${owner}/${repoName}`;
 
   async function fetchWithRetry(url: string, opts: RequestInit = {}, maxAttempts = 6) {
