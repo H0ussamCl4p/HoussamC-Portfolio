@@ -93,6 +93,61 @@ async function run() {
         watchers: repoJson.watchers_count ?? 0,
       };
     }
+  
+      // Fetch repository metrics using the REST Metrics endpoints.
+      // Note: these endpoints are computed and may return 202 Accepted initially.
+      async function fetchWithRetry(url, opts = {}, maxAttempts = 6) {
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          const r = await fetch(url, opts);
+          if (r.status === 202) {
+            // still being generated, wait and retry
+            const waitMs = Math.min(3000, 500 * (2 ** attempt));
+            if (debug) console.log(`Stats endpoint ${url} returned 202, retrying in ${waitMs}ms (attempt ${attempt})`);
+            await new Promise((res) => setTimeout(res, waitMs));
+            continue;
+          }
+          if (!r.ok) {
+            const txt = await r.text();
+            throw new Error(`REST stats error ${r.status}: ${txt}`);
+          }
+          return r.json();
+        }
+        throw new Error(`Stats endpoint ${url} did not become ready after ${maxAttempts} attempts`);
+      }
+
+      try {
+        const base = `https://api.github.com/repos/${owner}/${repoName}`;
+        // commit activity (last year, weekly)
+        const commitActivity = await fetchWithRetry(`${base}/stats/commit_activity`, {
+          headers: { Authorization: `token ${token}`, 'User-Agent': 'magic-portfolio' },
+        });
+
+        // contributors aggregate (each contributor with total and weeks)
+        const contributorsStats = await fetchWithRetry(`${base}/stats/contributors`, {
+          headers: { Authorization: `token ${token}`, 'User-Agent': 'magic-portfolio' },
+        });
+
+        // participation (weekly commit counts for owner and all)
+        const participation = await fetchWithRetry(`${base}/stats/participation`, {
+          headers: { Authorization: `token ${token}`, 'User-Agent': 'magic-portfolio' },
+        });
+
+        // attach metrics to the repo object
+        result.repo = result.repo || {};
+        result.repo.metrics = {
+          commitActivity: Array.isArray(commitActivity) ? commitActivity : [],
+          contributors: Array.isArray(contributorsStats) ? contributorsStats : [],
+          participation: participation || null,
+        };
+        if (debug) {
+          console.log('Fetched REST metrics: commitActivity length=', (result.repo.metrics.commitActivity||[]).length);
+          console.log('contributors count=', (result.repo.metrics.contributors||[]).length);
+          console.log('participation=', result.repo.metrics.participation);
+        }
+      } catch (e) {
+        // don't fail the whole generation if metrics endpoints are temporarily unavailable
+    console.warn('Could not fetch REST metrics:', e?.message ?? e);
+      }
 
   if (!fs.existsSync('public')) fs.mkdirSync('public');
     fs.writeFileSync('public/github-stats.json', JSON.stringify(result, null, 2));
