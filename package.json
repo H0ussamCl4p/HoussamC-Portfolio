@@ -1,15 +1,13 @@
 {
-  "name": "@once-ui-system/magic-portfolio",
-  "version": "2.3.0",
+  "name": "magic-portfolio",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
     "dev": "next dev",
-    "export": "next export",
-    "build": "next build",
-    "biome-write": "npx @biomejs/biome format --write .",
-  "sync-designs": "node sync-and-generate.js",
-  "gen:github-stats": "node ./scripts/fetch-github-stats.js",
+    "build": "npm run gen:github-stats && next build",
     "start": "next start",
-    "lint": "next lint"
+    "gen:github-stats": "node ./scripts/fetch-github-stats.js",
+    "sync-designs": "node sync-and-generate.js"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",

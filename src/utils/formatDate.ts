@@ -1,11 +1,20 @@
-export function formatDate(date: string, includeRelative = false) {
+export function formatDate(date: string | undefined | null, includeRelative = false) {
   const currentDate = new Date();
 
-  if (!date.includes("T")) {
-    date = `${date}T00:00:00`;
+  // Guard: if date is not provided or not a string, return a friendly fallback
+  if (!date || typeof date !== "string") {
+    return includeRelative ? '(unknown)' : 'Unknown date';
+  }
+  // avoid reassigning the function parameter
+  let dateStr = date;
+  if (!dateStr.includes('T')) {
+    dateStr = `${dateStr}T00:00:00`;
   }
 
-  const targetDate = new Date(date);
+  const targetDate = new Date(dateStr);
+  if (Number.isNaN(targetDate.getTime())) {
+    return includeRelative ? '(invalid date)' : 'Invalid date';
+  }
   const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
   const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
   const daysAgo = currentDate.getDate() - targetDate.getDate();

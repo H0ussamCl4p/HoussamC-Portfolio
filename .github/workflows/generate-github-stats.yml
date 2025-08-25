@@ -26,6 +26,7 @@ jobs:
 
       - name: Run GitHub stats generator
         env:
+          # Use the workflow-provided token. No personal PAT required.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_STATS_USER: ${{ secrets.GITHUB_STATS_USER || 'H0ussamCl4p' }}
           YEAR: ${{ github.event.inputs.year || github.run_date || format('yyyy', github.event.created_at) }}

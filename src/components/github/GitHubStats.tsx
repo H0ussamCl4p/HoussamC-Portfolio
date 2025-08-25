@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./GitHubStats.module.scss";
 
 type Stats = {
@@ -18,9 +18,46 @@ type Stats = {
 
 type Contributor = { login?: string; contributions?: number };
 
+function useAnimatedNumber(target: number, duration = 700) {
+  const [value, setValue] = useState(0);
+  const raf = useRef<number | null>(null);
+
+  useEffect(() => {
+    let start: number | null = null;
+    const from = 0;
+    const to = Math.max(0, Math.floor(target || 0));
+    if (to === from) {
+      setValue(to);
+      return;
+    }
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min(1, (timestamp - start) / duration);
+      const next = Math.round(from + (to - from) * progress);
+      setValue(next);
+      if (progress < 1) {
+        raf.current = requestAnimationFrame(step);
+      }
+    };
+    raf.current = requestAnimationFrame(step);
+    return () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, [target, duration]);
+
+  return value;
+}
+
 export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
   const cacheKey = `ghstats:${owner}/${repo}`;
+
+  const starsAnim = useAnimatedNumber(stats?.stars ?? 0);
+  const commitsAnim = useAnimatedNumber(
+    stats?.totalCommitContributions ?? stats?.totalContributions ?? 0
+  );
 
   useEffect(() => {
     const cached =
@@ -134,128 +171,169 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
     fetchStats();
   }, [owner, repo, cacheKey]);
 
+  // actions
+  const onCopy = async () => {
+    const text = `https://github.com/${owner}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  const onDownload = () => {
+    // attempt to download the generated JSON if available in public
+    const url = "/github-stats.json";
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${owner}-github-stats.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
   // always render the card; show placeholders while loading or when data is unavailable
   const loaded = Boolean(stats);
 
   return (
     <div className={styles.container}>
-      <a
-        className={styles.card}
-        href={`https://github.com/${owner}/${repo}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <div className={styles.content}>
-          <div className={styles.left}>
-            <div className={styles.title}>Choubik Houssam's GitHub Stats</div>
-            <div className={styles.list}>
-              <div className={styles.item}>
-                <div className={styles.label}>Total Stars Earned:</div>
-                <div className={styles.value}>{stats?.stars ?? "—"}</div>
-              </div>
-              <div className={styles.item}>
-                <div className={styles.label}>
-                  Total Commits ({new Date().getFullYear()}):
-                </div>
-                <div className={styles.value}>
-                  {stats?.totalCommitContributions ??
-                    stats?.totalContributions ??
-                    "—"}
-                </div>
-              </div>
-              <div className={styles.item}>
-                <div className={styles.label}>Total PRs:</div>
-                <div className={styles.value}>
-                  {stats?.totalPullRequestContributions ?? "—"}
-                </div>
-              </div>
-              <div className={styles.item}>
-                <div className={styles.label}>Total Issues:</div>
-                <div className={styles.value}>
-                  {stats?.totalIssueContributions ?? "—"}
-                </div>
-              </div>
-              <div className={styles.item}>
-                <div className={styles.label}>Contributed to (last year):</div>
-                <div className={styles.value}>
-                  {stats?.contributedRepositoriesCount ?? "—"}
-                </div>
-              </div>
-            </div>
+      <section className={styles.cardPrimary} aria-label="GitHub stats card">
+        <div className={styles.leftCol}>
+          {/* Primary: github-readme-stats badges — no token required */}
+          <a
+            className={styles.badgeLink}
+            href={`https://github.com/${owner}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${owner} on GitHub`}
+          >
+            <img
+              className={styles.mainBadge}
+              src={`https://github-readme-stats.vercel.app/api?username=${owner}&show_icons=true&theme=dark&hide_border=true`}
+              alt={`${owner}'s GitHub stats`}
+              style={{ width: "100%", maxWidth: 420 }}
+            />
+          </a>
+
+          <div className={styles.badgesRow}>
+            <button
+              type="button"
+              className={styles.badgeBtn}
+              onClick={() =>
+                window.open(
+                  `https://github.com/${owner}?tab=repositories`,
+                  "_blank"
+                )
+              }
+              aria-label="Open repositories"
+            >
+              <img
+                className={styles.smallBadge}
+                src={`https://github-readme-stats.vercel.app/api/top-langs?username=${owner}&langs_count=6&layout=compact&theme=dark&hide_border=true`}
+                alt="Top languages"
+              />
+            </button>
+            <button
+              type="button"
+              className={styles.badgeBtn}
+              onClick={() =>
+                window.open(
+                  `https://github.com/${owner}/graphs/streak`,
+                  "_blank"
+                )
+              }
+              aria-label="Open streaks"
+            >
+              <img
+                className={styles.smallBadge}
+                src={`https://github-readme-streak-stats.herokuapp.com/?user=${owner}&theme=dark&hide_border=true`}
+                alt="Streak stats"
+              />
+            </button>
           </div>
-          <div className={styles.right}>
-            <div className={styles.grade}>
-              {/* simple score = clamp(totalContributions / 300 * 100) */}
-              {(() => {
-                const total = stats?.totalContributions ?? 0;
-                const pct = Math.max(
-                  0,
-                  Math.min(100, Math.round((total / 300) * 100))
-                );
-                let grade = "C";
-                if (pct >= 85) grade = "A";
-                else if (pct >= 70) grade = "B";
-                else if (pct >= 50) grade = "C+";
-                else if (pct >= 30) grade = "C";
-                else grade = "D";
-                const stroke = 6;
-                const size = 86;
-                const radius = (size - stroke) / 2;
-                const circumference = 2 * Math.PI * radius;
-                const offset = circumference - (pct / 100) * circumference;
-                return (
-                  <svg
-                    width={size}
-                    height={size}
-                    viewBox={`0 0 ${size} ${size}`}
-                    role="img"
-                  >
-                    <title>GitHub activity grade</title>
-                    <circle
-                      cx={size / 2}
-                      cy={size / 2}
-                      r={radius}
-                      stroke="#1f2937"
-                      strokeWidth={stroke}
-                      fill="none"
-                    />
-                    <circle
-                      cx={size / 2}
-                      cy={size / 2}
-                      r={radius}
-                      stroke="#60a5fa"
-                      strokeWidth={stroke}
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeDasharray={circumference}
-                      strokeDashoffset={offset}
-                      transform={`rotate(-90 ${size / 2} ${size / 2})`}
-                    />
-                    <text
-                      x="50%"
-                      y="50%"
-                      dominantBaseline="middle"
-                      textAnchor="middle"
-                      style={{
-                        fontSize: "18px",
-                        fill: "#dbeafe",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {grade}
-                    </text>
-                  </svg>
-                );
-              })()}
-            </div>
+
+          <div className={styles.actionsRow}>
+            <button
+              type="button"
+              className={styles.actionBtn}
+              onClick={onCopy}
+              aria-label="Copy GitHub profile link"
+            >
+              {copied ? "Copied" : "Copy"}
+            </button>
+            <button
+              type="button"
+              className={styles.actionBtn}
+              onClick={onDownload}
+              aria-label="Download stats JSON"
+            >
+              Download
+            </button>
+            <button
+              type="button"
+              className={styles.actionBtn}
+              onClick={() => setExpanded((s) => !s)}
+              aria-expanded={expanded}
+            >
+              {expanded ? "Hide" : "Details"}
+            </button>
           </div>
         </div>
-        {!loaded && (
-          <div style={{ marginTop: 10 }} className={styles.muted}>
-            Stats unavailable yet — loading or rate-limited.
-          </div>
-        )}
-      </a>
+
+        {/* Fallback: structured numeric display when available */}
+        <div className={styles.rightCol}>
+          {loaded ? (
+            <div className={styles.fallback}>
+              <div className={styles.title}>{owner}'s GitHub Stats</div>
+              <div className={styles.list}>
+                <div className={styles.item}>
+                  <div className={styles.label}>Stars:</div>
+                  <div className={styles.value}>{starsAnim}</div>
+                </div>
+                <div className={styles.item}>
+                  <div className={styles.label}>Commits (year):</div>
+                  <div className={styles.value}>{commitsAnim}</div>
+                </div>
+              </div>
+
+              <div
+                className={`${styles.details} ${expanded ? styles.open : ""}`}
+              >
+                <div className={styles.detailRow}>
+                  <div className={styles.detailLabel}>Total contributions</div>
+                  <div className={styles.detailValue}>
+                    {stats?.totalContributions ?? "—"}
+                  </div>
+                </div>
+                <div className={styles.detailRow}>
+                  <div className={styles.detailLabel}>PRs</div>
+                  <div className={styles.detailValue}>
+                    {stats?.totalPullRequestContributions ?? "—"}
+                  </div>
+                </div>
+                <div className={styles.detailRow}>
+                  <div className={styles.detailLabel}>Issues</div>
+                  <div className={styles.detailValue}>
+                    {stats?.totalIssueContributions ?? "—"}
+                  </div>
+                </div>
+                <div className={styles.detailRow}>
+                  <div className={styles.detailLabel}>Contributed repos</div>
+                  <div className={styles.detailValue}>
+                    {stats?.contributedRepositoriesCount ?? "—"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.placeholder}>
+              GitHub stats unavailable — showing badges above
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

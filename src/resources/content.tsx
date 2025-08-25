@@ -89,6 +89,10 @@ const about: About = {
   avatar: {
     display: true,
   },
+  calendar: {
+    display: false,
+    link: "",
+  },
   intro: {
     display: true,
     title: "Introduction",

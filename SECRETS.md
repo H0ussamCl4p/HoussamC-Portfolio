@@ -22,7 +22,7 @@ Notes about tokens
 
 Using in GitHub Actions
 
-- Add repository secrets (Settings → Secrets → Actions): `GITHUB_TOKEN` (or a different name), `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`, `DRIVE_FOLDER_ID`.
+- Add repository secrets (Settings → Secrets → Actions): `GITHUB_TOKEN`, `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`, `DRIVE_FOLDER_ID`.
 - Example step (decode service account JSON and run sync script):
 
   - name: Setup service account
@@ -51,8 +51,7 @@ Security tips
 
 GitHub Actions: generate-github-stats workflow
 
-- Add secret `GITHUB_TOKEN` (Repository Settings → Secrets → Actions). This token will be used by the workflow to call GitHub's GraphQL API.
-- (Optional) Add secret `GITHUB_STATS_USER` if you want to target a different username than the default `H0ussamCl4p`.
+- Add repository secret `GITHUB_TOKEN` (Repository Settings → Secrets → Actions) if your workflows need elevated permissions. The workflow-provided token is sufficient for most read-only operations. (Optional) Add `GITHUB_STATS_USER` to target a different username.
 - Trigger the workflow from the Actions tab (select "Generate GitHub Stats" → Run workflow) or let it run on schedule.
 - The workflow will upload `public/github-stats.json` as an artifact. You can download it from the workflow run details if you prefer not to commit it to the repo.
 
