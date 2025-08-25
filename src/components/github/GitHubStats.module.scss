@@ -90,3 +90,49 @@
   .cardPrimary{ padding:12px }
   .rightCol{ min-width:120px }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Clean card variant used by the portfolio (strings-only layout)             */
+/* Tweaks: increased spacing, stronger labels/values, subtle entrance anim   */
+/* -------------------------------------------------------------------------- */
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(8px) scale(0.997); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cardClean{
+  display:block;
+  background: linear-gradient(180deg, rgba(18,20,22,0.9), rgba(12,14,16,0.95));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 20px 22px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(2,6,23,0.45);
+  transition: transform .22s ease, box-shadow .22s ease;
+  animation: cardEnter .36s cubic-bezier(.2,.9,.2,1);
+  will-change: transform, opacity;
+}
+
+.cardClean:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(2,6,23,0.6); }
+
+.cardClean .header{ display:flex; flex-direction:column; gap:2px; margin-bottom:14px }
+.cardClean .title{ font-size:1.05rem; font-weight:700; color:#fff; letter-spacing:0.2px }
+.cardClean .sub{ font-size:0.85rem; color:#9aa6bf; font-weight:600 }
+
+.cardClean .metrics{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px 18px; margin-bottom:14px }
+.cardClean .metric{ display:flex; flex-direction:column; gap:6px }
+.cardClean .metricLabel{ color:#9aa6bf; font-size:13px; font-weight:600 }
+.cardClean .metricValue{ font-weight:800; color:#ffffff; font-size:1.06rem }
+
+.cardClean .actionsClean{ display:flex; gap:10px; align-items:center }
+.cardClean .actionClean{ background:transparent; color:#dfeffe; border:1px solid rgba(255,255,255,0.045); padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; transition: transform .12s ease, background .12s ease }
+.cardClean .actionClean:hover{ transform: translateY(-2px); background: rgba(255,255,255,0.02) }
+
+.detailsClean{ margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.03); color:#cfe6ff }
+.detailsClean strong{ color:#fff; font-weight:700 }
+
+@media (max-width:640px){
+  .cardClean .metrics{ grid-template-columns:1fr; gap:10px }
+  .cardClean{ padding:16px }
+}
+
