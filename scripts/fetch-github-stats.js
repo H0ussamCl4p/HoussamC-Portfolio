@@ -33,6 +33,13 @@ async function run() {
   }`;
 
   try {
+    // load summarizer
+    let summarizeMetrics = null;
+    try {
+      summarizeMetrics = require('./metrics-summary').summarizeMetrics;
+    } catch (e) {
+      if (debug) console.log('No metrics summarizer available:', e?.message ?? e);
+    }
   const resp = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       headers: {
@@ -96,12 +103,12 @@ async function run() {
   
       // Fetch repository metrics using the REST Metrics endpoints.
       // Note: these endpoints are computed and may return 202 Accepted initially.
-      async function fetchWithRetry(url, opts = {}, maxAttempts = 6) {
+      async function fetchWithRetry(url, opts = {}, maxAttempts = 10) {
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
           const r = await fetch(url, opts);
           if (r.status === 202) {
             // still being generated, wait and retry
-            const waitMs = Math.min(3000, 500 * (2 ** attempt));
+            const waitMs = Math.min(8000, 300 * (2 ** attempt));
             if (debug) console.log(`Stats endpoint ${url} returned 202, retrying in ${waitMs}ms (attempt ${attempt})`);
             await new Promise((res) => setTimeout(res, waitMs));
             continue;
@@ -139,6 +146,18 @@ async function run() {
           contributors: Array.isArray(contributorsStats) ? contributorsStats : [],
           participation: participation || null,
         };
+        // attach a compact summary if summarizer is available
+        if (summarizeMetrics) {
+          try {
+            result.repo.summary = summarizeMetrics({
+              commitActivity: result.repo.metrics.commitActivity,
+              contributors: result.repo.metrics.contributors,
+              participation: result.repo.metrics.participation,
+            });
+          } catch (e) {
+            if (debug) console.log('Failed to summarize metrics:', e?.message ?? e);
+          }
+        }
         if (debug) {
           console.log('Fetched REST metrics: commitActivity length=', (result.repo.metrics.commitActivity||[]).length);
           console.log('contributors count=', (result.repo.metrics.contributors||[]).length);

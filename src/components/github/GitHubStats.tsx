@@ -18,6 +18,15 @@ type Stats = {
 
 type Contributor = { login?: string; contributions?: number };
 
+type TopContributor = { login?: string; total?: number };
+
+type MetricsSummary = {
+  totalCommitsLastYear?: number;
+  topContributors?: TopContributor[];
+  participationAll?: number;
+  participationOwner?: number;
+};
+
 function useAnimatedNumber(target: number, duration = 700) {
   const [value, setValue] = useState(0);
   const raf = useRef<number | null>(null);
@@ -50,6 +59,8 @@ function useAnimatedNumber(target: number, duration = 700) {
 
 export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
   const [stats, setStats] = useState<Stats | null>(null);
+  // extend Stats with optional internal summary storage
+  type StatsWithTop = Stats & { _topContributors?: TopContributor[] };
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const cacheKey = `ghstats:${owner}/${repo}`;
@@ -92,6 +103,22 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
             contributedRepositoriesCount:
               staticJson.contributedRepositoriesCount ?? 0,
           };
+          // prefer compact summary if available (smaller payload from metrics endpoints)
+          if (staticJson.repo?.summary) {
+            try {
+              const sum = staticJson.repo.summary;
+              // prefer totalCommitsLastYear if provided
+              if (typeof sum.totalCommitsLastYear === "number") {
+                s.totalCommitContributions = sum.totalCommitsLastYear;
+              }
+              // attach top contributors count as contributors length hint
+              if (Array.isArray(sum.topContributors)) {
+                s.contributors = sum.topContributors.length;
+              }
+            } catch (e) {
+              // ignore
+            }
+          }
           setStats(s);
           try {
             window.localStorage.setItem(cacheKey, JSON.stringify(s));
@@ -158,6 +185,20 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
                 contribJson.totalIssueContributions ?? 0;
               s.contributedRepositoriesCount =
                 contribJson.contributedRepositoriesCount ?? 0;
+              // if server provided repo summary, prefer it
+              if (contribJson.repo?.summary) {
+                const summary = contribJson.repo.summary as MetricsSummary;
+                if (typeof summary.totalCommitsLastYear === "number") {
+                  s.totalCommitContributions = summary.totalCommitsLastYear;
+                }
+                if (Array.isArray(summary.topContributors)) {
+                  const top = summary.topContributors
+                    .slice(0, 5)
+                    .map((c) => ({ login: c.login, total: c.total }));
+                  (s as StatsWithTop)._topContributors = top;
+                  s.contributors = s.contributors ?? top.length;
+                }
+              }
             }
           }
         } catch (e) {
@@ -199,140 +240,88 @@ export function GitHubStats({ owner, repo }: { owner: string; repo: string }) {
 
   return (
     <div className={styles.container}>
-      <section className={styles.cardPrimary} aria-label="GitHub stats card">
-        <div className={styles.leftCol}>
-          {/* Primary: github-readme-stats badges — no token required */}
-          <a
-            className={styles.badgeLink}
-            href={`https://github.com/${owner}`}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`${owner} on GitHub`}
+      <section className={styles.cardClean} aria-label="GitHub stats">
+        <div className={styles.header}>
+          <div className={styles.title}>{owner}</div>
+          <div className={styles.sub}>GitHub overview</div>
+        </div>
+
+        <div className={styles.metrics}>
+          <div className={styles.metric}>
+            <div className={styles.metricLabel}>Stars</div>
+            <div className={styles.metricValue}>{stats ? starsAnim : "—"}</div>
+          </div>
+          <div className={styles.metric}>
+            <div className={styles.metricLabel}>Commits (year)</div>
+            <div className={styles.metricValue}>
+              {stats ? commitsAnim : "—"}
+            </div>
+          </div>
+          <div className={styles.metric}>
+            <div className={styles.metricLabel}>PRs</div>
+            <div className={styles.metricValue}>
+              {stats?.totalPullRequestContributions ?? "—"}
+            </div>
+          </div>
+          <div className={styles.metric}>
+            <div className={styles.metricLabel}>Issues</div>
+            <div className={styles.metricValue}>
+              {stats?.totalIssueContributions ?? "—"}
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.actionsClean}>
+          <button type="button" className={styles.actionClean} onClick={onCopy}>
+            {copied ? "Copied" : "Copy profile"}
+          </button>
+          <button
+            type="button"
+            className={styles.actionClean}
+            onClick={onDownload}
           >
-            <img
-              className={styles.mainBadge}
-              src={`https://github-readme-stats.vercel.app/api?username=${owner}&show_icons=true&theme=dark&hide_border=true`}
-              alt={`${owner}'s GitHub stats`}
-              style={{ width: "100%", maxWidth: 420 }}
-            />
-          </a>
-
-          <div className={styles.badgesRow}>
-            <button
-              type="button"
-              className={styles.badgeBtn}
-              onClick={() =>
-                window.open(
-                  `https://github.com/${owner}?tab=repositories`,
-                  "_blank"
-                )
-              }
-              aria-label="Open repositories"
-            >
-              <img
-                className={styles.smallBadge}
-                src={`https://github-readme-stats.vercel.app/api/top-langs?username=${owner}&langs_count=6&layout=compact&theme=dark&hide_border=true`}
-                alt="Top languages"
-              />
-            </button>
-            <button
-              type="button"
-              className={styles.badgeBtn}
-              onClick={() =>
-                window.open(
-                  `https://github.com/${owner}/graphs/streak`,
-                  "_blank"
-                )
-              }
-              aria-label="Open streaks"
-            >
-              <img
-                className={styles.smallBadge}
-                src={`https://github-readme-streak-stats.herokuapp.com/?user=${owner}&theme=dark&hide_border=true`}
-                alt="Streak stats"
-              />
-            </button>
-          </div>
-
-          <div className={styles.actionsRow}>
-            <button
-              type="button"
-              className={styles.actionBtn}
-              onClick={onCopy}
-              aria-label="Copy GitHub profile link"
-            >
-              {copied ? "Copied" : "Copy"}
-            </button>
-            <button
-              type="button"
-              className={styles.actionBtn}
-              onClick={onDownload}
-              aria-label="Download stats JSON"
-            >
-              Download
-            </button>
-            <button
-              type="button"
-              className={styles.actionBtn}
-              onClick={() => setExpanded((s) => !s)}
-              aria-expanded={expanded}
-            >
-              {expanded ? "Hide" : "Details"}
-            </button>
-          </div>
+            Download JSON
+          </button>
+          <button
+            type="button"
+            className={styles.actionClean}
+            onClick={() => setExpanded((s) => !s)}
+            aria-expanded={expanded}
+          >
+            {expanded ? "Hide" : "Details"}
+          </button>
         </div>
 
-        {/* Fallback: structured numeric display when available */}
-        <div className={styles.rightCol}>
-          {loaded ? (
-            <div className={styles.fallback}>
-              <div className={styles.title}>{owner}'s GitHub Stats</div>
-              <div className={styles.list}>
-                <div className={styles.item}>
-                  <div className={styles.label}>Stars:</div>
-                  <div className={styles.value}>{starsAnim}</div>
-                </div>
-                <div className={styles.item}>
-                  <div className={styles.label}>Commits (year):</div>
-                  <div className={styles.value}>{commitsAnim}</div>
-                </div>
-              </div>
-
-              <div
-                className={`${styles.details} ${expanded ? styles.open : ""}`}
-              >
-                <div className={styles.detailRow}>
-                  <div className={styles.detailLabel}>Total contributions</div>
-                  <div className={styles.detailValue}>
-                    {stats?.totalContributions ?? "—"}
-                  </div>
-                </div>
-                <div className={styles.detailRow}>
-                  <div className={styles.detailLabel}>PRs</div>
-                  <div className={styles.detailValue}>
-                    {stats?.totalPullRequestContributions ?? "—"}
-                  </div>
-                </div>
-                <div className={styles.detailRow}>
-                  <div className={styles.detailLabel}>Issues</div>
-                  <div className={styles.detailValue}>
-                    {stats?.totalIssueContributions ?? "—"}
-                  </div>
-                </div>
-                <div className={styles.detailRow}>
-                  <div className={styles.detailLabel}>Contributed repos</div>
-                  <div className={styles.detailValue}>
-                    {stats?.contributedRepositoriesCount ?? "—"}
-                  </div>
-                </div>
-              </div>
+        {expanded && (
+          <div className={styles.detailsClean}>
+            <div>
+              <strong>Total contributions:</strong>{" "}
+              {stats?.totalContributions ?? "—"}
             </div>
-          ) : (
-            <div className={styles.placeholder}>
-              GitHub stats unavailable — showing badges above
+            <div>
+              <strong>Contributed repos:</strong>{" "}
+              {stats?.contributedRepositoriesCount ?? "—"}
             </div>
-          )}
-        </div>
+            <div>
+              <strong>Repo stars:</strong> {stats?.stars ?? "—"}
+            </div>
+            {/* show top contributors if available */}
+            {((stats as StatsWithTop)?._topContributors ?? []).length > 0 && (
+              <div style={{ marginTop: 8 }}>
+                <strong>Top contributors:</strong>
+                <ol style={{ margin: "6px 0 0 18px" }}>
+                  {((stats as StatsWithTop)._topContributors || [])
+                    .slice(0, 5)
+                    .map((c, idx) => (
+                      <li key={c.login || idx}>
+                        {c.login} — {c.total}
+                      </li>
+                    ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        )}
       </section>
     </div>
   );

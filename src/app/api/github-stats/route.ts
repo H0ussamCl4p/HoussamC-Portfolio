@@ -81,6 +81,14 @@ export async function GET(req: Request) {
     }
 
     try {
+      // optionally load local summarizer to reduce payload size
+  let summarize: ((m: Record<string, unknown>) => Record<string, unknown> | null) | null = null;
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        summarize = require('../../../../scripts/metrics-summary').summarizeMetrics;
+      } catch (e) {
+        // summarizer not present - it's optional
+      }
       const commitActivity = await fetchWithRetry(`${base}/stats/commit_activity`, {
         headers: { Authorization: `token ${token}`, 'User-Agent': 'magic-portfolio' },
       });
@@ -98,6 +106,23 @@ export async function GET(req: Request) {
           participation: participation ?? null,
         },
       };
+      if (summarize) {
+        try {
+          // attach a compact summary useful for the frontend
+          // attach summary in a typed-safe way
+          const r = result as Record<string, unknown>;
+          const repoObj = r.repo as Record<string, unknown> || {};
+          const summary = summarize({
+            commitActivity: commitActivity,
+            contributors: contributorsStats,
+            participation: participation,
+          });
+          if (summary) repoObj.summary = summary;
+          r.repo = repoObj;
+        } catch (e) {
+          // ignore summarizer errors
+        }
+      }
     } catch (e) {
       // do not fail if metrics endpoints are delayed; include a warning field
       result.metricsWarning = (e instanceof Error) ? e.message : String(e);
