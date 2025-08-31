@@ -143,7 +143,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
           variant="body-default-l"
           onBackground="neutral-weak"
         >
-          I'll get back to you within 24 hours
+              I&apos;ll get back to you within 24 hours
         </Text>
       </Column>
 
