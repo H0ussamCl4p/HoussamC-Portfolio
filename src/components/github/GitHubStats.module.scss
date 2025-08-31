@@ -1,0 +1,138 @@
+/* GitHubStats improved UI */
+.container { margin-top: 20px; }
+
+.cardPrimary{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:18px;
+  border-radius:14px;
+  background: linear-gradient(180deg, rgba(24,26,28,0.85), rgba(14,16,20,0.9));
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 10px 30px rgba(2,6,23,0.5);
+  transition:transform .22s ease, box-shadow .22s ease;
+  will-change: transform;
+}
+
+.cardPrimary:focus-within,
+.cardPrimary:hover{
+  transform: translateY(-6px);
+  box-shadow:0 18px 40px rgba(2,6,23,0.6);
+}
+
+/* badge images */
+.cardPrimary img{
+  display:block;
+  border-radius:10px;
+  background:linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
+  width:100%;
+  max-width:460px;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+.mainBadge{ border-radius:10px; }
+.mainBadge:hover{ transform: translateY(-4px) scale(1.01); filter: brightness(1.02); }
+
+/* small gap between badges */
+.cardPrimary .badges{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.badgesRow{ display:flex; gap:10px; align-items:center }
+.badgeBtn{ background:transparent; border:0; padding:0; border-radius:8px; cursor:pointer; }
+.badgeBtn:focus{ outline:2px solid rgba(255,255,255,0.06); transform: translateY(-2px); }
+.smallBadge{ height:72px; border-radius:8px; }
+
+.actionsRow{ display:flex; gap:8px; margin-top:8px }
+.actionBtn{ background:rgba(255,255,255,0.03); color:#eaf3ff; border:1px solid rgba(255,255,255,0.04); padding:8px 10px; border-radius:8px; cursor:pointer; transition: background .12s ease, transform .12s ease; }
+.actionBtn:hover{ background:rgba(255,255,255,0.06); transform: translateY(-2px); }
+.actionBtn:active{ transform: translateY(0); }
+
+
+/* numeric fallback area */
+.fallback{
+  margin-top:6px;
+  padding-top:8px;
+  border-top:1px dashed rgba(255,255,255,0.03);
+  color:#e6eef8;
+}
+.fallback .title{ font-weight:700; margin-bottom:6px; color:#fff }
+.fallback .list{ display:flex; gap:12px; align-items:center; flex-wrap:wrap }
+.fallback .item{ display:flex; gap:8px; align-items:center }
+.fallback .label{ color:#9aa6bf; font-size:13px }
+.fallback .value{ font-weight:700; color:#fff }
+
+.rightCol{ display:flex; align-items:center; min-width:220px }
+.leftCol{ display:flex; flex-direction:column; gap:12px }
+
+.details{ max-height:0; overflow:hidden; transition: max-height .28s ease, opacity .22s ease; opacity:0 }
+.details.open{ max-height:400px; opacity:1 }
+.detailRow{ display:flex; justify-content:space-between; gap:12px; padding:6px 0 }
+.detailLabel{ color:#9aa6bf }
+.detailValue{ font-weight:700; color:#fff }
+
+.placeholder{ color:#9aa6bf }
+
+/* responsive: badges + fallback side-by-side on wide screens */
+@media (min-width:880px){
+  .cardPrimary{ flex-direction:row; align-items:flex-start; gap:24px }
+  .cardPrimary .badges{ flex:0 0 auto }
+  .fallback{ margin-left:auto; text-align:right; padding-top:0; border-top:none }
+}
+
+/* compact on narrow screens */
+@media (max-width:480px){
+  .cardPrimary img{ max-width:220px }
+  .fallback .list{ flex-direction:column; align-items:flex-start }
+  .cardPrimary{ padding:12px }
+  .rightCol{ min-width:120px }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Clean card variant used by the portfolio (strings-only layout)             */
+/* Tweaks: increased spacing, stronger labels/values, subtle entrance anim   */
+/* -------------------------------------------------------------------------- */
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(8px) scale(0.997); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cardClean{
+  display:block;
+  background: linear-gradient(180deg, rgba(18,20,22,0.9), rgba(12,14,16,0.95));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 20px 22px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(2,6,23,0.45);
+  transition: transform .22s ease, box-shadow .22s ease;
+  animation: cardEnter .36s cubic-bezier(.2,.9,.2,1);
+  will-change: transform, opacity;
+}
+
+.cardClean:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(2,6,23,0.6); }
+
+.cardClean .header{ display:flex; flex-direction:column; gap:2px; margin-bottom:14px }
+.cardClean .title{ font-size:1.05rem; font-weight:700; color:#fff; letter-spacing:0.2px }
+.cardClean .sub{ font-size:0.85rem; color:#9aa6bf; font-weight:600 }
+
+.cardClean .metrics{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px 18px; margin-bottom:14px }
+.cardClean .metric{ display:flex; flex-direction:column; gap:6px }
+.cardClean .metricLabel{ color:#9aa6bf; font-size:13px; font-weight:600 }
+.cardClean .metricValue{ font-weight:800; color:#ffffff; font-size:1.06rem }
+
+.cardClean .actionsClean{ display:flex; gap:10px; align-items:center }
+.cardClean .actionClean{ background:transparent; color:#dfeffe; border:1px solid rgba(255,255,255,0.045); padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; transition: transform .12s ease, background .12s ease }
+.cardClean .actionClean:hover{ transform: translateY(-2px); background: rgba(255,255,255,0.02) }
+
+.detailsClean{ margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.03); color:#cfe6ff }
+.detailsClean strong{ color:#fff; font-weight:700 }
+
+@media (max-width:640px){
+  .cardClean .metrics{ grid-template-columns:1fr; gap:10px }
+  .cardClean{ padding:16px }
+}
+
