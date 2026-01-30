@@ -2,18 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/src/bin/mdx_parse.rs",
-      "use": "@vercel/rust",
-      "config": {
-        "output": "api/mdx-parse"
-      }
-    },
-    {
-      "src": "api/src/bin/design_manifest.rs",
-      "use": "@vercel/rust",
-      "config": {
-        "output": "api/design-manifest"
-      }
+      "src": "api/Cargo.toml",
+      "use": "@vercel/rust"
     },
     {
       "src": "package.json",
