@@ -118,7 +118,7 @@ export async function GET() {
               id: file.id || "",
               name: file.name || "design",
               url: `https://drive.google.com/uc?export=download&id=${file.id}`,
-              thumbnail: `https://drive.google.com/thumbnail?id=${file.id}&sz=w800`,
+              thumbnail: `https://drive.google.com/thumbnail?id=${file.id}&sz=w600`,
             })
           );
 
@@ -146,7 +146,7 @@ export async function GET() {
             id: file.id || "",
             name: file.name || "design",
             url: `https://drive.google.com/uc?export=download&id=${file.id}`,
-            thumbnail: `https://drive.google.com/thumbnail?id=${file.id}&sz=w800`,
+            thumbnail: `https://drive.google.com/thumbnail?id=${file.id}&sz=w600`,
           })
         );
 

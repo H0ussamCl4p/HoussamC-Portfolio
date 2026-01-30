@@ -167,6 +167,7 @@ export default function DesignsView() {
                     <div className={styles["design-overlay"]} />
                     <Media
                       enlarge
+                      unoptimized
                       priority={index < 10}
                       sizes="(max-width: 560px) 100vw, 50vw"
                       radius="m"
