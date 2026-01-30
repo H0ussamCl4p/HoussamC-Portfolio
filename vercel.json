@@ -37,16 +37,6 @@
       "dest": "/$1"
     }
   ],
-  "functions": {
-    "api/mdx-parse": {
-      "runtime": "@vercel/rust@latest",
-      "maxDuration": 10
-    },
-    "api/design-manifest": {
-      "runtime": "@vercel/rust@latest",
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
