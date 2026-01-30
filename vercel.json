@@ -1,45 +1,27 @@
 {
   "version": 2,
-  "builds": [
+  "headers": [
     {
-      "src": "api/Cargo.toml",
-      "use": "@vercel/rust"
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=300, stale-while-revalidate=600"
+        }
+      ]
     },
     {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/mdx-parse",
-      "dest": "/api/mdx-parse"
-    },
-    {
-      "src": "/api/design-manifest",
-      "dest": "/api/design-manifest"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1",
-      "headers": {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600"
-      }
-    },
-    {
-      "src": "/wasm/(.*)",
-      "dest": "/wasm/$1",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "Content-Type": "application/wasm"
-      }
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/wasm/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/wasm"
+        }
+      ]
     }
   ]
 }
