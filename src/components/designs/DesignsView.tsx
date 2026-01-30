@@ -30,7 +30,7 @@ export default function DesignsView() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch("/api/drive-designs")
+    fetch(`/api/drive-designs?ts=${Date.now()}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load designs");
         return res.json() as Promise<ApiResponse>;
