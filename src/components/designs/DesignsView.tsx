@@ -4,25 +4,48 @@ import { Media, MasonryGrid } from "@once-ui-system/core";
 import styles from "./DesignsView.module.scss";
 import { useEffect, useState, useCallback } from "react";
 
-type DesignImage = {
-  path: string;
-};
+interface DesignImage {
+  id: string;
+  name: string;
+  url: string;       // Direct Drive download URL
+  thumbnail: string; // Drive thumbnail URL
+}
+
+interface DesignCategory {
+  name: string;
+  slug: string;
+  images: DesignImage[];
+  thumbnail: string | null;
+}
+
+interface ApiResponse {
+  categories: DesignCategory[];
+}
 
 export default function DesignsView() {
-  const [images, setImages] = useState<DesignImage[]>([]);
+  const [categories, setCategories] = useState<DesignCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/designs.json")
-      .then((res) => res.json())
-      .then((paths: string[]) => setImages(paths.map((path) => ({ path }))));
+    setLoading(true);
+    setError(null);
+    fetch("/api/drive-designs")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load designs");
+        return res.json() as Promise<ApiResponse>;
+      })
+      .then((data) => setCategories(data.categories))
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   }, []);
 
-  // Share handler must be inside the component
-  const handleShare = useCallback((e: React.MouseEvent, imageUrl: string) => {
+  // Share handler
+  const handleShare = useCallback((e: React.MouseEvent, imageUrl: string, imageName: string) => {
     e.preventDefault();
     if (navigator.share) {
       navigator.share({
-        title: "Check out this design!",
+        title: `Check out this design: ${imageName}`,
         url: imageUrl,
       });
     } else {
@@ -31,28 +54,40 @@ export default function DesignsView() {
     }
   }, []);
 
-  // Group images by [top-level]/[subfolder] (e.g., Canva/A&M Aeronautics/Club's Day)
-  const grouped: Record<string, DesignImage[]> = {};
-  for (const img of images) {
-    const parts = img.path.split("/");
-    // Group by first 3 levels: e.g., Canva/A&M Aeronautics/Club's Day
-    const group = parts.slice(0, 3).join("/");
-    if (!grouped[group]) grouped[group] = [];
-    grouped[group].push(img);
+  // Sort categories alphabetically
+  const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name));
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
+        <span>Loading designs...</span>
+      </div>
+    );
   }
 
-  // Sort groups alphabetically, but images from latest to oldest (descending by path)
-  const sortedGroups = Object.keys(grouped).sort();
-  for (const group of sortedGroups) {
-    grouped[group].sort((a, b) => b.path.localeCompare(a.path)); // descending order
+  if (error) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200, color: "red" }}>
+        Error: {error}
+      </div>
+    );
+  }
+
+  if (sortedCategories.length === 0) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
+        No designs found
+      </div>
+    );
   }
 
   return (
     <div>
-      {sortedGroups.map((group) => {
-        const parts = group.split("/");
+      {sortedCategories.map((category) => {
+        // Split category name for fancy display (if it contains /)
+        const labelParts = category.name.split("/");
         return (
-          <div key={group} style={{ marginBottom: 32 }}>
+          <div key={category.slug} style={{ marginBottom: 32 }}>
             {/* Group label as a pill/tab style */}
             <div
               style={{
@@ -69,9 +104,9 @@ export default function DesignsView() {
                 minHeight: 36,
               }}
             >
-              {parts.map((part, idx) => (
+              {labelParts.map((part, idx) => (
                 <span
-                  key={`${group}-${part}`}
+                  key={`${category.slug}-${part}`}
                   style={{ display: "inline-flex", alignItems: "center" }}
                 >
                   <span
@@ -80,16 +115,16 @@ export default function DesignsView() {
                       color:
                         idx === 0
                           ? "#222"
-                          : idx === parts.length - 1
+                          : idx === labelParts.length - 1
                           ? "#0a7cff"
                           : "#222",
-                      marginRight: idx < parts.length - 1 ? 8 : 0,
+                      marginRight: idx < labelParts.length - 1 ? 8 : 0,
                       marginLeft: idx > 0 ? 8 : 0,
                     }}
                   >
                     {part}
                   </span>
-                  {idx < parts.length - 1 && (
+                  {idx < labelParts.length - 1 && (
                     <span
                       style={{
                         color: "#b0b0b0",
@@ -113,20 +148,19 @@ export default function DesignsView() {
               s={{ columns: 1 }}
               style={{ gap: 18 }}
             >
-              {grouped[group].map((image, index) => {
+              {category.images.map((image, index) => {
                 // Stagger animation delay for entry
                 const animationDelay = `${index * 60}ms`;
-                const imageUrl = `${window.location.origin}/designs/${image.path}`;
-                const fileName = image.path.split("/").pop() || "design";
                 const hue = 180 + ((index * 13) % 120); // vary hue per item
                 const inlineStyle: React.CSSProperties &
                   Record<string, string> = {
                   animationDelay,
                   "--hue": String(hue),
                 };
+                const displayName = image.name.replace(/[-_]/g, " ").replace(/\.[^.]+$/, "");
                 return (
                   <div
-                    key={image.path}
+                    key={image.id}
                     className={`${styles["design-hover"]} ${styles["design-fadein"]}`}
                     style={inlineStyle}
                   >
@@ -136,33 +170,35 @@ export default function DesignsView() {
                       priority={index < 10}
                       sizes="(max-width: 560px) 100vw, 50vw"
                       radius="m"
-                      src={`/designs/${image.path}`}
-                      alt={fileName}
+                      src={image.thumbnail}
+                      alt={displayName}
                     />
                     <div className={styles["design-title"]}>
-                      {fileName.replace(/[-_]/g, " ")}
+                      {displayName}
                     </div>
                     <div className={styles["design-actions"]}>
                       <button
                         type="button"
-                        onClick={(e) => handleShare(e, imageUrl)}
-                        aria-label={`Share ${fileName}`}
+                        onClick={(e) => handleShare(e, image.url, displayName)}
+                        aria-label={`Share ${displayName}`}
                       >
                         Share
                       </button>
                       <a
-                        href={`/designs/${image.path}`}
-                        download={fileName}
-                        aria-label={`Download ${fileName}`}
+                        href={image.url}
+                        download={image.name}
+                        aria-label={`Download ${displayName}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         Download
                       </a>
                     </div>
                     <button
                       className={styles["share-btn"]}
-                      title={`Share ${fileName}`}
+                      title={`Share ${displayName}`}
                       type="button"
-                      onClick={(e) => handleShare(e, imageUrl)}
+                      onClick={(e) => handleShare(e, image.url, displayName)}
                       tabIndex={0}
                     >
                       <svg
@@ -173,7 +209,7 @@ export default function DesignsView() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        <title>{`Share ${fileName}`}</title>
+                        <title>{`Share ${displayName}`}</title>
                         <circle cx="18" cy="5" r="3" />
                         <circle cx="6" cy="12" r="3" />
                         <circle cx="18" cy="19" r="3" />
