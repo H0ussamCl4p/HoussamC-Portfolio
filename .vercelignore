@@ -1,0 +1,5 @@
+# Ignore Rust API directory - deploy separately or via custom build
+api/
+*.rs
+Cargo.toml
+Cargo.lock
