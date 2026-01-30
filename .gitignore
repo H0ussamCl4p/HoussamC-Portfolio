@@ -1,12 +1,18 @@
 ﻿# local env and secrets
+.env
 .env.local
+.env*.local
 google-service-account.json
+service-account.json
+*.pem
 
 # node / build
 node_modules
 .next
 dist
 
+# Rust build artifacts
+api/target/
 
 # system
 .DS_Store

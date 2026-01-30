@@ -1,0 +1,688 @@
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE-FIRST RESPONSIVE DESIGN SYSTEM
+// Strict mobile-first approach: base styles are mobile, scale up to desktop
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@use "breakpoints" as bp;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CSS CUSTOM PROPERTIES - Mobile-First Fluid Typography
+// Using clamp() to scale from 320px to 1440px without media query jumps
+// Formula: clamp(min, preferred, max)
+// Preferred = min + (max - min) * ((100vw - 320px) / (1440px - 320px))
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+:root {
+  // ─── Base Typography Scale ───
+  // 320px → 1440px viewport scaling
+  --font-size-2xs: clamp(0.625rem, 0.589rem + 0.179vw, 0.75rem);    // 10px → 12px
+  --font-size-xs: clamp(0.75rem, 0.696rem + 0.268vw, 0.875rem);     // 12px → 14px
+  --font-size-sm: clamp(0.875rem, 0.821rem + 0.268vw, 1rem);        // 14px → 16px
+  --font-size-base: clamp(1rem, 0.929rem + 0.357vw, 1.125rem);      // 16px → 18px
+  --font-size-lg: clamp(1.125rem, 1.036rem + 0.446vw, 1.25rem);     // 18px → 20px
+  --font-size-xl: clamp(1.25rem, 1.107rem + 0.714vw, 1.5rem);       // 20px → 24px
+  --font-size-2xl: clamp(1.5rem, 1.286rem + 1.071vw, 2rem);         // 24px → 32px
+  --font-size-3xl: clamp(1.875rem, 1.518rem + 1.786vw, 2.5rem);     // 30px → 40px
+  --font-size-4xl: clamp(2.25rem, 1.714rem + 2.679vw, 3rem);        // 36px → 48px
+  --font-size-5xl: clamp(2.5rem, 1.786rem + 3.571vw, 3.5rem);       // 40px → 56px
+
+  // ─── Display Typography (Hero/Headlines) ───
+  --font-size-display-xs: clamp(1.5rem, 1.143rem + 1.786vw, 2.25rem);  // 24px → 36px
+  --font-size-display-sm: clamp(2rem, 1.429rem + 2.857vw, 3rem);       // 32px → 48px
+  --font-size-display-md: clamp(2.5rem, 1.643rem + 4.286vw, 4rem);     // 40px → 64px
+  --font-size-display-lg: clamp(3rem, 1.714rem + 6.429vw, 5rem);       // 48px → 80px
+  --font-size-display-xl: clamp(3.5rem, 1.786rem + 8.571vw, 6rem);     // 56px → 96px
+
+  // ─── Spacing Scale ───
+  --space-2xs: clamp(0.125rem, 0.107rem + 0.089vw, 0.25rem);  // 2px → 4px
+  --space-xs: clamp(0.25rem, 0.214rem + 0.179vw, 0.5rem);     // 4px → 8px
+  --space-sm: clamp(0.5rem, 0.429rem + 0.357vw, 0.75rem);     // 8px → 12px
+  --space-md: clamp(1rem, 0.857rem + 0.714vw, 1.5rem);        // 16px → 24px
+  --space-lg: clamp(1.5rem, 1.286rem + 1.071vw, 2rem);        // 24px → 32px
+  --space-xl: clamp(2rem, 1.571rem + 2.143vw, 3rem);          // 32px → 48px
+  --space-2xl: clamp(3rem, 2.143rem + 4.286vw, 4.5rem);       // 48px → 72px
+  --space-3xl: clamp(4rem, 2.571rem + 7.143vw, 6rem);         // 64px → 96px
+
+  // ─── Touch Target Minimum ───
+  --touch-target-min: 44px;  // iOS HIG minimum
+
+  // ─── Layout Widths ───
+  --content-width-xs: min(100% - var(--space-md) * 2, 32rem);  // 512px
+  --content-width-sm: min(100% - var(--space-md) * 2, 40rem);  // 640px
+  --content-width-md: min(100% - var(--space-md) * 2, 48rem);  // 768px
+  --content-width-lg: min(100% - var(--space-md) * 2, 64rem);  // 1024px
+  --content-width-xl: min(100% - var(--space-md) * 2, 80rem);  // 1280px
+
+  // ─── Mobile Navigation Height ───
+  --mobile-nav-height: 64px;
+  --mobile-nav-safe-area: env(safe-area-inset-bottom, 0px);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DEVICE DETECTION MIXINS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@mixin mobile {
+  @media (max-width: #{bp.$s - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{bp.$s}) and (max-width: #{bp.$m - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{bp.$m}) {
+    @content;
+  }
+}
+
+@mixin touch-device {
+  @media (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin pointer-device {
+  @media (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin can-hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin no-hover {
+  @media (hover: none) {
+    @content;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+@mixin high-contrast {
+  @media (prefers-contrast: high) {
+    @content;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE NAVIGATION - Bottom Tab Bar
+// Replaces desktop header on screens < 768px
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.mobile-nav {
+  display: none;
+
+  @include mobile {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--mobile-nav-height) + var(--mobile-nav-safe-area));
+    padding-bottom: var(--mobile-nav-safe-area);
+    background: var(--color-background-primary, #0a0a0a);
+    border-top: 1px solid var(--color-border-primary, rgba(255, 255, 255, 0.08));
+    z-index: 9999;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  &__list {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    height: var(--mobile-nav-height);
+  }
+
+  &__item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    padding: 8px 12px;
+    color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+    text-decoration: none;
+    font-size: var(--font-size-2xs);
+    font-weight: 500;
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:active {
+      color: var(--color-text-primary, #fff);
+      transform: scale(0.95);
+    }
+
+    &--active,
+    &[aria-current="page"] {
+      color: var(--color-brand-primary, #0096ff);
+    }
+  }
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__label {
+    font-size: 10px;
+    line-height: 1;
+    text-align: center;
+  }
+}
+
+// Hide desktop header on mobile when mobile nav is active
+.desktop-header,
+header[data-desktop="true"] {
+  @include mobile {
+    display: none !important;
+  }
+}
+
+// Add padding to main content for mobile nav
+body {
+  @include mobile {
+    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-nav-safe-area));
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOBILE OVERLAY MENU (Alternative to bottom tabs)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-background-primary, #0a0a0a);
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &--open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: var(--space-xl);
+    gap: var(--space-lg);
+  }
+
+  &__link {
+    font-size: var(--font-size-display-sm);
+    font-weight: 600;
+    color: var(--color-text-primary, #fff);
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-md);
+    min-height: var(--touch-target-min);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease;
+
+    &:active {
+      opacity: 0.7;
+    }
+
+    &--active {
+      color: var(--color-brand-primary, #0096ff);
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary, #fff);
+    cursor: pointer;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TYPOGRAPHY - Fluid Scaling Applied to Once UI
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+h1,
+.heading-display-l,
+[class*="display-strong-l"] {
+  font-size: var(--font-size-display-lg) !important;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+h2,
+.heading-display-m,
+[class*="display-strong-m"] {
+  font-size: var(--font-size-display-md) !important;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+h3,
+.heading-display-s,
+[class*="display-strong-s"] {
+  font-size: var(--font-size-display-sm) !important;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+h4,
+[class*="heading-default-xl"],
+[class*="heading-strong-xl"] {
+  font-size: var(--font-size-2xl) !important;
+  line-height: 1.2;
+}
+
+h5,
+[class*="heading-default-l"],
+[class*="heading-strong-l"] {
+  font-size: var(--font-size-xl) !important;
+  line-height: 1.25;
+}
+
+h6,
+[class*="heading-default-m"],
+[class*="heading-strong-m"] {
+  font-size: var(--font-size-lg) !important;
+  line-height: 1.3;
+}
+
+p,
+[class*="body-default"],
+[class*="text-"] {
+  font-size: var(--font-size-base);
+  line-height: 1.65;
+}
+
+[class*="label-default"],
+[class*="label-strong"] {
+  font-size: var(--font-size-sm);
+}
+
+small,
+[class*="caption"] {
+  font-size: var(--font-size-xs);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// GRID LAYOUTS - Mobile Single Column → Desktop Multi-Column
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.projects-grid,
+.project-grid,
+[class*="projects-list"] {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr;
+
+  @media (min-width: #{bp.$s}) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: #{bp.$m}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.posts-grid,
+.blog-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr;
+
+  @media (min-width: #{bp.$m}) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TOUCH TARGETS - 44px Minimum for All Interactive Elements
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@include touch-device {
+  button,
+  [role="button"],
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  select,
+  [class*="Button"],
+  [class*="IconButton"],
+  [class*="ToggleButton"],
+  .clickable,
+  [data-clickable="true"] {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+
+    // Ensure adequate padding for text buttons
+    &:not([class*="Icon"]) {
+      padding: 12px 16px;
+    }
+  }
+
+  // Form inputs
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  textarea,
+  select {
+    min-height: var(--touch-target-min);
+    padding: 12px 16px;
+    font-size: 16px; // Prevents iOS zoom on focus
+  }
+
+  // Links in navigation
+  nav a,
+  [class*="nav"] a {
+    padding: 12px 16px;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PROJECT CARDS - Mobile Optimized
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.project-card,
+[class*="ProjectCard"] {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+
+  @include mobile {
+    border-radius: 8px;
+  }
+
+  // Card image
+  &__image,
+  [class*="image"] {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  // Card content area
+  &__content,
+  [class*="content"] {
+    padding: var(--space-md);
+
+    @include mobile {
+      padding: var(--space-sm);
+    }
+  }
+
+  // Interactive state
+  @include can-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  @include touch-device {
+    // Disable transform animations on touch
+    transition: none;
+
+    &:active {
+      opacity: 0.9;
+    }
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ONCE UI COMPONENT OVERRIDES - Mobile Optimized
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[class*="Column"],
+.once-column {
+  @include mobile {
+    padding-left: var(--space-sm) !important;
+    padding-right: var(--space-sm) !important;
+  }
+}
+
+[class*="Row"],
+.once-row {
+  @include mobile {
+    flex-direction: column !important;
+    gap: var(--space-md) !important;
+  }
+}
+
+[class*="Card"] {
+  @include mobile {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+// Avatar sizes on mobile
+[class*="Avatar"] {
+  @include mobile {
+    &[class*="xl"] {
+      width: 80px !important;
+      height: 80px !important;
+    }
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PERFORMANCE - Disable Expensive Effects on Touch/Low-Power
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@include touch-device {
+  * {
+    &:hover {
+      transition: none !important;
+    }
+  }
+
+  [class*="Card"]:hover,
+  [class*="Button"]:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+}
+
+@include reduced-motion {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CLS PREVENTION - Skeleton Loaders
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.skeleton,
+[data-loading="true"] {
+  min-height: 1em;
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-alpha-weak, rgba(255, 255, 255, 0.05)) 0%,
+    var(--color-neutral-alpha-medium, rgba(255, 255, 255, 0.1)) 50%,
+    var(--color-neutral-alpha-weak, rgba(255, 255, 255, 0.05)) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
+
+  @include pointer-device {
+    animation: skeleton-shimmer 1.5s infinite ease-in-out;
+  }
+
+  @include touch-device {
+    animation: none;
+  }
+
+  @include reduced-motion {
+    animation: none;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Skeleton component variants
+.skeleton {
+  &--heading-lg {
+    height: var(--font-size-display-md);
+    width: 80%;
+    margin-bottom: var(--space-md);
+  }
+
+  &--heading-sm {
+    height: var(--font-size-xl);
+    width: 60%;
+    margin-bottom: var(--space-sm);
+  }
+
+  &--text {
+    height: var(--font-size-base);
+    width: 100%;
+    margin-bottom: var(--space-xs);
+
+    &:last-child {
+      width: 75%;
+    }
+  }
+
+  &--image {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  &--avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
+
+  &--button {
+    height: var(--touch-target-min);
+    width: 120px;
+    border-radius: 8px;
+  }
+
+  &--card {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    border-radius: 12px;
+
+    @include mobile {
+      border-radius: 8px;
+    }
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MOUSE FOLLOWER - Strictly Hidden on Mobile
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.mouse-follower,
+[class*="mouse-follower"],
+#mouse-follower,
+[data-mouse-follower] {
+  @include touch-device {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+
+  @include no-hover {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SAFE AREA HANDLING (Notch, Home Indicator)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}

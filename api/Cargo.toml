@@ -1,0 +1,99 @@
+[package]
+name = "portfolio-rust-api"
+version = "0.1.0"
+edition = "2021"
+authors = ["Houssam"]
+description = "High-performance Rust serverless functions for portfolio"
+
+[lib]
+crate-type = ["cdylib"]
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# VERCEL SERVERLESS FUNCTIONS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[[bin]]
+name = "mdx-parse"
+path = "src/bin/mdx_parse.rs"
+
+[[bin]]
+name = "design-manifest"
+path = "src/bin/design_manifest.rs"
+
+[dependencies]
+# Vercel Runtime - Required for serverless
+vercel_runtime = "1"
+lambda_http = "0.10"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+# Serialization - Zero-copy where possible
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+# HTTP Client for Google Drive API
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
+# URL parsing for query params
+url = "2.5"
+urlencoding = "2.1"
+
+# Performance utilities
+once_cell = "1.19"
+regex = "1.10"
+
+# In-memory cache for Google Drive content
+dashmap = "5.5"
+
+# Google Drive authentication (JWT for Service Account)
+jsonwebtoken = "9"
+base64 = "0.22"
+
+# Time handling for JWT
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Async utilities
+futures = "0.3"
+
+[dev-dependencies]
+criterion = "0.5"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# VERCEL OPTIMIZATIONS - Critical for cold start performance
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[profile.release]
+# Optimize for size (critical for Vercel cold starts)
+opt-level = "z"
+
+# Link-Time Optimization - Aggressive dead code elimination
+lto = true
+
+# Single codegen unit for maximum optimization
+codegen-units = 1
+
+# Strip symbols for smaller binary
+strip = true
+
+# Abort on panic (smaller binary, no unwinding)
+panic = "abort"
+
+# Reduce debug info
+debug = false
+
+[profile.dev]
+# Faster dev builds
+opt-level = 0
+debug = true
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# WASM TARGET (Optional - for client-side)
+# Build with: cargo build --target wasm32-unknown-unknown --release
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[target.wasm32-unknown-unknown]
+rustflags = ["-C", "link-arg=-s"]  # Strip WASM binary

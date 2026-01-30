@@ -1,0 +1,41 @@
+[package]
+name = "portfolio-wasm"
+version = "0.1.0"
+edition = "2021"
+authors = ["Houssam"]
+description = "Client-side WASM utilities for portfolio"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+path = "src/wasm.rs"
+
+[dependencies]
+wasm-bindgen = "0.2"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# WASM OPTIMIZATIONS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[profile.release]
+# Optimize for size (critical for WASM download)
+opt-level = "z"
+
+# Link-Time Optimization
+lto = true
+
+# Single codegen unit
+codegen-units = 1
+
+# No debug
+debug = false
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# wasm-pack Configuration
+# Build: wasm-pack build --target web --out-dir ../public/wasm
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-mutable-globals"]

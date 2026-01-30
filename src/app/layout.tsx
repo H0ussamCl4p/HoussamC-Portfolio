@@ -14,8 +14,8 @@ import {
   SpacingToken,
 } from "@once-ui-system/core";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
-import MouseFollower from "@/components/MouseFollower";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import MouseFollowerWrapper from "@/components/MouseFollowerWrapper";
 import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 
 export async function generateMetadata() {
@@ -115,7 +115,7 @@ export default async function RootLayout({
           padding="0"
           horizontal="center"
         >
-          <MouseFollower />
+          <MouseFollowerWrapper />
           <ScrollToTopButton />
           <RevealFx fill position="absolute">
             <Background

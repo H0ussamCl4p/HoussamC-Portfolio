@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:rust": "cd api && cargo build --release",
+    "build:wasm": "cd api && wasm-pack build --target web --out-dir ../public/wasm",
+    "build:all": "npm run build:rust && npm run build:wasm && npm run build",
+    "test:rust": "cd api && cargo test",
     "start": "next start",
     "sync-designs": "node sync-and-generate.js"
   },
