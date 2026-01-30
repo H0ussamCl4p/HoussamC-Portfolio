@@ -30,14 +30,26 @@ const RUST_API_BASE = process.env.RUST_API_BASE || "";
 
 /**
  * Determine the correct API URL based on environment
- * - In production on Vercel: Use relative URLs (same origin)
+ * - In production on Vercel: Use VERCEL_URL or relative URLs
  * - In development: Use localhost or RUST_API_BASE
  */
 function getApiUrl(endpoint: string): string {
   if (RUST_API_BASE) {
     return `${RUST_API_BASE}${endpoint}`;
   }
-  // Relative URL works in both Server Components and API routes on Vercel
+
+  // On Vercel, use the deployment URL for server-side requests
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}${endpoint}`;
+  }
+
+  // In development, use localhost
+  if (process.env.NODE_ENV === "development") {
+    return `http://localhost:3000${endpoint}`;
+  }
+
+  // Fallback to relative URL (works in browser/client)
   return endpoint;
 }
 
@@ -108,14 +120,7 @@ export async function fetchDriveMdx(
   category: ContentCategory,
   slug: string,
 ): Promise<AsyncContent<ParsedMdx>> {
-  // Skip Drive fetching during static build (no server available)
-  // ISR will fetch Drive content at runtime
   const apiUrl = getApiUrl("/api/mdx-parse");
-  if (!apiUrl.startsWith("http")) {
-    // Relative URL means no server context - we're in static build
-    // Return not-found to fallback to local MDX files
-    return createNotFoundState();
-  }
 
   try {
     const response = await fetch(apiUrl, {

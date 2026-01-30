@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { getPosts } from "@/utils/utils";
 import { fetchDriveMdx } from "@/lib/rust-api";
 import {
   Meta,
@@ -20,16 +19,11 @@ import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ISR Configuration - Revalidate content hourly
+// Dynamic rendering - Drive content fetched at runtime
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export const revalidate = 3600; // 1 hour
-
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const posts = getPosts(["src", "app", "work", "projects"]);
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 300; // 5 min cache
+export const dynamicParams = true; // Allow any slug
 
 export async function generateMetadata({
   params,
@@ -41,7 +35,7 @@ export async function generateMetadata({
     ? routeParams.slug.join("/")
     : routeParams.slug || "";
 
-  // Try Google Drive first (category: projects)
+  // Fetch from Google Drive
   const driveContent = await fetchDriveMdx("projects", slugPath);
 
   if (driveContent.status === "success" && driveContent.data) {
@@ -56,19 +50,7 @@ export async function generateMetadata({
     });
   }
 
-  // Fall back to local MDX
-  const posts = getPosts(["src", "app", "work", "projects"]);
-  const post = posts.find((post) => post.slug === slugPath);
-
-  if (!post) return {};
-
-  return Meta.generate({
-    title: post.metadata.title,
-    description: post.metadata.summary,
-    baseURL: baseURL,
-    image: post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
-    path: `${work.path}/${post.slug}`,
-  });
+  return {};
 }
 
 export default async function Project({
@@ -81,44 +63,15 @@ export default async function Project({
     ? routeParams.slug.join("/")
     : routeParams.slug || "";
 
-  // ─── Try Google Drive content first (category: projects) ───
+  // Fetch from Google Drive only
   const driveContent = await fetchDriveMdx("projects", slugPath);
 
-  if (driveContent.status === "success" && driveContent.data) {
-    const post = driveContent.data;
-    const avatars =
-      post.metadata.team?.map((p) => ({
-        src: p.avatar,
-      })) || [];
-
-    return (
-      <ProjectContent
-        slug={slugPath}
-        title={post.metadata.title}
-        summary={post.metadata.summary}
-        publishedAt={post.metadata.publishedAt}
-        images={post.metadata.images}
-        team={post.metadata.team}
-        content={post.content}
-        avatars={avatars}
-      />
-    );
-  }
-
-  // Handle Drive errors (only log actual errors, not "not-found")
-  if (driveContent.status === "error") {
-    console.error(`Drive fetch error for ${slugPath}:`, driveContent.error);
-  }
-
-  // ─── Fall back to local MDX files ───
-  const post = getPosts(["src", "app", "work", "projects"]).find(
-    (post) => post.slug === slugPath,
-  );
-
-  if (!post) {
+  if (driveContent.status !== "success" || !driveContent.data) {
+    console.error(`Drive fetch failed for ${slugPath}:`, driveContent.error);
     notFound();
   }
 
+  const post = driveContent.data;
   const avatars =
     post.metadata.team?.map((p) => ({
       src: p.avatar,

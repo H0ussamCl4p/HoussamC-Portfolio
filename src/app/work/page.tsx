@@ -2,6 +2,10 @@ import { Column, Heading, Meta, Schema } from "@once-ui-system/core";
 import { baseURL, about, person, work } from "@/resources";
 import { Projects } from "@/components/work/Projects";
 
+// Force dynamic rendering - Drive content fetched at runtime
+export const dynamic = "force-dynamic";
+export const revalidate = 300; // Cache for 5 minutes
+
 export async function generateMetadata() {
   return Meta.generate({
     title: work.title,
@@ -12,7 +16,7 @@ export async function generateMetadata() {
   });
 }
 
-export default function Work() {
+export default async function Work() {
   return (
     <Column maxWidth="m" paddingTop="24">
       <Schema

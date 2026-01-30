@@ -17,6 +17,10 @@ import { Projects } from "@/components/work/Projects";
 import { Posts } from "@/components/blog/Posts";
 import FeaturedProjects from "@/components/FeaturedProjects";
 
+// Dynamic rendering for Drive content
+export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
 export async function generateMetadata() {
   return Meta.generate({
     title: home.title,
@@ -27,7 +31,7 @@ export async function generateMetadata() {
   });
 }
 
-export default function Home() {
+export default async function Home() {
   return (
     <Column maxWidth="m" gap="xl" paddingY="12" horizontal="center">
       <Schema

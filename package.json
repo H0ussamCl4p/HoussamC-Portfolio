@@ -22,7 +22,7 @@
     "gray-matter": "^4.0.3",
     "install": "^0.13.0",
     "lint-staged": "^16.1.5",
-    "next": "^16.1.6",
+    "next": "15.3.8",
     "next-mdx-remote": "^5.0.0",
     "nodemailer": "^7.0.13",
     "react": "19.0.0",
