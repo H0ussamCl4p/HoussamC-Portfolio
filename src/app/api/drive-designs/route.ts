@@ -69,38 +69,79 @@ export async function GET() {
     const folderId = process.env.DRIVE_CANVA_FOLDER_ID;
     if (!folderId) {
       return NextResponse.json(
-        { error: "DRIVE_CANVA_FOLDER_ID not set" },
-        { status: 500 }
+        { error: "DRIVE_CANVA_FOLDER_ID not set", categories: [] },
+        { status: 200 }
       );
     }
 
     const drive = await getDriveClient();
 
-    // List all subfolders in Canva folder (each is a design category)
-    const foldersResponse = await drive.files.list({
+    // List all top-level folders (e.g., "A&M Aeronautics", "A&M Mechatronics")
+    const topFoldersResponse = await drive.files.list({
       q: `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
       fields: "files(id, name)",
       pageSize: 100,
       orderBy: "name",
     });
 
-    const folders = foldersResponse.data.files || [];
+    const topFolders = topFoldersResponse.data.files || [];
     const categories: DesignCategory[] = [];
 
-    // Fetch images for each category folder
-    for (const folder of folders) {
-      if (!folder.id || !folder.name) continue;
+    // For each top-level folder, get subfolders and their images
+    for (const topFolder of topFolders) {
+      if (!topFolder.id || !topFolder.name) continue;
 
       try {
-        // Get all images in this folder
-        const imagesResponse = await drive.files.list({
-          q: `'${folder.id}' in parents and (mimeType contains 'image/') and trashed = false`,
+        // Get subfolders inside this top-level folder (e.g., "Club's Day", "Stickers")
+        const subFoldersResponse = await drive.files.list({
+          q: `'${topFolder.id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+          fields: "files(id, name)",
+          pageSize: 100,
+          orderBy: "name",
+        });
+
+        const subFolders = subFoldersResponse.data.files || [];
+
+        // For each subfolder, get images and create a category
+        for (const subFolder of subFolders) {
+          if (!subFolder.id || !subFolder.name) continue;
+
+          const imagesResponse = await drive.files.list({
+            q: `'${subFolder.id}' in parents and (mimeType contains 'image/') and trashed = false`,
+            fields: "files(id, name, mimeType)",
+            pageSize: 100,
+            orderBy: "name",
+          });
+
+          const images: DesignImage[] = (imagesResponse.data.files || []).map(
+            (file) => ({
+              id: file.id || "",
+              name: file.name || "design",
+              url: `https://drive.google.com/uc?export=download&id=${file.id}`,
+              thumbnail: `https://drive.google.com/thumbnail?id=${file.id}&sz=w800`,
+            })
+          );
+
+          if (images.length > 0) {
+            const categoryName = `${topFolder.name}/${subFolder.name}`;
+            categories.push({
+              name: categoryName,
+              slug: slugify(categoryName),
+              images,
+              thumbnail: images[0]?.thumbnail || null,
+            });
+          }
+        }
+
+        // Also check for images directly in the top-level folder (no subfolder)
+        const directImagesResponse = await drive.files.list({
+          q: `'${topFolder.id}' in parents and (mimeType contains 'image/') and trashed = false`,
           fields: "files(id, name, mimeType)",
           pageSize: 100,
           orderBy: "name",
         });
 
-        const images: DesignImage[] = (imagesResponse.data.files || []).map(
+        const directImages: DesignImage[] = (directImagesResponse.data.files || []).map(
           (file) => ({
             id: file.id || "",
             name: file.name || "design",
@@ -109,16 +150,16 @@ export async function GET() {
           })
         );
 
-        if (images.length > 0) {
+        if (directImages.length > 0) {
           categories.push({
-            name: folder.name,
-            slug: slugify(folder.name),
-            images,
-            thumbnail: images[0]?.thumbnail || null,
+            name: topFolder.name,
+            slug: slugify(topFolder.name),
+            images: directImages,
+            thumbnail: directImages[0]?.thumbnail || null,
           });
         }
       } catch (err) {
-        console.error(`Error processing Canva folder ${folder.name}:`, err);
+        console.error(`Error processing folder ${topFolder.name}:`, err);
       }
     }
 
