@@ -5,10 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:rust": "cd api && cargo build --release",
-    "build:wasm": "cd api && wasm-pack build --target web --out-dir ../public/wasm",
-    "build:all": "npm run build:rust && npm run build:wasm && npm run build",
-    "test:rust": "cd api && cargo test",
     "start": "next start",
     "sync-designs": "node sync-and-generate.js"
   },
@@ -20,7 +16,6 @@
     "cookie": "^1.0.2",
     "googleapis": "^157.0.0",
     "gray-matter": "^4.0.3",
-    "install": "^0.13.0",
     "lint-staged": "^16.1.5",
     "next": "15.3.8",
     "next-mdx-remote": "^5.0.0",

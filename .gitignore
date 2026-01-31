@@ -10,6 +10,7 @@ service-account.json
 node_modules
 .next
 dist
+*.tsbuildinfo
 
 # Rust build artifacts
 api/target/
