@@ -44,7 +44,7 @@ export default async function Home() {
     }, [] as { name: string; icon: string }[]);
 
   return (
-    <Column maxWidth="m" gap="xl" paddingY="12" horizontal="center">
+    <Column maxWidth="m" gap="l" paddingY="8" paddingX="16" horizontal="center" s={{ paddingX: "12", paddingY: "8", gap: "m" }}>
       <Schema
         as="webPage"
         baseURL={baseURL}
