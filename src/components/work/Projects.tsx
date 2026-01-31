@@ -14,6 +14,7 @@ interface ProjectSummary {
 interface ProjectsProps {
   range?: [number, number?];
   exclude?: string[];
+  showEmptyState?: boolean;
 }
 
 async function fetchDriveProjects(): Promise<ProjectSummary[]> {
@@ -42,7 +43,7 @@ async function fetchDriveProjects(): Promise<ProjectSummary[]> {
   }
 }
 
-export async function Projects({ range, exclude }: ProjectsProps) {
+export async function Projects({ range, exclude, showEmptyState = true }: ProjectsProps) {
   let allProjects = await fetchDriveProjects();
 
   // Exclude by slug (exact match)
@@ -59,6 +60,8 @@ export async function Projects({ range, exclude }: ProjectsProps) {
     : sortedProjects;
 
   if (displayedProjects.length === 0) {
+    if (!showEmptyState) return null;
+
     return (
       <Column fillWidth gap="l" paddingX="l">
         <p style={{ textAlign: "center", opacity: 0.6 }}>
