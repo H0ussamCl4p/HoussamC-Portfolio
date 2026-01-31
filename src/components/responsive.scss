@@ -59,6 +59,25 @@
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ONE-PAGE SCROLLING - Smooth scroll + anchor offsets
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+html {
+  scroll-behavior: smooth;
+}
+
+.onepage-section {
+  scroll-margin-top: 96px; // account for sticky header
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+
+  @include mobile {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-lg);
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // DEVICE DETECTION MIXINS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

@@ -9,11 +9,10 @@ import {
   routes,
   display,
   person,
-  about,
-  blog,
   work,
   designs,
 } from "@/resources";
+import { useActiveSection } from "@/hooks/useActiveSection";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./Header.module.scss";
 
@@ -55,6 +54,9 @@ export default TimeDisplay;
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
+  const activeSectionId = useActiveSection(["hero", "about", "work"], {
+    defaultSectionId: "hero",
+  });
 
   return (
     <>
@@ -116,64 +118,51 @@ export const Header = () => {
               {routes["/"] && (
                 <ToggleButton
                   prefixIcon="home"
-                  href="/"
-                  selected={pathname === "/"}
+                  href="/#hero"
+                  selected={pathname === "/" && activeSectionId === "hero"}
                 />
               )}
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
-              {routes["/about"] && (
-                <>
-                  <Row s={{ hide: true }}>
-                    <ToggleButton
-                      prefixIcon="person"
-                      href="/about"
-                      label={about.label}
-                      selected={pathname === "/about"}
-                    />
-                  </Row>
-                  <Row hide s={{ hide: false }}>
-                    <ToggleButton
-                      prefixIcon="person"
-                      href="/about"
-                      selected={pathname === "/about"}
-                    />
-                  </Row>
-                </>
-              )}
+              <>
+                <Row s={{ hide: true }}>
+                  <ToggleButton
+                    prefixIcon="person"
+                    href="/#about"
+                    label="About"
+                    selected={pathname === "/" && activeSectionId === "about"}
+                  />
+                </Row>
+                <Row hide s={{ hide: false }}>
+                  <ToggleButton
+                    prefixIcon="person"
+                    href="/#about"
+                    selected={pathname === "/" && activeSectionId === "about"}
+                  />
+                </Row>
+              </>
               {routes["/work"] && (
                 <>
                   <Row s={{ hide: true }}>
                     <ToggleButton
                       prefixIcon="grid"
-                      href="/work"
+                      href="/#work"
                       label={work.label}
-                      selected={pathname.startsWith("/work")}
+                      selected={
+                        pathname === "/"
+                          ? activeSectionId === "work"
+                          : pathname.startsWith("/work")
+                      }
                     />
                   </Row>
                   <Row hide s={{ hide: false }}>
                     <ToggleButton
                       prefixIcon="grid"
-                      href="/work"
-                      selected={pathname.startsWith("/work")}
-                    />
-                  </Row>
-                </>
-              )}
-              {routes["/blog"] && (
-                <>
-                  <Row s={{ hide: true }}>
-                    <ToggleButton
-                      prefixIcon="book"
-                      href="/blog"
-                      label={blog.label}
-                      selected={pathname.startsWith("/blog")}
-                    />
-                  </Row>
-                  <Row hide s={{ hide: false }}>
-                    <ToggleButton
-                      prefixIcon="book"
-                      href="/blog"
-                      selected={pathname.startsWith("/blog")}
+                      href="/#work"
+                      selected={
+                        pathname === "/"
+                          ? activeSectionId === "work"
+                          : pathname.startsWith("/work")
+                      }
                     />
                   </Row>
                 </>

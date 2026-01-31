@@ -49,8 +49,14 @@ function getApiUrl(endpoint: string): string {
     return `http://localhost:3000${endpoint}`;
   }
 
-  // Fallback to relative URL (works in browser/client)
-  return endpoint;
+  // In the browser/client, a relative URL is fine.
+  if (typeof window !== "undefined") {
+    return endpoint;
+  }
+
+  // In Node/server (including `next build`), fetch() requires an absolute URL.
+  // This fallback keeps local production builds from throwing ERR_INVALID_URL.
+  return `http://localhost:3000${endpoint}`;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -127,7 +133,7 @@ export async function fetchDriveMdx(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ category, slug }),
-      next: { revalidate: 300 }, // 5-minute cache for Drive content
+      next: { revalidate: 3600 },
     });
 
     if (response.status === 404) {

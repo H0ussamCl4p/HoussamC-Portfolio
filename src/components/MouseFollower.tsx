@@ -59,6 +59,7 @@ const MouseFollower = () => {
 
   // Track if we should render (disabled on touch devices)
   const [shouldRender, setShouldRender] = useState(false);
+  const [enabledAfterHero, setEnabledAfterHero] = useState(false);
 
   useEffect(() => {
     // Early exit for touch devices or reduced motion preference
@@ -69,6 +70,20 @@ const MouseFollower = () => {
     }
 
     setShouldRender(true);
+
+    const updateEnabledAfterHero = () => {
+      const hero = document.getElementById("hero");
+      if (!hero) {
+        setEnabledAfterHero(true);
+        return;
+      }
+
+      const rect = hero.getBoundingClientRect();
+      const isPastHero = rect.bottom <= 0;
+      setEnabledAfterHero(isPastHero);
+    };
+
+    updateEnabledAfterHero();
 
     // Set initial position to center of window (client only)
     mouse.current.x = window.innerWidth / 2;
@@ -128,12 +143,14 @@ const MouseFollower = () => {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("scroll", updateEnabledAfterHero, { passive: true });
     animFrame.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("scroll", updateEnabledAfterHero);
       pointerMediaQuery.removeEventListener("change", handleMediaChange);
       motionMediaQuery.removeEventListener("change", handleMediaChange);
       if (animFrame.current) cancelAnimationFrame(animFrame.current);
@@ -141,7 +158,7 @@ const MouseFollower = () => {
   }, []);
 
   // Don't render anything on touch devices
-  if (!shouldRender) {
+  if (!shouldRender || !enabledAfterHero) {
     return null;
   }
 

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { routes, display } from "@/resources";
 import styles from "./MobileNav.module.scss";
+import { useActiveSection } from "@/hooks/useActiveSection";
 
 /**
  * Mobile Navigation Icons
@@ -44,10 +45,11 @@ const NavIcons = {
 };
 
 type NavItem = {
-  path: string;
+  href: string;
   label: string;
   icon: keyof typeof NavIcons;
   enabled: boolean;
+  sectionId?: string;
 };
 
 /**
@@ -55,11 +57,11 @@ type NavItem = {
  */
 function getNavItems(): NavItem[] {
   const items: NavItem[] = [
-    { path: "/", label: "Home", icon: "home", enabled: true },
-    { path: "/work", label: "Work", icon: "work", enabled: routes["/work"] },
-    { path: "/blog", label: "Blog", icon: "blog", enabled: routes["/blog"] },
-    { path: "/designs", label: "Designs", icon: "designs", enabled: routes["/designs"] },
-    { path: "/about", label: "About", icon: "about", enabled: routes["/about"] },
+    { href: "/#hero", sectionId: "hero", label: "Home", icon: "home", enabled: true },
+    { href: "/#about", sectionId: "about", label: "About", icon: "about", enabled: true },
+    { href: "/#work", sectionId: "work", label: "Work", icon: "work", enabled: routes["/work"] },
+    // Keep Designs as a route for the full gallery view.
+    { href: "/designs", label: "Designs", icon: "designs", enabled: routes["/designs"] },
   ];
 
   return items.filter((item) => item.enabled);
@@ -73,6 +75,10 @@ export function MobileNav() {
   const pathname = usePathname();
   const navItems = getNavItems();
 
+  const activeSectionId = useActiveSection(["hero", "about", "work"], {
+    defaultSectionId: "hero",
+  });
+
   // Limit to 5 items max for bottom nav
   const displayItems = navItems.slice(0, 5);
 
@@ -80,15 +86,18 @@ export function MobileNav() {
     <nav className={styles.mobileNav} aria-label="Mobile navigation">
       <ul className={styles.mobileNav__list}>
         {displayItems.map((item) => {
+          const isOnHome = pathname === "/";
           const isActive =
-            item.path === "/"
-              ? pathname === "/"
-              : pathname?.startsWith(item.path);
+            item.sectionId && isOnHome
+              ? activeSectionId === item.sectionId
+              : item.href === "/#hero"
+                ? pathname === "/"
+                : pathname?.startsWith(item.href);
 
           return (
-            <li key={item.path} className={styles.mobileNav__item}>
+            <li key={item.href} className={styles.mobileNav__item}>
               <Link
-                href={item.path}
+                href={item.href}
                 className={`${styles.mobileNav__link} ${isActive ? styles["mobileNav__link--active"] : ""}`}
                 aria-current={isActive ? "page" : undefined}
               >

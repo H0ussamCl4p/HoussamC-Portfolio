@@ -26,8 +26,13 @@ async function fetchDriveProjects(): Promise<ProjectSummary[]> {
         ? "http://localhost:3000"
         : "";
 
+    // During local production builds there is no server to fetch from.
+    if (!baseUrl) {
+      return [];
+    }
+
     const response = await fetch(`${baseUrl}/api/drive-projects`, {
-      next: { revalidate: 300 },
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
