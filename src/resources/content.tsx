@@ -170,25 +170,21 @@ const blog: Blog = {
   path: "/blog",
   label: "Blog",
   title: "Writing about tech...",
-  description: `Read what ${person.name} has been up to recently`,
-  // Create new blog posts by adding a new .mdx file to app/blog/posts
-  // All posts will be listed on the /blog route
+  description: `Read what ${person.name} has been up to recently (loaded from Google Drive)`,
 };
 
 const work: Work = {
   path: "/work",
   label: "Work",
   title: `Projects – ${person.name}`,
-  description: `Design and dev projects by ${person.name}`,
-  // Create new project pages by adding a new .mdx file to app/blog/posts
-  // All projects will be listed on the /home and /work routes
+  description: `Design and dev projects by ${person.name} (loaded from Google Drive)`,
 };
 
 const designs: Designs = {
   path: "/designs",
   label: "Designs",
   title: `Designs – ${person.name}`,
-  description: `A photo collection by ${person.name}`,
+  description: `A photo collection by ${person.name} (loaded from Google Drive)`,
   images: [],
 };
 
