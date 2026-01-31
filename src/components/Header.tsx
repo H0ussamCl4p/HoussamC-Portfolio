@@ -9,7 +9,7 @@ import {
   routes,
   display,
   person,
-  work,
+
   designs,
 } from "@/resources";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -54,7 +54,7 @@ export default TimeDisplay;
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
-  const activeSectionId = useActiveSection(["hero", "about", "work"], {
+  const activeSectionId = useActiveSection(["hero", "about"], {
     defaultSectionId: "hero",
   });
 
@@ -140,33 +140,6 @@ export const Header = () => {
                   />
                 </Row>
               </>
-              {routes["/work"] && (
-                <>
-                  <Row s={{ hide: true }}>
-                    <ToggleButton
-                      prefixIcon="grid"
-                      href="/#work"
-                      label={work.label}
-                      selected={
-                        pathname === "/"
-                          ? activeSectionId === "work"
-                          : pathname.startsWith("/work")
-                      }
-                    />
-                  </Row>
-                  <Row hide s={{ hide: false }}>
-                    <ToggleButton
-                      prefixIcon="grid"
-                      href="/#work"
-                      selected={
-                        pathname === "/"
-                          ? activeSectionId === "work"
-                          : pathname.startsWith("/work")
-                      }
-                    />
-                  </Row>
-                </>
-              )}
               {routes["/designs"] && (
                 <>
                   <Row s={{ hide: true }}>

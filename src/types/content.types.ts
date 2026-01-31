@@ -229,12 +229,6 @@ export interface About extends BasePageConfig {
 }
 
 /**
- * Work/projects page configuration.
- * @description Configuration for the Work/Projects page, including metadata and navigation label.
- */
-export interface Work extends BasePageConfig {}
-
-/**
  * Designs page configuration.
  * @description Configuration for the Designs page, including metadata, navigation label, and image list.
  */

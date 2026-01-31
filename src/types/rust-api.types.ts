@@ -54,11 +54,11 @@ export interface MdxParseResponse {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /** Content category for Drive CMS folder routing */
-export type ContentCategory = "projects" | "canva";
+export type ContentCategory = "canva";
 
 /** Request to fetch MDX content from Google Drive by category + slug */
 export interface DriveContentRequest {
-  /** Content category: projects or canva */
+  /** Content category: canva */
   category: ContentCategory;
   /** Slug to search for (matches subfolder name) */
   slug: string;

@@ -12,10 +12,8 @@ import {
   Meta,
   Line,
 } from "@once-ui-system/core";
-import { home, about, person, baseURL, routes, social } from "@/resources";
+import { home, about, person, baseURL, social } from "@/resources";
 import { Mailchimp } from "@/components";
-import { Projects } from "@/components/work/Projects";
-import { Suspense } from "react";
 import styles from "@/app/home-sections.module.scss";
 import Image from "next/image";
 
@@ -317,16 +315,6 @@ export default async function Home() {
         </section>
       )}
 
-      <Suspense
-        fallback={
-          <section id="work" className="onepage-section" data-loading="true">
-            <SelectedWorksSkeleton />
-          </section>
-        }
-      >
-        <SelectedWorksSection />
-      </Suspense>
-
       <Mailchimp />
     </Column>
   );
@@ -348,63 +336,4 @@ function socialButtons() {
       variant="secondary"
     />
   ));
-}
-
-async function SelectedWorksSection() {
-  if (!routes["/work"]) return null;
-
-  return (
-    <section id="work" className="onepage-section">
-      <Column fillWidth gap="24" marginBottom="l">
-        <Row fillWidth paddingRight="64">
-          <Line maxWidth={48} />
-        </Row>
-        <Row fillWidth gap="24" marginTop="40" s={{ direction: "column" }}>
-          <Row flex={1} paddingLeft="l" paddingTop="24">
-            <Heading as="h2" variant="display-strong-xs" wrap="balance">
-              Selected works
-            </Heading>
-          </Row>
-          <Row flex={3} paddingX="20">
-            <Projects range={[1, 3]} showEmptyState={false} />
-          </Row>
-        </Row>
-        <Row fillWidth paddingLeft="64" horizontal="end">
-          <Line maxWidth={48} />
-        </Row>
-      </Column>
-    </section>
-  );
-}
-
-function SelectedWorksSkeleton() {
-  return (
-    <Column fillWidth gap="24" marginBottom="l">
-      <Row fillWidth paddingRight="64">
-        <Line maxWidth={48} />
-      </Row>
-      <Row fillWidth gap="24" marginTop="40" s={{ direction: "column" }}>
-        <Row flex={1} paddingLeft="l" paddingTop="24">
-          <div className="skeleton skeleton--heading-sm" style={{ width: "240px", height: "32px" }} />
-        </Row>
-        <Row flex={3} paddingX="20" style={{ width: "100%" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: "16px",
-              width: "100%",
-            }}
-          >
-            {[1, 2].map((i) => (
-              <div key={`work-skel-${i}`} className="skeleton skeleton--card" />
-            ))}
-          </div>
-        </Row>
-      </Row>
-      <Row fillWidth paddingLeft="64" horizontal="end">
-        <Line maxWidth={48} />
-      </Row>
-    </Column>
-  );
 }

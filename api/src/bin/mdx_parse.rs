@@ -4,12 +4,10 @@
 //! Supports nested folder structure: [Category] / [Slug-Folder] / index.mdx
 //!
 //! Structure:
-//!   Projects / atlas-ai / index.mdx + thumbnail.png
 //!   Canva / design-1 / index.mdx + assets/
 //!
 //! Usage:
 //!   POST /api/mdx-parse
-//!   Body: { "category": "projects", "slug": "atlas-ai" }
 //!   Body: { "category": "canva", "slug": "design-1" }
 //!
 //!   // Legacy local mode:
@@ -35,7 +33,6 @@ use vercel_runtime::{run, Body, Error, Request, RequestPayloadExt, Response, Sta
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 enum ContentCategory {
-    Projects,
     Canva,
 }
 
@@ -43,7 +40,6 @@ impl ContentCategory {
     /// Get the environment variable name for this category's folder ID
     fn env_var_name(&self) -> &'static str {
         match self {
-            ContentCategory::Projects => "DRIVE_PROJECTS_FOLDER_ID",
             ContentCategory::Canva => "DRIVE_CANVA_FOLDER_ID",
         }
     }

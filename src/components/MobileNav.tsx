@@ -59,7 +59,6 @@ function getNavItems(): NavItem[] {
   const items: NavItem[] = [
     { href: "/#hero", sectionId: "hero", label: "Home", icon: "home", enabled: true },
     { href: "/#about", sectionId: "about", label: "About", icon: "about", enabled: true },
-    { href: "/#work", sectionId: "work", label: "Work", icon: "work", enabled: routes["/work"] },
     // Keep Designs as a route for the full gallery view.
     { href: "/designs", label: "Designs", icon: "designs", enabled: routes["/designs"] },
   ];
@@ -75,7 +74,7 @@ export function MobileNav() {
   const pathname = usePathname();
   const navItems = getNavItems();
 
-  const activeSectionId = useActiveSection(["hero", "about", "work"], {
+  const activeSectionId = useActiveSection(["hero", "about"], {
     defaultSectionId: "hero",
   });
 

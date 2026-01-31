@@ -5,7 +5,6 @@ import {
   Newsletter,
   Person,
   Social,
-  Work,
 } from "@/types";
 import { Line, Logo, Row, Text } from "@once-ui-system/core";
 
@@ -173,13 +172,6 @@ const about: About = {
   },
 };
 
-const work: Work = {
-  path: "/work",
-  label: "Work",
-  title: `Projects – ${person.name}`,
-  description: `Design and dev projects by ${person.name} (loaded from Google Drive)`,
-};
-
 const designs: Designs = {
   path: "/designs",
   label: "Designs",
@@ -188,4 +180,4 @@ const designs: Designs = {
   images: [],
 };
 
-export { person, social, newsletter, home, about, work, designs };
+export { person, social, newsletter, home, about, designs };
