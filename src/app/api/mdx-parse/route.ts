@@ -5,7 +5,7 @@
  * [Category] / [Slug-Folder] / index.mdx + images
  *
  * POST /api/mdx-parse
- * Body: { "category": "projects" | "blog" | "canva", "slug": "my-project" }
+ * Body: { "category": "projects" | "canva", "slug": "my-project" }
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -16,7 +16,7 @@ import matter from "gray-matter";
 // TYPES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-type ContentCategory = "projects" | "blog" | "canva";
+type ContentCategory = "projects" | "canva";
 
 interface DriveRequest {
   category: ContentCategory;
@@ -96,7 +96,6 @@ async function getDriveClient() {
 function getFolderId(category: ContentCategory): string {
   const envVars: Record<ContentCategory, string> = {
     projects: "DRIVE_PROJECTS_FOLDER_ID",
-    blog: "DRIVE_BLOG_FOLDER_ID",
     canva: "DRIVE_CANVA_FOLDER_ID",
   };
 

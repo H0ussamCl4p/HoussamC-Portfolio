@@ -5,13 +5,11 @@
 //!
 //! Structure:
 //!   Projects / atlas-ai / index.mdx + thumbnail.png
-//!   Blog / my-post / index.mdx + header.png
 //!   Canva / design-1 / index.mdx + assets/
 //!
 //! Usage:
 //!   POST /api/mdx-parse
 //!   Body: { "category": "projects", "slug": "atlas-ai" }
-//!   Body: { "category": "blog", "slug": "my-post" }
 //!   Body: { "category": "canva", "slug": "design-1" }
 //!
 //!   // Legacy local mode:
@@ -38,7 +36,6 @@ use vercel_runtime::{run, Body, Error, Request, RequestPayloadExt, Response, Sta
 #[serde(rename_all = "lowercase")]
 enum ContentCategory {
     Projects,
-    Blog,
     Canva,
 }
 
@@ -47,7 +44,6 @@ impl ContentCategory {
     fn env_var_name(&self) -> &'static str {
         match self {
             ContentCategory::Projects => "DRIVE_PROJECTS_FOLDER_ID",
-            ContentCategory::Blog => "DRIVE_BLOG_FOLDER_ID",
             ContentCategory::Canva => "DRIVE_CANVA_FOLDER_ID",
         }
     }
@@ -698,7 +694,7 @@ struct ParseRequest {
     /// Legacy: local files to parse
     #[serde(default)]
     files: Vec<FileInput>,
-    /// Content category: "projects", "blog", or "canva"
+    /// Content category: "projects" or "canva"
     #[serde(default)]
     category: Option<ContentCategory>,
     /// Slug to search for in the category folder
@@ -848,7 +844,7 @@ async fn handler(req: Request) -> Result<Response<Body>, Error> {
         .body(Body::Text(json))?)
 }
 
-/// Handle category-based request (projects, blog, canva)
+/// Handle category-based request (projects, canva)
 async fn handle_category_request(
     category: ContentCategory,
     slug: &str,

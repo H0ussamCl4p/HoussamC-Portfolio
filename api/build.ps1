@@ -42,7 +42,6 @@ else {
 # Google Drive Root Folder IDs - Required for nested folder structure
 $driveFolders = @{
     "DRIVE_PROJECTS_FOLDER_ID" = "Projects folder"
-    "DRIVE_BLOG_FOLDER_ID" = "Blog folder"
     "DRIVE_CANVA_FOLDER_ID" = "Canva folder"
 }
 

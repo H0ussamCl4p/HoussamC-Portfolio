@@ -52,3 +52,57 @@
   --scheme-neutral-600-50: rgba(137,152,159,0.5);
   /*
 }*/
+
+:root {
+  --portfolio-accent: rgb(34 197 94);
+  --portfolio-accent-soft: rgba(34, 197, 94, 0.18);
+  --portfolio-accent-glow: rgba(34, 197, 94, 0.35);
+
+  --portfolio-border: rgba(255, 255, 255, 0.10);
+  --portfolio-border-strong: rgba(255, 255, 255, 0.14);
+
+  --portfolio-card-bg: rgba(2, 6, 23, 0.55);
+  --portfolio-card-bg-strong: rgba(2, 6, 23, 0.72);
+
+  --portfolio-hero-bg:
+    radial-gradient(1200px 600px at 20% 40%, rgba(34, 197, 94, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 80% 20%, rgba(59, 130, 246, 0.10), transparent 55%),
+    radial-gradient(700px 500px at 70% 85%, rgba(255, 255, 255, 0.06), transparent 55%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.92), rgba(2, 6, 23, 0.78));
+
+  --portfolio-stars-opacity: 0.8;
+
+  /* Pill/badge colors */
+  --portfolio-pill-bg: rgba(59, 130, 246, 0.14);
+  --portfolio-pill-border: rgba(59, 130, 246, 0.35);
+  --portfolio-pill-text: rgba(255, 255, 255, 0.9);
+
+  /* Text colors */
+  --portfolio-text-muted: rgba(255, 255, 255, 0.7);
+  --portfolio-text-strong: rgba(255, 255, 255, 0.95);
+}
+
+html[data-theme="light"] {
+  --portfolio-border: rgba(15, 23, 42, 0.12);
+  --portfolio-border-strong: rgba(15, 23, 42, 0.16);
+
+  --portfolio-card-bg: rgba(255, 255, 255, 0.72);
+  --portfolio-card-bg-strong: rgba(255, 255, 255, 0.88);
+
+  --portfolio-hero-bg:
+    radial-gradient(1100px 600px at 20% 35%, rgba(34, 197, 94, 0.15), transparent 58%),
+    radial-gradient(900px 500px at 80% 20%, rgba(59, 130, 246, 0.08), transparent 55%),
+    radial-gradient(700px 500px at 70% 85%, rgba(2, 6, 23, 0.04), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.90));
+
+  --portfolio-stars-opacity: 0.25;
+
+  /* Pill/badge colors - higher contrast for light */
+  --portfolio-pill-bg: rgba(59, 130, 246, 0.12);
+  --portfolio-pill-border: rgba(59, 130, 246, 0.28);
+  --portfolio-pill-text: rgb(30, 64, 175);
+
+  /* Text colors */
+  --portfolio-text-muted: rgba(15, 23, 42, 0.65);
+  --portfolio-text-strong: rgba(15, 23, 42, 0.92);
+}

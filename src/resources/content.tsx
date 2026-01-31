@@ -1,6 +1,5 @@
 import {
   About,
-  Blog,
   Designs,
   Home,
   Newsletter,
@@ -70,8 +69,7 @@ const home: Home = {
   subline: (
     <>
       I&apos;m Houssam, a Cybersecurity & Cloud Computing Engineering Student at
-      ENSAM Casablanca. I merge my interests in cybersecurity, IoT,
-      <br /> and AI into projects that push technical boundaries and explore
+      ENSAM Casablanca. I merge my interests in cybersecurity, IoT, and AI into projects that push technical boundaries and explore
       innovative solutions.
     </>
   ),
@@ -106,17 +104,26 @@ const about: About = {
     ),
   },
   work: {
-    display: false, // set to false to hide this section
+    display: true,
     title: "Experience",
     experiences: [
       {
         company: "Ministry of Health and Social Protection",
+        logo: "/images/ministry-logo.png",
         timeframe: "July 2025 - August 2025",
         role: "Fullstack Intern",
+        type: "Internship",
+        location: "Hybrid",
+        featured: true,
+        current: false,
+        description:
+          "Developed a fullstack web application for border vaccination management using Spring Boot and React.",
         achievements: [
-          "Coded a fullstack web application about vaccination in the border using spring boot and react.",
+          "Built end-to-end vaccination tracking system",
+          "Implemented secure API endpoints for health data",
         ],
-        images: [],
+        skills: ["Spring Boot", "React", "PostgreSQL", "Docker"],
+        links: {},
       },
     ],
   },
@@ -166,13 +173,6 @@ const about: About = {
   },
 };
 
-const blog: Blog = {
-  path: "/blog",
-  label: "Blog",
-  title: "Writing about tech...",
-  description: `Read what ${person.name} has been up to recently (loaded from Google Drive)`,
-};
-
 const work: Work = {
   path: "/work",
   label: "Work",
@@ -188,4 +188,4 @@ const designs: Designs = {
   images: [],
 };
 
-export { person, social, newsletter, home, about, blog, work, designs };
+export { person, social, newsletter, home, about, work, designs };

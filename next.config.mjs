@@ -9,6 +9,10 @@ const withMDX = mdx({
 const nextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   transpilePackages: ["next-mdx-remote"],
+  eslint: {
+    // Keep `next build` fast on Vercel; run lint separately via `npm run lint`.
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {

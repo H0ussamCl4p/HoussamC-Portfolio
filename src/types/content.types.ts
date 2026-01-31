@@ -144,12 +144,31 @@ export interface About extends BasePageConfig {
     experiences: Array<{
       /** Company name */
       company: string;
+      /** Company logo path */
+      logo?: string;
       /** Timeframe of employment */
       timeframe: string;
       /** Role or job title */
       role: string;
+      /** Employment type (Full-time, Part-time, Internship, etc.) */
+      type?: string;
+      /** Work location (Remote, Hybrid, On-site) */
+      location?: string;
+      /** Whether this is a featured experience */
+      featured?: boolean;
+      /** Whether this is a current position */
+      current?: boolean;
+      /** Job description */
+      description?: string;
       /** Achievements at the company */
       achievements: React.ReactNode[];
+      /** Skills used or developed */
+      skills?: string[];
+      /** Related links */
+      links?: {
+        details?: string;
+        connect?: string;
+      };
       /** Images related to the experience */
       images?: Array<{
         /** Image source path */
@@ -208,12 +227,6 @@ export interface About extends BasePageConfig {
     }>;
   };
 }
-
-/**
- * Blog page configuration.
- * @description Configuration for the Blog page, including metadata and navigation label.
- */
-export interface Blog extends BasePageConfig {}
 
 /**
  * Work/projects page configuration.
