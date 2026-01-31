@@ -18,6 +18,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const [checkingAuth, setCheckingAuth] = useState(false);
 
   const normalizedPathname = pathname || "/";
+  const isHome = normalizedPathname === "/";
 
   const isRouteEnabled = (() => {
     if (normalizedPathname in routes) {
@@ -40,6 +41,12 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      if (isHome) {
+        setIsAuthenticated(true);
+        setCheckingAuth(false);
+        return;
+      }
+
       if (!isPasswordRequired) {
         setIsAuthenticated(true);
         setCheckingAuth(false);
@@ -60,7 +67,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
     };
 
     checkAuth();
-  }, [isPasswordRequired, normalizedPathname]);
+  }, [isHome, isPasswordRequired, normalizedPathname]);
 
   const handlePasswordSubmit = async () => {
     const response = await fetch("/api/authenticate", {
@@ -83,6 +90,10 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
         <Spinner />
       </Flex>
     );
+  }
+
+  if (isHome) {
+    return <>{children}</>;
   }
 
   if (!isRouteEnabled) {
