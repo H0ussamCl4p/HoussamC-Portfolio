@@ -15,9 +15,7 @@ import { home, about, person, baseURL, routes } from "@/resources";
 import { Mailchimp } from "@/components";
 import { Projects } from "@/components/work/Projects";
 import { Suspense } from "react";
-import { fetchDriveMdx } from "@/lib/rust-api";
-import { CustomMDX } from "@/components";
-import { BlogSkeleton } from "@/app/work/[slug]/loading";
+import AboutContent from "@/components/about/AboutContent";
 
 // Drive content is cached via fetch() revalidate.
 // Keep the page itself SSR/streamable, but ensure ISR-friendly caching.
@@ -115,15 +113,9 @@ export default async function Home() {
         </Column>
       </section>
 
-      <Suspense
-        fallback={
-          <section id="about" className="onepage-section" data-loading="true">
-            <BlogSkeleton />
-          </section>
-        }
-      >
-        <AboutSection />
-      </Suspense>
+      <section id="about" className="onepage-section">
+        <AboutContent />
+      </section>
 
       <Suspense
         fallback={
@@ -137,36 +129,6 @@ export default async function Home() {
 
       <Mailchimp />
     </Column>
-  );
-}
-
-async function AboutSection() {
-  // Fetch About content from Google Drive (Blog folder / about / index.mdx)
-  const aboutMdx = await fetchDriveMdx("blog", "about");
-
-  if (aboutMdx.status !== "success" || !aboutMdx.data) {
-    return null;
-  }
-
-  const title = aboutMdx.data.metadata?.title || "About";
-
-  return (
-    <section id="about" className="onepage-section">
-      <Column fillWidth gap="24">
-        <Row fillWidth paddingRight="64">
-          <Line maxWidth={48} />
-        </Row>
-        <Heading as="h2" variant="display-strong-xs" wrap="balance" paddingLeft="l">
-          {title}
-        </Heading>
-        <Column as="article" maxWidth="xs" style={{ margin: "auto" }}>
-          <CustomMDX source={aboutMdx.data.content} />
-        </Column>
-        <Row fillWidth paddingLeft="64" horizontal="end">
-          <Line maxWidth={48} />
-        </Row>
-      </Column>
-    </section>
   );
 }
 
