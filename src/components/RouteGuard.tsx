@@ -12,6 +12,7 @@ interface RouteGuardProps {
 
 const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -38,6 +39,11 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const isPasswordRequired = Boolean(
     protectedRoutes[normalizedPathname as keyof typeof protectedRoutes]
   );
+
+  // Avoid SSR/edge returning 404 due to client-side route gating.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,6 +74,10 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
 
     checkAuth();
   }, [isHome, isPasswordRequired, normalizedPathname]);
+
+  if (!mounted) {
+    return <>{children}</>;
+  }
 
   const handlePasswordSubmit = async () => {
     const response = await fetch("/api/authenticate", {
