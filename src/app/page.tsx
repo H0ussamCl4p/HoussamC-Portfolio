@@ -44,7 +44,9 @@ export default async function Home() {
     }, [] as { name: string; icon: string }[]);
 
   return (
-    <Column maxWidth="m" gap="l" paddingY="8" paddingX="16" horizontal="center" s={{ paddingX: "12", paddingY: "8", gap: "m" }}>
+    <Column maxWidth="m" gap="xl" paddingY="24" paddingX="16" horizontal="center" 
+      s={{ paddingX: "12", paddingY: "16", gap: "l" }}
+      m={{ paddingX: "20", paddingY: "20", gap: "xl" }}>
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -148,18 +150,15 @@ export default async function Home() {
             <Heading as="h3" variant="display-strong-xs" wrap="balance">
               Hey! I&apos;m <span className={styles.nameAccent}>{person.firstName}</span>.
             </Heading>
-            <Text onBackground="neutral-weak" variant="body-default-l" style={{ marginTop: 10 }}>
-              {about.intro.description}
-            </Text>
             <Text onBackground="neutral-weak" variant="body-default-m" style={{ marginTop: 10 }}>
               {home.subline}
             </Text>
           </div>
         </div>
 
-        {/* Tech Stack as skill rows with icons */}
+        {/* Technologies I enjoy */}
         <div className={styles.skillsSection}>
-          <div className={styles.cardTitle}>TECH STACK</div>
+          <div className={styles.cardTitle}>TECHNOLOGIES I ENJOY</div>
           <div className={styles.skillsGrid}>
             {(techStack.length
               ? techStack
@@ -179,6 +178,62 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Featured Section */}
+      {home.featuredPosts?.display && home.featuredPosts.posts.length > 0 && (
+        <section id="featured" className={`onepage-section ${styles.featured}`}>
+          <div className={styles.sectionHeader}>
+            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
+              {home.featuredPosts.title}
+            </Heading>
+            <div className={styles.headerDecor}>
+              <span className={styles.headerLine} />
+              <span className={styles.headerDot} />
+              <span className={styles.headerLine} />
+            </div>
+          </div>
+
+          <div className={styles.featuredGrid}>
+            {home.featuredPosts.posts.map((post) => (
+              <div key={post.name} className={styles.featuredCard}>
+                <div className={styles.featuredImageWrap}>
+                  <Image
+                    src={post.image}
+                    alt={post.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className={styles.featuredImage}
+                  />
+                  <div className={styles.featuredOverlay}>
+                    <Icon name="linkedin" size="l" />
+                  </div>
+                </div>
+                <div className={styles.featuredContent}>
+                  <Heading as="h3" variant="heading-strong-s" className={styles.featuredName}>
+                    {post.name}
+                  </Heading>
+                  {post.description && (
+                    <Text variant="body-default-s" onBackground="neutral-weak" className={styles.featuredDesc}>
+                      {post.description}
+                    </Text>
+                  )}
+                  {post.link && (
+                    <Button
+                      href={post.link}
+                      target="_blank"
+                      size="s"
+                      variant="secondary"
+                      className={styles.featuredBtn}
+                    >
+                      Read More
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Experience Section */}
       {about.work.display && (
@@ -315,6 +370,120 @@ export default async function Home() {
         </section>
       )}
 
+      {/* Parascolaire Section */}
+      {about.parascolaire?.display && about.parascolaire.activities.length > 0 && (
+        <section id="parascolaire" className={`onepage-section ${styles.parascolaire}`}>
+          <div className={styles.sectionHeader}>
+            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
+              {about.parascolaire.title}
+            </Heading>
+            <div className={styles.headerDecor}>
+              <span className={styles.headerLine} />
+              <span className={styles.headerDot} />
+              <span className={styles.headerLine} />
+            </div>
+          </div>
+
+          <div className={styles.parascolaireGrid}>
+            {about.parascolaire.activities.map((activity) => (
+              <div key={activity.name} className={styles.parascolaireCard}>
+                <div className={styles.parascolaireHeader}>
+                  <div className={styles.parascolaireLogo}>
+                    {activity.logo ? (
+                      <Image src={activity.logo} alt={activity.name} width={48} height={48} />
+                    ) : (
+                      <Icon name="grid" size="l" />
+                    )}
+                  </div>
+                  <div className={styles.parascolaireInfo}>
+                    <Heading as="h3" variant="heading-strong-m">{activity.role}</Heading>
+                    <Text variant="body-default-s" onBackground="brand-medium">{activity.name}</Text>
+                  </div>
+                </div>
+                <div className={styles.parascolaireMeta}>
+                  <Row gap="8" vertical="center">
+                    <Icon name="calendar" size="xs" onBackground="neutral-weak" />
+                    <Text variant="label-default-s" onBackground="neutral-weak">{activity.timeframe}</Text>
+                  </Row>
+                </div>
+                {activity.description && (
+                  <Text variant="body-default-s" onBackground="neutral-weak" style={{ marginTop: 12 }}>
+                    {activity.description}
+                  </Text>
+                )}
+                {activity.achievements && activity.achievements.length > 0 && (
+                  <div className={styles.parascolaireAchievements}>
+                    <ul>
+                      {activity.achievements.map((achievement, i) => (
+                        <li key={`${activity.name}-achievement-${i}`}>
+                          <Text variant="body-default-s" onBackground="neutral-weak">
+                            {achievement}
+                          </Text>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Education Section */}
+      {about.studies.display && about.studies.institutions.length > 0 && (
+        <section id="education" className={`onepage-section ${styles.education}`}>
+          <div className={styles.sectionHeader}>
+            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
+              {about.studies.title}
+            </Heading>
+            <div className={styles.headerDecor}>
+              <span className={styles.headerLine} />
+              <span className={styles.headerDot} />
+              <span className={styles.headerLine} />
+            </div>
+          </div>
+
+          <div className={styles.educationGrid}>
+            {about.studies.institutions.map((institution) => (
+              <div key={institution.name} className={styles.educationCard}>
+                <div className={styles.educationHeader}>
+                  <div className={styles.educationLogo}>
+                    {institution.logo ? (
+                      <Image src={institution.logo} alt={institution.name} width={56} height={56} />
+                    ) : (
+                      <Icon name="grid" size="l" />
+                    )}
+                  </div>
+                  <div className={styles.educationInfo}>
+                    <Heading as="h3" variant="heading-strong-m">{institution.name}</Heading>
+                    <Text variant="body-default-s" onBackground="neutral-weak">
+                      {institution.description}
+                    </Text>
+                  </div>
+                </div>
+                {(institution.timeframe || institution.location) && (
+                  <div className={styles.educationMeta}>
+                    {institution.timeframe && (
+                      <Row gap="8" vertical="center">
+                        <Icon name="calendar" size="xs" onBackground="neutral-weak" />
+                        <Text variant="label-default-s" onBackground="neutral-weak">{institution.timeframe}</Text>
+                      </Row>
+                    )}
+                    {institution.location && (
+                      <Row gap="8" vertical="center">
+                        <Icon name="globe" size="xs" onBackground="neutral-weak" />
+                        <Text variant="label-default-s" onBackground="neutral-weak">{institution.location}</Text>
+                      </Row>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <Mailchimp />
     </Column>
   );
@@ -334,6 +503,7 @@ function socialButtons() {
       href={item.link}
       icon={item.icon}
       variant="secondary"
+      className={styles.socialBtn}
     />
   ));
 }

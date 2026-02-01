@@ -65,6 +65,19 @@ const home: Home = {
     ),
     href: "/work",
   },
+  featuredPosts: {
+    display: true,
+    title: "Featured",
+    posts: [
+      {
+        name: "Capgemini Engineering Techathon 2025",
+        image: "/images/featured/Techathon.jpg",
+        link: "https://www.linkedin.com/posts/houssam-choubik_industry-smartfactory-energyefficiency-activity-7422402895360212994-B6vv?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFBEJZgBerSRa2n18t3JoY82ptFr-ncoRD41",
+        description: "Smart Energy Guardian : a concrete approach to industrial energy optimization !",
+      },
+      // Add more posts here
+    ],
+  },
   subline: (
     <>
       I&apos;m Houssam, a Cybersecurity & Cloud Computing Engineering Student at
@@ -90,27 +103,15 @@ const about: About = {
     display: false,
     link: "",
   },
-  intro: {
-    display: true,
-    title: "Introduction",
-    description: (
-      <>
-        Hey! I&apos;m Houssam, an engineering student at ENSAM Casablanca with a
-        passion for informatics, AI, mechanics, electronics, and aeronautics. I
-        thrive on exploring innovative technologies and designing creative
-        solutions that bridge these dynamic fields.
-      </>
-    ),
-  },
   work: {
     display: true,
     title: "Experience",
     experiences: [
       {
-        company: "Ministry of Health and Social Protection",
-        logo: "/images/ministry-logo.png",
+        company: "Ministère de la santé et de la Protection Sociale",
+        logo: "/images/logo/logo-ministere-sante.png",
         timeframe: "July 2025 - August 2025",
-        role: "Fullstack Intern",
+        role: "Systèmes d'information Intern",
         type: "Internship",
         location: "Hybrid",
         featured: true,
@@ -118,54 +119,102 @@ const about: About = {
         description:
           "Developed a fullstack web application for border vaccination management using Spring Boot and React.",
         achievements: [
-          "Built end-to-end vaccination tracking system",
+          "Built a complete full-stack web application using React and Spring Boot",
           "Implemented secure API endpoints for health data",
         ],
-        skills: ["Spring Boot", "React", "PostgreSQL", "Docker"],
+        skills: ["Spring Boot", "React", "MySQL"],
         links: {},
       },
     ],
   },
   studies: {
-    display: true, // set to false to hide this section
+    display: true, 
     title: "Studies",
     institutions: [
       {
         name: "ENSAM Casablanca",
         description: <>Cybersecurity and Cloud Computing Engineering.</>,
+        logo: "/images/logo/logoENsam.png",
+        timeframe: "2023 - Present",
+        location: "Casablanca, Morocco",
       },
     ],
   },
+  parascolaire: {
+    display: false,
+    title: "Extracurricular",
+    activities: [
+      {
+        role: "Member / President",
+        name: "Club Name",
+        logo: "/images/club-logo.png",
+        timeframe: "2023 - Present",
+        description: "Description of your extracurricular activity.",
+        achievements: [
+          "Achievement 1",
+          "Achievement 2",
+        ],
+      },
+      // Add more activities here
+    ],
+  },
   technical: {
-    display: false, // set to false to hide this section
-    title: "Technical skills",
+    display: true,
+    title: "Technologies I enjoy",
     skills: [
       {
-        title: "Frontend Development",
-        description: <>Building frontend apps using :</>,
+        title: "Technologies",
+        description: <></>,
         tags: [
           {
-            name: "JavaScript",
-            icon: "javascript",
+            name: "Rust",
+            icon: "rust",
+          },
+          {
+            name: "Docker",
+            icon: "docker",
+          },
+          {
+            name: "Linux",
+            icon: "linux",
+          },
+          {
+            name: "Spring Boot",
+            icon: "springboot",
+          },
+          {
+            name: "TypeScript",
+            icon: "typescript",
           },
           {
             name: "Next.js",
             icon: "nextjs",
           },
           {
-            name: "React",
-            icon: "reactjs",
+            name: "C",
+            icon: "c",
           },
           {
-            name: "HTML",
-            icon: "html5",
+            name: "C++",
+            icon: "cpp",
           },
           {
-            name: "CSS",
-            icon: "css3",
+            name: "Python",
+            icon: "python",
+          },
+          {
+            name: "Git",
+            icon: "git",
+          },
+          {
+            name: "MySQL",
+            icon: "mysql",
+          },
+          {
+            name: "Java",
+            icon: "java",
           },
         ],
-        // optional: leave the array empty if you don't want to display images
         images: [],
       },
     ],

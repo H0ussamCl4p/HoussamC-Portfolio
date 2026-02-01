@@ -81,6 +81,20 @@ export interface BasePageConfig {
 }
 
 /**
+ * Featured LinkedIn post item.
+ */
+export type FeaturedPost = {
+  /** Display name for the featured post */
+  name: string;
+  /** Path to the image from the LinkedIn post */
+  image: string;
+  /** Optional link to the LinkedIn post */
+  link?: string;
+  /** Optional description */
+  description?: string;
+};
+
+/**
  * Home page configuration.
  */
 export interface Home extends BasePageConfig {
@@ -96,6 +110,12 @@ export interface Home extends BasePageConfig {
     display: boolean;
     title: React.ReactNode;
     href: string;
+  };
+  /** Featured LinkedIn posts section */
+  featuredPosts?: {
+    display: boolean;
+    title: string;
+    posts: FeaturedPost[];
   };
   /** The sub text which appears below the headline */
   subline: React.ReactNode;
@@ -194,6 +214,34 @@ export interface About extends BasePageConfig {
       name: string;
       /** Description of studies */
       description: React.ReactNode;
+      /** Institution logo */
+      logo?: string;
+      /** Timeframe */
+      timeframe?: string;
+      /** Location */
+      location?: string;
+    }>;
+  };
+  /** Extracurricular activities section */
+  parascolaire?: {
+    /** Whether to display parascolaire section */
+    display: boolean;
+    /** Title for the parascolaire section */
+    title: string;
+    /** List of extracurricular activities */
+    activities: Array<{
+      /** Organization or club name */
+      name: string;
+      /** Logo path */
+      logo?: string;
+      /** Role in the organization */
+      role: string;
+      /** Timeframe */
+      timeframe: string;
+      /** Description of activities */
+      description?: string;
+      /** Achievements */
+      achievements?: React.ReactNode[];
     }>;
   };
   /** Technical skills section */

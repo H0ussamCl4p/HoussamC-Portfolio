@@ -55,6 +55,8 @@ import {
   SiSvelte,
 } from "react-icons/si";
 
+import { FaJava } from "react-icons/fa";
+
 import { FaDiscord, FaLinkedin, FaX, FaThreads, FaGithub } from "react-icons/fa6";
 
 export const iconLibrary: Record<string, IconType> = {
@@ -112,6 +114,7 @@ export const iconLibrary: Record<string, IconType> = {
   cplusplus: SiCplusplus,
   
   // Frameworks
+  java: FaJava,
   spring: SiSpringboot,
   springboot: SiSpringboot,
   flask: SiFlask,
