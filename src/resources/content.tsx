@@ -103,6 +103,11 @@ const about: About = {
     display: false,
     link: "",
   },
+  intro: {
+    display: false,
+    title: "",
+    description: <></>,
+  },
   work: {
     display: true,
     title: "Experience",
