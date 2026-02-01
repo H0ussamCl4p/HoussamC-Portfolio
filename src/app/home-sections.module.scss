@@ -718,26 +718,34 @@
 
 .featured {
   position: relative;
-  padding: 0 8px;
-}
-
-@media (min-width: 480px) {
-  .featured {
-    padding: 0;
-  }
+  padding: 0;
+  overflow: hidden;
 }
 
 .featuredGrid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
   gap: 16px;
-  justify-items: center;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 8px 16px;
+  margin: 0 -16px;
+}
+
+.featuredGrid::-webkit-scrollbar {
+  display: none;
 }
 
 @media (min-width: 560px) {
   .featuredGrid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 18px;
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding: 0;
+    margin: 0;
   }
 }
 
@@ -765,12 +773,14 @@
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  width: 100%;
-  max-width: 400px;
+  flex: 0 0 280px;
+  scroll-snap-align: start;
 }
 
 @media (min-width: 560px) {
   .featuredCard {
+    flex: none;
+    width: 100%;
     max-width: none;
   }
 }

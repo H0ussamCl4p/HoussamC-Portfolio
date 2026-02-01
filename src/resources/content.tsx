@@ -75,6 +75,18 @@ const home: Home = {
         link: "https://www.linkedin.com/posts/houssam-choubik_industry-smartfactory-energyefficiency-activity-7422402895360212994-B6vv?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFBEJZgBerSRa2n18t3JoY82ptFr-ncoRD41",
         description: "Smart Energy Guardian : a concrete approach to industrial energy optimization !",
       },
+      {
+        name: "MCPC 2025",
+        image: "/images/featured/MCPC.jpg",
+        link: "https://www.linkedin.com/posts/houssam-choubik_mcpc-ensamcasablanca-competitiveprogramming-activity-7415365095494492160-OFEu?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFBEJZgBerSRa2n18t3JoY82ptFr-ncoRD4",
+        description: "Back in September 2025, I had the opportunity to participate in the Moroccan Collegiate Programming Contest (MCPC), held from September 19 to 21 at UM6P – College of Computing, Rabat Campus, organized by UM6P College of Computing.",
+      },
+      {
+        name: "FORUM ENSAM CASABLANCA ENTREPRISES 2025",
+        image: "/images/featured/FEE-2025.jpg",
+        link: "https://www.linkedin.com/posts/houssam-choubik_ensamcasablanca-forumensamcasa-organizingcommittee-activity-7395544213725093888-3NEx?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFBEJZgBerSRa2n18t3JoY82ptFr-ncoRD4",
+        description: "Honored to Contribute to the FORUM ENSAM CASABLANCA ENTREPRISES 2025 !",
+      },
       // Add more posts here
     ],
   },

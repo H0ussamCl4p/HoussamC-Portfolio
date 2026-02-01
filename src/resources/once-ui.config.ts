@@ -17,7 +17,7 @@ const baseURL: string = "https://houssamclap.dev";
 
 const routes: RoutesConfig = {
   "/": true,
-  "/about": true,
+  "/about": false,
   "/designs": true,
 };
 

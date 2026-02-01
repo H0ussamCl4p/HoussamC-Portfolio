@@ -123,23 +123,6 @@ export const Header = () => {
                 />
               )}
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
-              <>
-                <Row s={{ hide: true }}>
-                  <ToggleButton
-                    prefixIcon="person"
-                    href="/#about"
-                    label="About"
-                    selected={pathname === "/" && activeSectionId === "about"}
-                  />
-                </Row>
-                <Row hide s={{ hide: false }}>
-                  <ToggleButton
-                    prefixIcon="person"
-                    href="/#about"
-                    selected={pathname === "/" && activeSectionId === "about"}
-                  />
-                </Row>
-              </>
               {routes["/designs"] && (
                 <>
                   <Row s={{ hide: true }}>

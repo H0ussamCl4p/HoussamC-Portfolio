@@ -14,6 +14,7 @@ import {
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, social } from "@/resources";
 import { Mailchimp } from "@/components";
+import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import styles from "@/app/home-sections.module.scss";
 import Image from "next/image";
 
@@ -193,45 +194,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className={styles.featuredGrid}>
-            {home.featuredPosts.posts.map((post) => (
-              <div key={post.name} className={styles.featuredCard}>
-                <div className={styles.featuredImageWrap}>
-                  <Image
-                    src={post.image}
-                    alt={post.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className={styles.featuredImage}
-                  />
-                  <div className={styles.featuredOverlay}>
-                    <Icon name="linkedin" size="l" />
-                  </div>
-                </div>
-                <div className={styles.featuredContent}>
-                  <Heading as="h3" variant="heading-strong-s" className={styles.featuredName}>
-                    {post.name}
-                  </Heading>
-                  {post.description && (
-                    <Text variant="body-default-s" onBackground="neutral-weak" className={styles.featuredDesc}>
-                      {post.description}
-                    </Text>
-                  )}
-                  {post.link && (
-                    <Button
-                      href={post.link}
-                      target="_blank"
-                      size="s"
-                      variant="secondary"
-                      className={styles.featuredBtn}
-                    >
-                      Read More
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <FeaturedCarousel posts={home.featuredPosts.posts} />
         </section>
       )}
 
