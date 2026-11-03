@@ -1,31 +1,15 @@
-import mdx from "@next/mdx";
-
-const withMDX = mdx({
-  extension: /\.mdx?$/,
-  options: {},
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ["ts", "tsx", "md", "mdx"],
-  transpilePackages: ["next-mdx-remote"],
+  poweredByHeader: false,
   eslint: {
     // Keep `next build` fast on Vercel; run lint separately via `npm run lint`.
     ignoreDuringBuilds: true,
   },
+  // Design thumbnails are rendered unoptimized, so the image optimizer only
+  // needs local files. No remotePatterns means /_next/image can't proxy
+  // arbitrary third-party URLs.
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "drive.google.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        pathname: "/**",
-      },
-    ],
+    remotePatterns: [],
   },
   sassOptions: {
     compiler: "modern",
@@ -33,4 +17,4 @@ const nextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;

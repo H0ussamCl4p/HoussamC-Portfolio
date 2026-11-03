@@ -28,13 +28,19 @@ import {
   SiFigma,
   SiSupabase,
   SiReact,
-  SiCss3,
+  SiCss,
   SiHtml5,
   SiTypescript,
   SiPython,
   SiDocker,
   SiKubernetes,
-  SiAmazonwebservices,
+  SiTerraform,
+  SiGithubactions,
+  SiTrivy,
+  SiBurpsuite,
+  SiWireshark,
+  SiMetasploit,
+  SiFortinet,
   SiGooglecloud,
   SiLinux,
   SiGit,
@@ -55,9 +61,21 @@ import {
   SiSvelte,
 } from "react-icons/si";
 
-import { FaJava } from "react-icons/fa";
+import { FaJava, FaAws } from "react-icons/fa";
+import { VscAzure } from "react-icons/vsc";
 
-import { FaDiscord, FaLinkedin, FaX, FaThreads, FaGithub } from "react-icons/fa6";
+import {
+  FaDiscord,
+  FaLinkedin,
+  FaX,
+  FaThreads,
+  FaGithub,
+  FaTrophy,
+  FaUsers,
+  FaFileArrowDown,
+  FaCode,
+  FaShieldHalved,
+} from "react-icons/fa6";
 
 export const iconLibrary: Record<string, IconType> = {
   arrowUpRight: HiArrowUpRight,
@@ -81,6 +99,11 @@ export const iconLibrary: Record<string, IconType> = {
   document: HiOutlineDocument,
   rocket: HiOutlineRocketLaunch,
   github: FaGithub,
+  trophy: FaTrophy,
+  users: FaUsers,
+  download: FaFileArrowDown,
+  code: FaCode,
+  shield: FaShieldHalved,
   
   // Tech stack icons
   javascript: SiJavascript,
@@ -97,8 +120,8 @@ export const iconLibrary: Record<string, IconType> = {
   svelte: SiSvelte,
   html5: SiHtml5,
   html: SiHtml5,
-  css3: SiCss3,
-  css: SiCss3,
+  css3: SiCss,
+  css: SiCss,
   tailwind: SiTailwindcss,
   tailwindcss: SiTailwindcss,
   
@@ -124,7 +147,17 @@ export const iconLibrary: Record<string, IconType> = {
   docker: SiDocker,
   kubernetes: SiKubernetes,
   k8s: SiKubernetes,
-  aws: SiAmazonwebservices,
+  aws: FaAws,
+  azure: VscAzure,
+  terraform: SiTerraform,
+  githubactions: SiGithubactions,
+
+  // Security tooling
+  trivy: SiTrivy,
+  burpsuite: SiBurpsuite,
+  wireshark: SiWireshark,
+  metasploit: SiMetasploit,
+  fortinet: SiFortinet,
   gcp: SiGooglecloud,
   googlecloud: SiGooglecloud,
   linux: SiLinux,
