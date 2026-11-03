@@ -1,0 +1,5 @@
+# Security contact for houssamc-portfolio.vercel.app (RFC 9116)
+Contact: mailto:TODO(houssam)
+Expires: 2027-11-03T00:00:00.000Z
+Preferred-Languages: en, fr
+Canonical: https://houssamc-portfolio.vercel.app/.well-known/security.txt

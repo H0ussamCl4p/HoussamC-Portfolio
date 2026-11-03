@@ -1,27 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { baseURL, person } from "@/resources";
+import { designs, home, person } from "@/resources";
 
 export const runtime = "nodejs";
 
+// Only page titles from the content files can be rendered, so the route can't be
+// used to put arbitrary text on an image served from this domain. Anything else
+// falls back to the site title.
+const allowedTitles = new Set([home.title, designs.title]);
+
+let avatarDataUrl: Promise<string | null> | undefined;
+
+// Read once per instance from the deployment bundle (see outputFileTracingIncludes),
+// so rendering never makes an outbound request.
+function loadAvatar() {
+  avatarDataUrl ??= readFile(join(process.cwd(), "public", person.avatar))
+    .then((file) => `data:image/jpeg;base64,${file.toString("base64")}`)
+    .catch(() => null);
+  return avatarDataUrl;
+}
+
 export async function GET(request: Request) {
-  let url = new URL(request.url);
-  let title = url.searchParams.get("title") || "Portfolio";
-
-  async function loadGoogleFont(font: string) {
-    const url = `https://fonts.googleapis.com/css2?family=${font}`;
-    const css = await (await fetch(url)).text();
-    const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
-
-    if (resource) {
-      const response = await fetch(resource[1]);
-      if (response.status == 200) {
-        return await response.arrayBuffer();
-      }
-    }
-
-    throw new Error("failed to load font data");
-  }
+  const requested = new URL(request.url).searchParams.get("title") ?? "";
+  const title = allowedTitles.has(requested) ? requested : home.title;
+  const avatar = await loadAvatar();
 
   return new ImageResponse(
     <div
@@ -46,9 +50,9 @@ export async function GET(request: Request) {
         <span
           style={{
             padding: "1rem",
-            fontSize: "6rem",
-            lineHeight: "8rem",
-            letterSpacing: "-0.05em",
+            fontSize: "5rem",
+            lineHeight: "6.5rem",
+            letterSpacing: "-0.03em",
             whiteSpace: "wrap",
             textWrap: "balance",
             overflow: "hidden",
@@ -63,16 +67,18 @@ export async function GET(request: Request) {
             gap: "5rem",
           }}
         >
-          <img
-            src={baseURL + person.avatar}
-            alt={person.name}
-            style={{
-              width: "12rem",
-              height: "12rem",
-              objectFit: "cover",
-              borderRadius: "100%",
-            }}
-          />
+          {avatar && (
+            <img
+              src={avatar}
+              alt={person.name}
+              style={{
+                width: "12rem",
+                height: "12rem",
+                objectFit: "cover",
+                borderRadius: "100%",
+              }}
+            />
+          )}
           <div
             style={{
               display: "flex",
@@ -108,13 +114,10 @@ export async function GET(request: Request) {
     {
       width: 1280,
       height: 720,
-      fonts: [
-        {
-          name: "Geist",
-          data: await loadGoogleFont("Geist:wght@400"),
-          style: "normal",
-        },
-      ],
+      headers: {
+        // Output only changes on deploy.
+        "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+      },
     },
   );
 }
