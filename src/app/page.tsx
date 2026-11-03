@@ -123,13 +123,14 @@ export default function Home() {
               </RevealFx>
             )}
 
-            <RevealFx translateY={6} fillWidth>
+            {/* CSS-only reveal so the hero paints before hydration (LCP) */}
+            <div className={styles.heroReveal}>
               <Heading as="h1" wrap="balance" variant="display-strong-l" className={styles.heroTitle}>
                 Hello, I&apos;m <span className={styles.nameAccent}>{person.firstName}</span>
               </Heading>
-            </RevealFx>
+            </div>
 
-            <RevealFx translateY={8} delay={0.1} fillWidth>
+            <div className={styles.heroReveal} style={{ animationDelay: "0.1s" }}>
               <Text
                 className={styles.heroSubtitle}
                 onBackground="neutral-weak"
@@ -137,10 +138,10 @@ export default function Home() {
               >
                 {home.subtitle}
               </Text>
-            </RevealFx>
+            </div>
 
             {home.badges && home.badges.length > 0 && (
-              <RevealFx translateY={8} delay={0.15} fillWidth>
+              <div className={styles.heroReveal} style={{ animationDelay: "0.15s" }}>
                 <ul className={`${styles.pills} ${styles.heroBadges}`} aria-label="Highlights">
                   {home.badges.map((badge) => (
                     <li key={badge} className={styles.pill}>
@@ -148,10 +149,10 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-              </RevealFx>
+              </div>
             )}
 
-            <RevealFx delay={0.2}>
+            <div className={styles.heroReveal} style={{ animationDelay: "0.2s" }}>
               <div className={styles.ctaRow}>
                 <EmailButton label="Get In Touch" className={styles.primaryCta} />
                 {cvAvailable && person.cv && (
@@ -168,7 +169,7 @@ export default function Home() {
                   </Button>
                 )}
               </div>
-            </RevealFx>
+            </div>
 
             <div className={styles.socialRow}>
               {socialButtons()}

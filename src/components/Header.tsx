@@ -47,14 +47,14 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({
 export default TimeDisplay;
 
 // One-page sections linked from the header. Order matches the page.
-const sections = [
+const sections: Array<{ id: string; label: string; icon: string; hideOnPhone?: boolean }> = [
   { id: "about", label: "About", icon: "person" },
-  { id: "experience", label: "Experience", icon: "rocket" },
+  { id: "experience", label: "Experience", icon: "rocket", hideOnPhone: true },
   { id: "projects", label: "Projects", icon: "code" },
   { id: "awards", label: "Awards", icon: "trophy" },
-  { id: "leadership", label: "Leadership", icon: "users" },
+  { id: "leadership", label: "Leadership", icon: "users", hideOnPhone: true },
   { id: "contact", label: "Contact", icon: "email" },
-] as const;
+];
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
@@ -124,6 +124,7 @@ export const Header = () => {
               {routes["/"] && (
                 <ToggleButton
                   prefixIcon="home"
+                  size="s"
                   href="/#hero"
                   selected={isHome && activeSectionId === "hero"}
                   aria-label="Home"
@@ -143,13 +144,15 @@ export const Header = () => {
               </Row>
               <Row as="nav" aria-label="Sections" gap="2" vertical="center" hide m={{ hide: false }}>
                 {sections.map((section) => (
-                  <ToggleButton
-                    key={section.id}
-                    href={`/#${section.id}`}
-                    prefixIcon={section.icon}
-                    aria-label={section.label}
-                    selected={isHome && activeSectionId === section.id}
-                  />
+                  <Row key={section.id} s={section.hideOnPhone ? { hide: true } : undefined}>
+                    <ToggleButton
+                      size="s"
+                      href={`/#${section.id}`}
+                      prefixIcon={section.icon}
+                      aria-label={section.label}
+                      selected={isHome && activeSectionId === section.id}
+                    />
+                  </Row>
                 ))}
               </Row>
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
@@ -165,6 +168,7 @@ export const Header = () => {
                   </Row>
                   <Row hide s={{ hide: false }}>
                     <ToggleButton
+                      size="s"
                       prefixIcon="designs"
                       href="/designs"
                       aria-label={designs.label}

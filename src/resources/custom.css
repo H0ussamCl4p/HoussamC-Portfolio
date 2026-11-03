@@ -107,6 +107,8 @@ a,
   --portfolio-accent: rgb(59 130 246);
   --portfolio-accent-soft: rgba(59, 130, 246, 0.18);
   --portfolio-accent-glow: rgba(59, 130, 246, 0.35);
+  /* Accent for text and outlines on the page background (4.5:1 or better) */
+  --portfolio-accent-text: rgb(96 165 250);
 
   --portfolio-border: rgba(255, 255, 255, 0.10);
   --portfolio-border-strong: rgba(255, 255, 255, 0.14);
@@ -161,6 +163,7 @@ html[data-theme="light"] {
   --portfolio-pill-bg: rgba(59, 130, 246, 0.12);
   --portfolio-pill-border: rgba(59, 130, 246, 0.28);
   --portfolio-pill-text: rgb(30, 64, 175);
+  --portfolio-accent-text: rgb(29 78 216);
 
   /* Text colors */
   --portfolio-text-muted: rgba(15, 23, 42, 0.65);
@@ -372,5 +375,24 @@ select:focus-visible {
   a:active,
   [role="button"]:active {
     opacity: 0.7;
+  }
+}
+
+/* Sections are flex children of the page column: never let content widen them. */
+section[id] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Keep anchored sections clear of the sticky header (bottom bar on mobile). */
+section[id],
+[id^="experience-"] {
+  scroll-margin-top: 96px;
+}
+
+@media (max-width: 768px) {
+  section[id],
+  [id^="experience-"] {
+    scroll-margin-top: 24px;
   }
 }
