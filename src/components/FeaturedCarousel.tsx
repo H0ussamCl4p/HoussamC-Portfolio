@@ -31,33 +31,43 @@ export const FeaturedCarousel = ({ posts }: FeaturedCarouselProps) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Only animate while the carousel is on screen.
   useEffect(() => {
-    if (!isMobile || isHovered) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile || isHovered || !isVisible) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
 
-    let scrollPosition = 0;
-    const cardWidth = 296; // 280px card + 16px gap
-    const totalWidth = posts.length * cardWidth;
+    let frame = 0;
+    let scrollPosition = scrollContainer.scrollLeft;
 
     const autoScroll = () => {
-      if (!scrollContainer || isHovered) return;
-      
-      scrollPosition += 1;
-      
+      scrollPosition += 0.5;
+
       // Reset to start when reaching end
-      if (scrollPosition >= totalWidth - scrollContainer.clientWidth) {
+      if (scrollPosition >= scrollContainer.scrollWidth - scrollContainer.clientWidth) {
         scrollPosition = 0;
       }
-      
+
       scrollContainer.scrollLeft = scrollPosition;
+      frame = requestAnimationFrame(autoScroll);
     };
 
-    const interval = setInterval(autoScroll, 30);
+    frame = requestAnimationFrame(autoScroll);
 
-    return () => clearInterval(interval);
-  }, [isMobile, isHovered, posts.length]);
+    return () => cancelAnimationFrame(frame);
+  }, [isMobile, isHovered, isVisible]);
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
@@ -101,7 +111,7 @@ export const FeaturedCarousel = ({ posts }: FeaturedCarouselProps) => {
               {post.name}
             </Heading>
             {post.description && (
-              <Text variant="body-default-s" onBackground="neutral-weak" className={styles.featuredDesc}>
+              <Text variant="body-default-s" onBackground="neutral-medium" className={styles.featuredDesc}>
                 {post.description}
               </Text>
             )}
@@ -115,7 +125,7 @@ export const FeaturedCarousel = ({ posts }: FeaturedCarouselProps) => {
                 variant="secondary"
                 className={styles.featuredBtn}
               >
-                Read More
+                View on LinkedIn
               </Button>
             )}
           </div>
