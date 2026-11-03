@@ -1,6 +1,8 @@
-import { Flex, Meta, Schema } from "@once-ui-system/core";
+import { Column, Heading, Meta, Schema, Text } from "@once-ui-system/core";
+import { notFound } from "next/navigation";
 import DesignsView from "@/components/designs/DesignsView";
-import { baseURL, designs, person } from "@/resources";
+import { getDesigns } from "@/lib/drive-designs";
+import { baseURL, designs, person, routes } from "@/resources";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -12,9 +14,23 @@ export async function generateMetadata() {
   });
 }
 
-export default function Designs() {
+function StatusMessage({ children }: { children: React.ReactNode }) {
   return (
-    <Flex maxWidth="l">
+    <Column fillWidth horizontal="center" paddingY="64">
+      <Text onBackground="neutral-weak" align="center">
+        {children}
+      </Text>
+    </Column>
+  );
+}
+
+export default async function Designs() {
+  if (!routes["/designs"]) notFound();
+
+  const result = await getDesigns();
+
+  return (
+    <Column maxWidth="l" fillWidth gap="24">
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -24,11 +40,29 @@ export default function Designs() {
         image={`/api/og/generate?title=${encodeURIComponent(designs.title)}`}
         author={{
           name: person.name,
-          url: `${baseURL}${designs.path}`,
+          url: baseURL,
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      <DesignsView />
-    </Flex>
+      <Column gap="8">
+        <Heading as="h1" variant="display-strong-s">
+          Designs
+        </Heading>
+        <Text onBackground="neutral-weak">{designs.description}</Text>
+      </Column>
+
+      {result.status === "ok" && result.categories.length > 0 && (
+        <DesignsView categories={result.categories} />
+      )}
+      {result.status === "ok" && result.categories.length === 0 && (
+        <StatusMessage>No designs to show yet.</StatusMessage>
+      )}
+      {result.status === "not-configured" && (
+        <StatusMessage>The design gallery isn&apos;t available right now.</StatusMessage>
+      )}
+      {result.status === "error" && (
+        <StatusMessage>The designs couldn&apos;t be loaded. Please try again later.</StatusMessage>
+      )}
+    </Column>
   );
 }

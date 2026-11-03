@@ -170,3 +170,25 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Loading skeleton */
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    var(--portfolio-card-bg) 0%,
+    var(--portfolio-card-bg-strong) 50%,
+    var(--portfolio-card-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}

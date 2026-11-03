@@ -2,44 +2,17 @@
 
 import { Media, MasonryGrid } from "@once-ui-system/core";
 import styles from "./DesignsView.module.scss";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 
-interface DesignImage {
-  id: string;
-  name: string;
-  url: string;       // Direct Drive download URL
-  thumbnail: string; // Drive thumbnail URL
-}
+import type { DesignCategory } from "@/lib/drive-designs";
 
-interface DesignCategory {
-  name: string;
-  slug: string;
-  images: DesignImage[];
-  thumbnail: string | null;
-}
-
-interface ApiResponse {
+interface DesignsViewProps {
   categories: DesignCategory[];
 }
 
-export default function DesignsView() {
-  const [categories, setCategories] = useState<DesignCategory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    fetch(`/api/drive-designs?ts=${Date.now()}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load designs");
-        return res.json() as Promise<ApiResponse>;
-      })
-      .then((data) => setCategories(data.categories))
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, []);
-
+// Rendered with data fetched on the server (see src/app/designs/page.tsx), so
+// the gallery is in the initial HTML and no Drive call happens in the browser.
+export default function DesignsView({ categories }: DesignsViewProps) {
   // Share handler
   const handleShare = useCallback((e: React.MouseEvent, imageUrl: string, imageName: string) => {
     e.preventDefault();
@@ -47,43 +20,16 @@ export default function DesignsView() {
       navigator.share({
         title: `Check out this design: ${imageName}`,
         url: imageUrl,
-      });
+      }).catch(() => {});
     } else {
       navigator.clipboard.writeText(imageUrl);
       alert("Image URL copied to clipboard!");
     }
   }, []);
 
-  // Sort categories alphabetically
-  const sortedCategories = [...categories].sort((a, b) => a.name.localeCompare(b.name));
-
-  if (loading) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
-        <span>Loading designs...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200, color: "red" }}>
-        Error: {error}
-      </div>
-    );
-  }
-
-  if (sortedCategories.length === 0) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
-        No designs found
-      </div>
-    );
-  }
-
   return (
     <div>
-      {sortedCategories.map((category) => {
+      {categories.map((category, categoryIndex) => {
         // Split category name for fancy display (if it contains /)
         const labelParts = category.name.split("/");
         return (
@@ -168,7 +114,7 @@ export default function DesignsView() {
                     <Media
                       enlarge
                       unoptimized
-                      priority={index < 10}
+                      priority={categoryIndex === 0 && index < 3}
                       sizes="(max-width: 560px) 100vw, 50vw"
                       radius="m"
                       src={image.thumbnail}
