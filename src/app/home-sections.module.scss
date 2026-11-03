@@ -1831,8 +1831,9 @@ ul.skillsGrid {
 }
 
 @keyframes heroReveal {
+  /* Starts partly visible so the text is readable even if animations don't run */
   from {
-    opacity: 0.01;
+    opacity: 0.4;
     transform: translateY(8px);
   }
   to {
