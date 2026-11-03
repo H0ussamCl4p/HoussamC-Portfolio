@@ -5,6 +5,8 @@ export {
   newsletter,
   home,
   about,
+  projects,
+  awards,
   designs,
 } from "./content";
 

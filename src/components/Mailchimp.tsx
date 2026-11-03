@@ -1,18 +1,14 @@
-"use client";
-
-import { person } from "@/resources";
-import {
-  Button,
-  Heading,
-  Text,
-  Column,
-} from "@once-ui-system/core";
+import { Heading, Text, Column } from "@once-ui-system/core";
+import { EmailButton } from "@/components/EmailButton";
 
 export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
   ...flex
 }) => {
   return (
     <Column
+      as="section"
+      id="contact"
+      className="onepage-section"
       overflow="hidden"
       fillWidth
       padding="xl"
@@ -25,7 +21,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
       {...flex}
     >
       <Column maxWidth="xs" horizontal="center" gap="16">
-        <Heading variant="display-strong-xs">
+        <Heading as="h2" variant="display-strong-xs">
           Contact Me
         </Heading>
         <Text
@@ -34,19 +30,9 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
           onBackground="neutral-weak"
           style={{ textAlign: "center" }}
         >
-          Have a question or want to work together? Feel free to reach out!
+          Have a question or want to work together? Email me or reach out on LinkedIn.
         </Text>
-        <Button
-          href={`mailto:${person.email}`}
-          prefixIcon="email"
-          size="m"
-          style={{
-            marginTop: 8,
-            borderRadius: 999,
-          }}
-        >
-          Email Me
-        </Button>
+        <EmailButton style={{ marginTop: 8, borderRadius: 999 }} />
       </Column>
     </Column>
   );

@@ -1664,3 +1664,132 @@
     padding-top: 14px;
   }
 }
+
+/* ========== Hero badges ========== */
+
+.pills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.heroBadges {
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .heroBadges {
+    justify-content: flex-start;
+  }
+}
+
+/* ========== Grouped skills ========== */
+
+.skillGroup {
+  margin-top: 18px;
+}
+
+.skillGroup:first-of-type {
+  margin-top: 8px;
+}
+
+.skillGroup > .pills {
+  margin-top: 10px;
+}
+
+ul.skillsGrid {
+  list-style: none;
+  padding: 0;
+}
+
+.skillRow {
+  cursor: default;
+}
+
+/* ========== Projects ========== */
+
+.projectsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 560px) {
+  .projectsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (min-width: 768px) {
+  .projectsGrid {
+    gap: 24px;
+  }
+}
+
+.projectCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: none;
+}
+
+.projectImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--portfolio-card-bg-strong);
+}
+
+.projectLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* ========== Honors & Awards ========== */
+
+.awardsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.awardItem {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.awardItem > :first-child {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.awardItem strong {
+  color: var(--portfolio-text-strong);
+  font-weight: 600;
+}
+
+.awardsFootnote {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--portfolio-border);
+}
+
+.featuredPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--portfolio-accent);
+  background: radial-gradient(circle at 50% 40%, var(--portfolio-accent-soft), transparent 70%);
+}

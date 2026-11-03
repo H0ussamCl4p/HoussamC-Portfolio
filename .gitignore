@@ -22,3 +22,6 @@ api/target/
 .DS_Store
 Thumbs.db
 .vercel
+
+# local tooling
+.claude/

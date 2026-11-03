@@ -7,7 +7,7 @@ import styles from "@/app/home-sections.module.scss";
 
 interface FeaturedPost {
   name: string;
-  image: string;
+  image?: string;
   description?: string;
   link?: string;
 }
@@ -79,13 +79,19 @@ export const FeaturedCarousel = ({ posts }: FeaturedCarouselProps) => {
       {posts.map((post) => (
         <div key={post.name} className={styles.featuredCard}>
           <div className={styles.featuredImageWrap}>
-            <Image
-              src={post.image}
-              alt={post.name}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className={styles.featuredImage}
-            />
+            {post.image ? (
+              <Image
+                src={post.image}
+                alt={`Photo from the LinkedIn post about ${post.name}`}
+                fill
+                sizes="(max-width: 640px) 280px, 33vw"
+                className={styles.featuredImage}
+              />
+            ) : (
+              <div className={styles.featuredPlaceholder} aria-hidden="true">
+                <Icon name="trophy" size="xl" />
+              </div>
+            )}
             <div className={styles.featuredOverlay}>
               <Icon name="linkedin" size="l" />
             </div>
@@ -103,6 +109,8 @@ export const FeaturedCarousel = ({ posts }: FeaturedCarouselProps) => {
               <Button
                 href={post.link}
                 target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Read the LinkedIn post about ${post.name}`}
                 size="s"
                 variant="secondary"
                 className={styles.featuredBtn}

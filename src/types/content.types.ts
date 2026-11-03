@@ -21,8 +21,13 @@ export type Person = {
   role: string;
   /** Path to avatar image */
   avatar: string;
-  /** Email address */
-  email: string;
+  /** Email address, split so it isn't in the HTML as a plain string. Joined on click. */
+  email: {
+    user: string;
+    domain: string;
+  };
+  /** Path to a downloadable CV in /public (optional) */
+  cv?: string;
   /** IANA time zone location */
   location: IANATimeZone;
   /** Languages spoken */
@@ -86,9 +91,9 @@ export interface BasePageConfig {
 export type FeaturedPost = {
   /** Display name for the featured post */
   name: string;
-  /** Path to the image from the LinkedIn post */
-  image: string;
-  /** Optional link to the LinkedIn post */
+  /** Path to the image from the LinkedIn post (optional, a placeholder is shown otherwise) */
+  image?: string;
+  /** Link to the LinkedIn post. Posts with an empty link are not displayed. */
   link?: string;
   /** Optional description */
   description?: string;
@@ -102,9 +107,13 @@ export interface Home extends BasePageConfig {
    *
    * The image needs to be put inside `/public/images/` directory
    */
-  image: `/images/${string}` | string;
+  image?: `/images/${string}` | string;
   /** The headline of the home page */
   headline: React.ReactNode;
+  /** Short subtitle shown under the name in the hero */
+  subtitle: string;
+  /** Credibility chips shown under the subtitle */
+  badges?: string[];
   /** Featured badge, which appears above the headline */
   featured: {
     display: boolean;
@@ -162,6 +171,8 @@ export interface About extends BasePageConfig {
     title: string;
     /** List of work experiences */
     experiences: Array<{
+      /** Optional anchor id, so other sections can link to this entry */
+      id?: string;
       /** Company name */
       company: string;
       /** Company logo path */
@@ -237,7 +248,7 @@ export interface About extends BasePageConfig {
       /** Role in the organization */
       role: string;
       /** Timeframe */
-      timeframe: string;
+      timeframe?: string;
       /** Description of activities */
       description?: string;
       /** Achievements */
@@ -250,6 +261,8 @@ export interface About extends BasePageConfig {
     display: boolean;
     /** Title for the technical skills section */
     title: string;
+    /** Languages spoken, shown as chips under the skills */
+    spokenLanguages?: string[];
     /** List of technical skills */
     skills: Array<{
       /** Skill title */
@@ -290,4 +303,46 @@ export interface Designs extends BasePageConfig {
     /** Image orientation (horizontal/vertical) */
     orientation: string;
   }>;
+}
+
+/**
+ * Project card shown in the Projects section.
+ */
+export type Project = {
+  title: string;
+  /** One or two sentences */
+  description: string;
+  /** Optional line for awards or results */
+  highlight?: string;
+  /** Stack or topic tags */
+  tags: string[];
+  /** Optional cover image in /public */
+  image?: string;
+  /** Alt text for the cover image */
+  imageAlt?: string;
+  /** Links. Leave a link out (or empty) to hide its button. */
+  links?: {
+    github?: string;
+    demo?: string;
+    /** Internal anchor, e.g. "#experience-dataprotect" */
+    details?: string;
+  };
+};
+
+export interface Projects {
+  display: boolean;
+  title: string;
+  items: Project[];
+}
+
+/**
+ * Honors & Awards section.
+ */
+export interface Awards {
+  display: boolean;
+  title: string;
+  /** Each entry is a single field so it can be swapped in one place */
+  items: React.ReactNode[];
+  /** Small line under the list */
+  footnote?: React.ReactNode;
 }
