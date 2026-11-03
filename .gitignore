@@ -1,10 +1,13 @@
-﻿# local env and secrets
+# local env and secrets
 .env
-.env.local
-.env*.local
+.env.*
+!.env.example
 google-service-account.json
 service-account.json
+google-sa-base64.txt
+*-sa-*.txt
 *.pem
+*.key
 
 # node / build
 node_modules
