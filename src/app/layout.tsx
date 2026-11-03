@@ -3,6 +3,7 @@ import "@once-ui-system/core/css/tokens.css";
 import "@/resources/custom.css";
 
 import classNames from "classnames";
+import { headers } from "next/headers";
 
 import {
   Background,
@@ -33,6 +34,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Set per request by src/middleware.ts for the Content Security Policy.
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <Flex
       suppressHydrationWarning
@@ -49,6 +53,9 @@ export default async function RootLayout({
       <head>
         <script
           id="theme-init"
+          nonce={nonce}
+          // Browsers hide the nonce attribute after load, so it never matches on hydration.
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
