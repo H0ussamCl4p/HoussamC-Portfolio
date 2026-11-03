@@ -83,7 +83,8 @@ export async function GET(request: Request) {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "0.75rem",
+              gap: "1rem",
+              maxWidth: "52rem",
             }}
           >
             <span
@@ -98,8 +99,8 @@ export async function GET(request: Request) {
             </span>
             <span
               style={{
-                fontSize: "2.5rem",
-                lineHeight: "2.5rem",
+                fontSize: "2.25rem",
+                lineHeight: "2.75rem",
                 whiteSpace: "pre-wrap",
                 textWrap: "balance",
                 opacity: "0.6",
