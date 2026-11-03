@@ -28,11 +28,6 @@ export type DisplayConfig = {
 export type RoutesConfig = Record<`/${string}`, boolean>;
 
 /**
- * Protected route configuration.
- */
-export type ProtectedRoutesConfig = Record<`/${string}`, boolean>;
-
-/**
  * Font configuration for each variant.
  */
 export type FontsConfig = {
@@ -154,7 +149,6 @@ export type OnceUIConfig = {
   display: DisplayConfig;
   mailchimp: MailchimpConfig;
   routes: RoutesConfig;
-  protectedRoutes: ProtectedRoutesConfig;
   baseURL: string;
   fonts: FontsConfig;
   style: StyleConfig;
