@@ -136,11 +136,7 @@ export type SchemaConfig = {
 /**
  * Social links for organization.
  */
-export type SameAsConfig = {
-  threads: string;
-  linkedin: string;
-  discord: string;
-};
+export type SameAsConfig = Record<string, string>;
 
 /**
  * Top-level config types for once-ui.config.js

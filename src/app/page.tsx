@@ -10,17 +10,13 @@ import {
   Icon,
   Schema,
   Meta,
-  Line,
 } from "@once-ui-system/core";
-import { home, about, person, baseURL, social } from "@/resources";
+import { home, about, person, baseURL, social, projects, awards, sameAs } from "@/resources";
 import { Mailchimp } from "@/components";
+import { EmailButton } from "@/components/EmailButton";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import styles from "@/app/home-sections.module.scss";
 import Image from "next/image";
-
-// Drive content is cached via fetch() revalidate.
-// Keep the page itself SSR/streamable, but ensure ISR-friendly caching.
-export const revalidate = 3600;
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -32,20 +28,44 @@ export async function generateMetadata() {
   });
 }
 
-export default async function Home() {
-  // Get unique skills with their icons
-  const techStack = about.technical.skills
-    .flatMap((skill) => skill.tags || [])
-    .filter((tag): tag is { name: string; icon: string } => Boolean(tag.name && tag.icon))
-    .reduce((acc, tag) => {
-      if (!acc.find((t) => t.name === tag.name)) {
-        acc.push({ name: tag.name, icon: tag.icon });
-      }
-      return acc;
-    }, [] as { name: string; icon: string }[]);
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: person.name,
+  jobTitle: "Cybersecurity & Cloud Computing Engineering Student",
+  url: baseURL,
+  image: `${baseURL}${person.avatar}`,
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "ENSAM Casablanca",
+    parentOrganization: { "@type": "CollegeOrUniversity", name: "Hassan II University of Casablanca" },
+  },
+  sameAs: Object.values(sameAs),
+};
+
+// Set at build time in next.config.mjs, so the button only shows once the PDF is in public/cv/.
+const cvAvailable = process.env.CV_AVAILABLE === "1";
+
+function SectionHeader({ title }: { title: React.ReactNode }) {
+  return (
+    <div className={styles.sectionHeader}>
+      <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
+        {title}
+      </Heading>
+      <div className={styles.headerDecor}>
+        <span className={styles.headerLine} />
+        <span className={styles.headerDot} />
+        <span className={styles.headerLine} />
+      </div>
+    </div>
+  );
+}
+
+export default function Home() {
+  const highlights = (home.featuredPosts?.posts ?? []).filter((post) => Boolean(post.link));
 
   return (
-    <Column maxWidth="m" gap="xl" paddingY="24" paddingX="16" horizontal="center" 
+    <Column maxWidth="m" gap="xl" paddingY="24" paddingX="16" horizontal="center"
       s={{ paddingX: "12", paddingY: "16", gap: "l" }}
       m={{ paddingX: "20", paddingY: "20", gap: "xl" }}>
       <Schema
@@ -57,8 +77,15 @@ export default async function Home() {
         image={`/api/og/generate?title=${encodeURIComponent(home.title)}`}
         author={{
           name: person.name,
-          url: `${baseURL}${about.path}`,
+          url: baseURL,
           image: `${baseURL}${person.avatar}`,
+        }}
+      />
+      <script
+        type="application/ld+json"
+        // Static data from content files; "<" is escaped so it can't close the tag.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
         }}
       />
       <section id="hero" className={`onepage-section ${styles.hero}`}>
@@ -69,10 +96,10 @@ export default async function Home() {
               <div className={styles.avatarInner}>
                 <Image
                   src={person.avatar}
-                  alt={person.name}
+                  alt={`Portrait of ${person.name}`}
                   fill
                   priority
-                  sizes="(max-width: 767px) 72vw, 320px"
+                  sizes="(max-width: 479px) 200px, (max-width: 767px) 240px, 320px"
                   className={styles.avatarImg}
                 />
               </div>
@@ -97,7 +124,7 @@ export default async function Home() {
             )}
 
             <RevealFx translateY={6} fillWidth>
-              <Heading wrap="balance" variant="display-strong-l" className={styles.heroTitle}>
+              <Heading as="h1" wrap="balance" variant="display-strong-l" className={styles.heroTitle}>
                 Hello, I&apos;m <span className={styles.nameAccent}>{person.firstName}</span>
               </Heading>
             </RevealFx>
@@ -108,42 +135,51 @@ export default async function Home() {
                 onBackground="neutral-weak"
                 variant="heading-default-xl"
               >
-                {person.role} |
+                {home.subtitle}
               </Text>
             </RevealFx>
 
+            {home.badges && home.badges.length > 0 && (
+              <RevealFx translateY={8} delay={0.15} fillWidth>
+                <ul className={`${styles.pills} ${styles.heroBadges}`} aria-label="Highlights">
+                  {home.badges.map((badge) => (
+                    <li key={badge} className={styles.pill}>
+                      {badge}
+                    </li>
+                  ))}
+                </ul>
+              </RevealFx>
+            )}
+
             <RevealFx delay={0.2}>
               <div className={styles.ctaRow}>
-                <Button
-                  href={`mailto:${person.email}`}
-                  prefixIcon="email"
-                  size="m"
-                  weight="default"
-                  className={styles.primaryCta}
-                >
-                  Get In Touch
-                </Button>
+                <EmailButton label="Get In Touch" className={styles.primaryCta} />
+                {cvAvailable && person.cv && (
+                  <Button
+                    href={person.cv}
+                    prefixIcon="download"
+                    size="m"
+                    weight="default"
+                    variant="secondary"
+                    className={styles.secondaryCta}
+                    download
+                  >
+                    Download CV
+                  </Button>
+                )}
               </div>
             </RevealFx>
 
             <div className={styles.socialRow}>
               {socialButtons()}
+              <EmailButton variant="icon" className={styles.socialBtn} />
             </div>
           </Column>
         </div>
       </section>
 
       <section id="about" className={`onepage-section ${styles.about}`}>
-        <div className={styles.sectionHeader}>
-          <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
-            About Me
-          </Heading>
-          <div className={styles.headerDecor}>
-            <span className={styles.headerLine} />
-            <span className={styles.headerDot} />
-            <span className={styles.headerLine} />
-          </div>
-        </div>
+        <SectionHeader title="About Me" />
 
         <div className={styles.aboutGrid}>
           <div className={styles.card}>
@@ -157,79 +193,70 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Technologies I enjoy */}
-        <div className={styles.skillsSection}>
-          <div className={styles.cardTitle}>TECHNOLOGIES I ENJOY</div>
-          <div className={styles.skillsGrid}>
-            {(techStack.length
-              ? techStack
-              : [
-                  { name: "JavaScript", icon: "javascript" },
-                  { name: "Next.js", icon: "nextjs" },
-                  { name: "React", icon: "react" },
-                ]
-            ).map((skill) => (
-              <div key={skill.name} className={styles.skillRow}>
-                <Icon name={skill.icon} size="m" onBackground="brand-weak" />
-                <Text variant="body-default-m" onBackground="neutral-strong">
-                  {skill.name}
+        {about.technical.display && (
+          <div className={styles.skillsSection}>
+            <Heading as="h3" className={styles.cardTitle}>
+              {about.technical.title}
+            </Heading>
+            {about.technical.skills.map((group) => (
+              <div key={group.title} className={styles.skillGroup}>
+                <Text as="h4" variant="label-strong-s" onBackground="neutral-strong">
+                  {group.title}
                 </Text>
+                <ul className={styles.skillsGrid}>
+                  {(group.tags ?? []).map((tag) => (
+                    <li key={tag.name} className={styles.skillRow}>
+                      {tag.icon && <Icon name={tag.icon} size="m" onBackground="brand-weak" />}
+                      <Text variant="body-default-m" onBackground="neutral-strong">
+                        {tag.name}
+                      </Text>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
+
+            {about.technical.spokenLanguages && about.technical.spokenLanguages.length > 0 && (
+              <div className={styles.skillGroup}>
+                <Text as="h4" variant="label-strong-s" onBackground="neutral-strong">
+                  Languages spoken
+                </Text>
+                <ul className={styles.pills}>
+                  {about.technical.spokenLanguages.map((language) => (
+                    <li key={language} className={styles.pill}>
+                      {language}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </section>
-
-      {/* Featured Section */}
-      {home.featuredPosts?.display && home.featuredPosts.posts.length > 0 && (
-        <section id="featured" className={`onepage-section ${styles.featured}`}>
-          <div className={styles.sectionHeader}>
-            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
-              {home.featuredPosts.title}
-            </Heading>
-            <div className={styles.headerDecor}>
-              <span className={styles.headerLine} />
-              <span className={styles.headerDot} />
-              <span className={styles.headerLine} />
-            </div>
-          </div>
-
-          <FeaturedCarousel posts={home.featuredPosts.posts} />
-        </section>
-      )}
 
       {/* Experience Section */}
       {about.work.display && (
         <section id="experience" className={`onepage-section ${styles.experience}`}>
-          <div className={styles.sectionHeader}>
-            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
-              Experience
-            </Heading>
-            <div className={styles.headerDecor}>
-              <span className={styles.headerLine} />
-              <span className={styles.headerDot} />
-              <span className={styles.headerLine} />
-            </div>
-          </div>
+          <SectionHeader title={about.work.title} />
 
           <div className={styles.experienceList}>
-            {about.work.experiences.map((exp, idx) => (
-              <div key={idx} className={styles.experienceItem}>
+            {about.work.experiences.map((exp) => (
+              <div key={exp.company} id={exp.id} className={styles.experienceItem}>
                 {/* Left: Company Card */}
                 <div className={styles.companyCard}>
                   <div className={styles.companyHeader}>
                     <div className={styles.companyLogo}>
                       {exp.logo ? (
-                        <Image src={exp.logo} alt={exp.company} width={48} height={48} />
+                        <Image src={exp.logo} alt={`${exp.company} logo`} width={48} height={48} />
                       ) : (
-                        <Icon name="grid" size="l" />
+                        <Icon name="shield" size="l" />
                       )}
                     </div>
                     {exp.current && <span className={styles.currentDot} />}
                   </div>
-                  <Heading as="h4" variant="heading-strong-m">{exp.company}</Heading>
+                  <Heading as="h3" variant="heading-strong-m">{exp.company}</Heading>
                   <Text variant="body-default-s" onBackground="neutral-weak">{exp.type}</Text>
-                  
+
                   <div className={styles.companyMeta}>
                     <Row gap="8" vertical="center">
                       <Icon name="calendar" size="xs" onBackground="neutral-weak" />
@@ -271,7 +298,7 @@ export default async function Home() {
                     )}
                   </div>
 
-                  <Heading as="h3" variant="display-strong-xs" style={{ marginTop: 12 }}>
+                  <Heading as="h4" variant="display-strong-xs" style={{ marginTop: 12 }}>
                     {exp.role}
                   </Heading>
 
@@ -291,7 +318,7 @@ export default async function Home() {
                       </Row>
                       <ul>
                         {exp.achievements.map((achievement, i) => (
-                          <li key={i}>
+                          <li key={`${exp.company}-achievement-${i}`}>
                             <Text variant="body-default-s" onBackground="neutral-weak">
                               {achievement}
                             </Text>
@@ -299,6 +326,14 @@ export default async function Home() {
                         ))}
                       </ul>
                     </div>
+                  )}
+
+                  {exp.skills && exp.skills.length > 3 && (
+                    <ul className={styles.pills} style={{ marginTop: 16 }} aria-label="Tools used">
+                      {exp.skills.map((skill) => (
+                        <li key={skill} className={styles.pill}>{skill}</li>
+                      ))}
+                    </ul>
                   )}
 
                   {(exp.links?.details || exp.links?.connect) && (
@@ -333,19 +368,116 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Parascolaire Section */}
-      {about.parascolaire?.display && about.parascolaire.activities.length > 0 && (
-        <section id="parascolaire" className={`onepage-section ${styles.parascolaire}`}>
-          <div className={styles.sectionHeader}>
-            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
-              {about.parascolaire.title}
-            </Heading>
-            <div className={styles.headerDecor}>
-              <span className={styles.headerLine} />
-              <span className={styles.headerDot} />
-              <span className={styles.headerLine} />
-            </div>
+      {/* Projects Section */}
+      {projects.display && projects.items.length > 0 && (
+        <section id="projects" className={`onepage-section ${styles.parascolaire}`}>
+          <SectionHeader title={projects.title} />
+
+          <div className={styles.projectsGrid}>
+            {projects.items.map((project) => (
+              <article key={project.title} className={`${styles.parascolaireCard} ${styles.projectCard}`}>
+                {project.image && (
+                  <div className={styles.projectImageWrap}>
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt ?? project.title}
+                      fill
+                      sizes="(max-width: 559px) 100vw, 50vw"
+                      className={styles.featuredImage}
+                    />
+                  </div>
+                )}
+                <Heading as="h3" variant="heading-strong-m">{project.title}</Heading>
+                <Text variant="body-default-s" onBackground="neutral-weak">
+                  {project.description}
+                </Text>
+                {project.highlight && (
+                  <Row gap="8" vertical="start">
+                    <Icon name="trophy" size="xs" onBackground="brand-medium" />
+                    <Text variant="body-default-s" onBackground="neutral-strong">
+                      {project.highlight}
+                    </Text>
+                  </Row>
+                )}
+                <ul className={styles.pills} aria-label={`${project.title} stack`}>
+                  {project.tags.map((tag) => (
+                    <li key={tag} className={styles.pill}>{tag}</li>
+                  ))}
+                </ul>
+                {(project.links?.github || project.links?.demo || project.links?.details) && (
+                  <div className={styles.projectLinks}>
+                    {project.links.github && (
+                      <Button
+                        href={project.links.github}
+                        prefixIcon="github"
+                        size="s"
+                        variant="secondary"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} source code on GitHub`}
+                      >
+                        GitHub
+                      </Button>
+                    )}
+                    {project.links.demo && (
+                      <Button
+                        href={project.links.demo}
+                        prefixIcon="arrowUpRightFromSquare"
+                        size="s"
+                        variant="secondary"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} live demo`}
+                      >
+                        Demo
+                      </Button>
+                    )}
+                    {project.links.details && (
+                      <Button
+                        href={project.links.details}
+                        prefixIcon="arrowRight"
+                        size="s"
+                        variant="secondary"
+                        aria-label={`${project.title}: see the experience entry`}
+                      >
+                        Details
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </article>
+            ))}
           </div>
+        </section>
+      )}
+
+      {/* Honors & Awards Section */}
+      {awards.display && awards.items.length > 0 && (
+        <section id="awards" className={`onepage-section ${styles.parascolaire}`}>
+          <SectionHeader title={awards.title} />
+
+          <div className={styles.card}>
+            <ul className={styles.awardsList}>
+              {awards.items.map((item, i) => (
+                <li key={`award-${i}`} className={styles.awardItem}>
+                  <Icon name="trophy" size="s" onBackground="brand-medium" />
+                  <Text variant="body-default-m" onBackground="neutral-weak">
+                    {item}
+                  </Text>
+                </li>
+              ))}
+            </ul>
+            {awards.footnote && (
+              <Text as="p" variant="body-default-s" onBackground="neutral-weak" className={styles.awardsFootnote}>
+                {awards.footnote}
+              </Text>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Leadership Section */}
+      {about.parascolaire?.display && about.parascolaire.activities.length > 0 && (
+        <section id="leadership" className={`onepage-section ${styles.parascolaire}`}>
+          <SectionHeader title={about.parascolaire.title} />
 
           <div className={styles.parascolaireGrid}>
             {about.parascolaire.activities.map((activity) => (
@@ -353,9 +485,9 @@ export default async function Home() {
                 <div className={styles.parascolaireHeader}>
                   <div className={styles.parascolaireLogo}>
                     {activity.logo ? (
-                      <Image src={activity.logo} alt={activity.name} width={48} height={48} />
+                      <Image src={activity.logo} alt={`${activity.name} logo`} width={48} height={48} />
                     ) : (
-                      <Icon name="grid" size="l" />
+                      <Icon name="users" size="l" />
                     )}
                   </div>
                   <div className={styles.parascolaireInfo}>
@@ -363,12 +495,14 @@ export default async function Home() {
                     <Text variant="body-default-s" onBackground="brand-medium">{activity.name}</Text>
                   </div>
                 </div>
-                <div className={styles.parascolaireMeta}>
-                  <Row gap="8" vertical="center">
-                    <Icon name="calendar" size="xs" onBackground="neutral-weak" />
-                    <Text variant="label-default-s" onBackground="neutral-weak">{activity.timeframe}</Text>
-                  </Row>
-                </div>
+                {activity.timeframe && (
+                  <div className={styles.parascolaireMeta}>
+                    <Row gap="8" vertical="center">
+                      <Icon name="calendar" size="xs" onBackground="neutral-weak" />
+                      <Text variant="label-default-s" onBackground="neutral-weak">{activity.timeframe}</Text>
+                    </Row>
+                  </div>
+                )}
                 {activity.description && (
                   <Text variant="body-default-s" onBackground="neutral-weak" style={{ marginTop: 12 }}>
                     {activity.description}
@@ -396,16 +530,7 @@ export default async function Home() {
       {/* Education Section */}
       {about.studies.display && about.studies.institutions.length > 0 && (
         <section id="education" className={`onepage-section ${styles.education}`}>
-          <div className={styles.sectionHeader}>
-            <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
-              {about.studies.title}
-            </Heading>
-            <div className={styles.headerDecor}>
-              <span className={styles.headerLine} />
-              <span className={styles.headerDot} />
-              <span className={styles.headerLine} />
-            </div>
-          </div>
+          <SectionHeader title={about.studies.title} />
 
           <div className={styles.educationGrid}>
             {about.studies.institutions.map((institution) => (
@@ -413,7 +538,7 @@ export default async function Home() {
                 <div className={styles.educationHeader}>
                   <div className={styles.educationLogo}>
                     {institution.logo ? (
-                      <Image src={institution.logo} alt={institution.name} width={56} height={56} />
+                      <Image src={institution.logo} alt="ENSAM Casablanca logo" width={56} height={56} />
                     ) : (
                       <Icon name="grid" size="l" />
                     )}
@@ -447,6 +572,15 @@ export default async function Home() {
         </section>
       )}
 
+      {/* Highlights (LinkedIn posts) Section */}
+      {home.featuredPosts?.display && highlights.length > 0 && (
+        <section id="highlights" className={`onepage-section ${styles.featured}`}>
+          <SectionHeader title={home.featuredPosts.title} />
+
+          <FeaturedCarousel posts={highlights} />
+        </section>
+      )}
+
       <Mailchimp />
     </Column>
   );
@@ -467,6 +601,9 @@ function socialButtons() {
       icon={item.icon}
       variant="secondary"
       className={styles.socialBtn}
+      rel="noopener noreferrer"
+      aria-label={`${person.name} on ${item.name}`}
+      tooltip={item.name}
     />
   ));
 }

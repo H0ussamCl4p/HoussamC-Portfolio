@@ -11,8 +11,9 @@ import {
 } from "@/types";
 import { home } from "./content";
 
-// IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL: string = "https://houssamclap.dev";
+// Used for canonical URLs, Open Graph tags, JSON-LD, robots.txt and sitemap.xml.
+// Must be a domain you control (see SECURITY_AUDIT.md F-02).
+const baseURL: string = "https://houssamc-portfolio.vercel.app";
 
 const routes: RoutesConfig = {
   "/": true,
@@ -177,17 +178,16 @@ const mailchimp: MailchimpConfig = {
 // default schema data
 const schema: SchemaConfig = {
   logo: "",
-  type: "Organization",
-  name: "Once UI",
+  type: "Person",
+  name: "Houssam Choubik",
   description: home.description,
-  email: "lorant@once-ui.com",
+  email: "",
 };
 
-// social links
+// social links, used for JSON-LD sameAs
 const sameAs: SameAsConfig = {
-  threads: "https://www.threads.com/@once_ui",
-  linkedin: "https://www.linkedin.com/company/once-ui/",
-  discord: "https://discord.com/invite/5EyAQ4eNdS",
+  github: "https://github.com/H0ussamCl4p",
+  linkedin: "https://www.linkedin.com/in/houssam-choubik-5b4ba3316/",
 };
 
 export {

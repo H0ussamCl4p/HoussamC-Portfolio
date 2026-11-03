@@ -5,13 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Fade, Flex, Line, Row, ToggleButton } from "@once-ui-system/core";
 
-import {
-  routes,
-  display,
-  person,
-
-  designs,
-} from "@/resources";
+import { routes, display, person, designs } from "@/resources";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./Header.module.scss";
@@ -52,11 +46,23 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({
 
 export default TimeDisplay;
 
+// One-page sections linked from the header. Order matches the page.
+const sections = [
+  { id: "about", label: "About", icon: "person" },
+  { id: "experience", label: "Experience", icon: "rocket" },
+  { id: "projects", label: "Projects", icon: "code" },
+  { id: "awards", label: "Awards", icon: "trophy" },
+  { id: "leadership", label: "Leadership", icon: "users" },
+  { id: "contact", label: "Contact", icon: "email" },
+] as const;
+
 export const Header = () => {
   const pathname = usePathname() ?? "";
-  const activeSectionId = useActiveSection(["hero", "about"], {
-    defaultSectionId: "hero",
-  });
+  const activeSectionId = useActiveSection(
+    ["hero", ...sections.map((section) => section.id)],
+    { defaultSectionId: "hero" },
+  );
+  const isHome = pathname === "/";
 
   return (
     <>
@@ -119,9 +125,33 @@ export const Header = () => {
                 <ToggleButton
                   prefixIcon="home"
                   href="/#hero"
-                  selected={pathname === "/" && activeSectionId === "hero"}
+                  selected={isHome && activeSectionId === "hero"}
+                  aria-label="Home"
                 />
               )}
+              <Line background="neutral-alpha-medium" vert maxHeight="24" />
+              {/* Section links: labels on wide screens, icons below 1024px */}
+              <Row as="nav" aria-label="Sections" gap="4" vertical="center" m={{ hide: true }}>
+                {sections.map((section) => (
+                  <ToggleButton
+                    key={section.id}
+                    href={`/#${section.id}`}
+                    label={section.label}
+                    selected={isHome && activeSectionId === section.id}
+                  />
+                ))}
+              </Row>
+              <Row as="nav" aria-label="Sections" gap="2" vertical="center" hide m={{ hide: false }}>
+                {sections.map((section) => (
+                  <ToggleButton
+                    key={section.id}
+                    href={`/#${section.id}`}
+                    prefixIcon={section.icon}
+                    aria-label={section.label}
+                    selected={isHome && activeSectionId === section.id}
+                  />
+                ))}
+              </Row>
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
               {routes["/designs"] && (
                 <>
@@ -137,6 +167,7 @@ export const Header = () => {
                     <ToggleButton
                       prefixIcon="designs"
                       href="/designs"
+                      aria-label={designs.label}
                       selected={pathname.startsWith("/designs")}
                     />
                   </Row>
