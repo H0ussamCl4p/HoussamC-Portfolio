@@ -57,11 +57,9 @@ const home: Home = {
     posts: [
       {
         name: "Falling Walls Lab Global Finale, Berlin 2026",
-        // TODO(houssam): add the photo at public/images/featured/FWL-Berlin-2026.jpg and set image.
-        // TODO(houssam): paste the LinkedIn post URL below; the card stays hidden until then.
-        link: "",
-        description:
-          "Pitched “Breaking the Wall of Industrial Energy Waste” for Morocco.",
+        image: "/images/featured/FWL-Berlin-2026.jpg",
+        link: "https://lnkd.in/p/eqdt_k9z",
+        description: "Represented Morocco among 100 finalists, 6 November 2026.",
       },
       {
         name: "OlympICTs CTF 2026",
@@ -301,8 +299,7 @@ const awards: Awards = {
   display: true,
   title: "Awards & Leadership",
   items: [
-    // Update this entry with the Berlin result after the Global Finale.
-    { title: "Falling Walls Lab 2026", detail: "1st in Morocco, Global Finalist in Berlin" },
+    { title: "Falling Walls Lab 2026", detail: "1st in Morocco, Global Finalist in Berlin (Nov 2026)" },
     { title: "OlympICTs CTF 2026", detail: "1st worldwide in the qualifier" },
     { title: "AGIOS v2 2026", detail: "1st prize with Smart Energy Guardian" },
     { title: "HackerRank Orchestrate 2026", detail: "1st in Morocco, 106th of 1,983" },
