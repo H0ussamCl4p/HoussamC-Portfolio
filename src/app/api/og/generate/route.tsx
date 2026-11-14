@@ -1,8 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { designs, home, person } from "@/resources";
+import { baseURL, designs, home, person } from "@/resources";
 
 export const runtime = "nodejs";
 
@@ -11,110 +8,107 @@ export const runtime = "nodejs";
 // falls back to the site title.
 const allowedTitles = new Set([home.title, designs.title]);
 
-let avatarDataUrl: Promise<string | null> | undefined;
+// Banner palette (see src/resources/custom.css).
+const paper = "#F3F0EA";
+const ink = "#1F1D1A";
+const ink2 = "#6B6760";
+const red = "#E0262B";
+const grid = "rgba(31, 29, 26, 0.05)";
 
-// Read once per instance from the deployment bundle (see outputFileTracingIncludes),
-// so rendering never makes an outbound request.
-function loadAvatar() {
-  avatarDataUrl ??= readFile(join(process.cwd(), "public", person.avatar))
-    .then((file) => `data:image/jpeg;base64,${file.toString("base64")}`)
-    .catch(() => null);
-  return avatarDataUrl;
-}
+// Plain-text headline for the image; the home page headline is JSX.
+const homeHeadline = "Securing the systems where AI, industry and health meet";
 
 export async function GET(request: Request) {
   const requested = new URL(request.url).searchParams.get("title") ?? "";
   const title = allowedTitles.has(requested) ? requested : home.title;
-  const avatar = await loadAvatar();
+  const headline = title === home.title ? homeHeadline : designs.label;
+  const host = new URL(baseURL).host;
 
   return new ImageResponse(
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         width: "100%",
         height: "100%",
-        padding: "6rem",
-        background: "#151515",
+        padding: "56px 72px",
+        background: paper,
+        backgroundImage: `linear-gradient(${grid} 1px, transparent 1px), linear-gradient(90deg, ${grid} 1px, transparent 1px)`,
+        backgroundSize: "40px 40px",
+        color: ink,
       }}
     >
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          gap: "4rem",
-          fontStyle: "normal",
-          color: "white",
+          justifyContent: "space-between",
+          fontSize: 22,
+          color: ink2,
         }}
       >
-        <span
-          style={{
-            padding: "1rem",
-            fontSize: "5rem",
-            lineHeight: "6.5rem",
-            letterSpacing: "-0.03em",
-            whiteSpace: "wrap",
-            textWrap: "balance",
-            overflow: "hidden",
-          }}
-        >
-          {title}
-        </span>
+        <span>{home.eyebrow}</span>
+        <span>{home.coordinates}</span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "center",
+        }}
+      >
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            gap: "5rem",
+            flexWrap: "wrap",
+            maxWidth: 940,
+            fontSize: 76,
+            lineHeight: 1.08,
+            letterSpacing: "-0.03em",
+            fontWeight: 500,
           }}
         >
-          {avatar && (
-            <img
-              src={avatar}
-              alt={person.name}
-              style={{
-                width: "12rem",
-                height: "12rem",
-                objectFit: "cover",
-                borderRadius: "100%",
-              }}
-            />
-          )}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-              maxWidth: "52rem",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "4.5rem",
-                lineHeight: "4.5rem",
-                whiteSpace: "pre-wrap",
-                textWrap: "balance",
-              }}
-            >
-              {person.name}
-            </span>
-            <span
-              style={{
-                fontSize: "2.25rem",
-                lineHeight: "2.75rem",
-                whiteSpace: "pre-wrap",
-                textWrap: "balance",
-                opacity: "0.6",
-              }}
-            >
-              {person.role}
-            </span>
-          </div>
+          <span>
+            {headline}
+            <span style={{ color: red }}>.</span>
+          </span>
         </div>
+        <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: ink2 }}>
+          {home.subtitle}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            width: 760,
+            height: 1,
+            marginTop: 36,
+            background: "rgba(31, 29, 26, 0.18)",
+          }}
+        />
+        <div style={{ display: "flex", marginTop: 24, fontSize: 22, color: ink2 }}>
+          {(home.credentials ?? []).join("  ·  ")}
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          fontSize: 24,
+        }}
+      >
+        <span style={{ fontWeight: 600 }}>
+          {person.name}
+          <span style={{ color: red }}>.</span>
+        </span>
+        <span style={{ color: ink2, fontSize: 22 }}>{host}</span>
       </div>
     </div>,
     {
-      width: 1280,
-      height: 720,
+      width: 1200,
+      height: 630,
       headers: {
         // Output only changes on deploy.
         "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
