@@ -55,16 +55,11 @@ function Ferris() {
   );
 }
 
-function SectionHeader({ index, title, id }: { index: string; title: string; id: string }) {
+function SectionHeader({ title, id }: { title: string; id: string }) {
   return (
-    <div className={styles.sectionHead}>
-      <span className={styles.sectionIndex} aria-hidden="true">
-        {index}
-      </span>
-      <h2 id={`${id}-title`} className={styles.sectionTitle}>
-        {title}
-      </h2>
-    </div>
+    <h2 id={`${id}-title`} className={styles.sectionTitle}>
+      {title}
+    </h2>
   );
 }
 
@@ -81,9 +76,6 @@ function DotList({ items, label }: { items: string[]; label?: string }) {
 export default function Home() {
   const highlights = (home.featuredPosts?.posts ?? []).filter((post) => Boolean(post.link));
   const leadership = about.parascolaire;
-
-  let sectionNumber = 0;
-  const nextIndex = () => String(++sectionNumber).padStart(2, "0");
 
   return (
     <div className={styles.page}>
@@ -130,9 +122,8 @@ export default function Home() {
           <div className={styles.openTo}>
             <p className={styles.status}>
               <span className={styles.statusDot} aria-hidden="true" />
-              Open to opportunities
+              Open to opportunities · summer 2027
             </p>
-            {home.openTo && <p className={styles.openToText}>{home.openTo}</p>}
             <div className={styles.ctaRow}>
               <EmailButton label="Email me" className={styles.btnPrimary} />
               {linkedin && (
@@ -143,6 +134,11 @@ export default function Home() {
                   rel="noopener noreferrer"
                 >
                   LinkedIn ↗
+                </a>
+              )}
+              {github && (
+                <a href={github} className={styles.btn} target="_blank" rel="noopener noreferrer">
+                  GitHub ↗
                 </a>
               )}
               {cvAvailable && person.cv && (
@@ -158,7 +154,7 @@ export default function Home() {
 
       {/* ---------- About ---------- */}
       <section id="about" className={styles.section} aria-labelledby="about-title">
-        <SectionHeader index={nextIndex()} title="About" id="about" />
+        <SectionHeader title="About" id="about" />
 
         <div className={styles.aboutGrid}>
           <div className={styles.avatar}>
@@ -172,11 +168,6 @@ export default function Home() {
           </div>
           <div className={styles.aboutText}>
             <p className={styles.lead}>{home.subline}</p>
-            {home.openTo && (
-              <p className={styles.body}>
-                <strong>Open to:</strong> {home.openTo}
-              </p>
-            )}
           </div>
         </div>
 
@@ -205,7 +196,7 @@ export default function Home() {
       {/* ---------- Experience ---------- */}
       {about.work.display && (
         <section id="experience" className={styles.section} aria-labelledby="experience-title">
-          <SectionHeader index={nextIndex()} title={about.work.title} id="experience" />
+          <SectionHeader title={about.work.title} id="experience" />
 
           <ol className={styles.timeline}>
             {about.work.experiences.map((exp) => (
@@ -252,7 +243,7 @@ export default function Home() {
       {/* ---------- Projects ---------- */}
       {projects.display && projects.items.length > 0 && (
         <section id="projects" className={styles.section} aria-labelledby="projects-title">
-          <SectionHeader index={nextIndex()} title={projects.title} id="projects" />
+          <SectionHeader title={projects.title} id="projects" />
 
           <div className={styles.projectGrid}>
             {projects.items.map((project) => (
@@ -317,16 +308,18 @@ export default function Home() {
       {/* ---------- Awards & Leadership ---------- */}
       {awards.display && (
         <section id="awards" className={styles.section} aria-labelledby="awards-title">
-          <SectionHeader index={nextIndex()} title={awards.title} id="awards" />
+          <SectionHeader title={awards.title} id="awards" />
 
           <div className={styles.twoCol}>
             <div>
               <h3 className={styles.label}>Awards</h3>
-              <ol className={styles.numbered}>
+              <ul className={styles.plainList}>
                 {awards.items.map((item, i) => (
-                  <li key={`award-${i}`}>{item}</li>
+                  <li key={`award-${i}`} className={styles.awardItem}>
+                    {item}
+                  </li>
                 ))}
-              </ol>
+              </ul>
               {awards.footnote && <p className={styles.footnote}>{awards.footnote}</p>}
             </div>
 
@@ -366,7 +359,7 @@ export default function Home() {
       {/* ---------- Education ---------- */}
       {about.studies.display && about.studies.institutions.length > 0 && (
         <section id="education" className={styles.section} aria-labelledby="education-title">
-          <SectionHeader index={nextIndex()} title={about.studies.title} id="education" />
+          <SectionHeader title={about.studies.title} id="education" />
 
           <ol className={styles.timeline}>
             {about.studies.institutions.map((institution) => (
@@ -388,19 +381,15 @@ export default function Home() {
       {/* ---------- Highlights (LinkedIn posts) ---------- */}
       {home.featuredPosts?.display && highlights.length > 0 && (
         <section id="highlights" className={styles.section} aria-labelledby="highlights-title">
-          <SectionHeader index={nextIndex()} title={home.featuredPosts.title} id="highlights" />
+          <SectionHeader title={home.featuredPosts.title} id="highlights" />
           <FeaturedCarousel posts={highlights} />
         </section>
       )}
 
       {/* ---------- Contact ---------- */}
       <section id="contact" className={styles.section} aria-labelledby="contact-title">
-        <SectionHeader index={nextIndex()} title="Contact" id="contact" />
+        <SectionHeader title="Contact" id="contact" />
         <div className={styles.contact}>
-          <p className={styles.contactLead}>
-            Working on cloud, industrial or health security? Let&apos;s talk
-            <span className={styles.accentDot}>.</span>
-          </p>
           {home.openTo && (
             <p className={styles.body}>
               <strong>Open to:</strong> {home.openTo}

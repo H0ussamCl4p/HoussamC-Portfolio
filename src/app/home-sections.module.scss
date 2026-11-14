@@ -207,13 +207,10 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin: 0 0 10px;
-  padding: 6px 12px;
+  margin: 0 0 20px;
   font-family: $mono;
   font-size: 12px;
   color: var(--ink);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
 }
 
 .statusDot {
@@ -221,25 +218,6 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 0 var(--accent-soft);
-  animation: pulse 2.4s ease-out infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(224, 38, 43, 0.35);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 8px rgba(224, 38, 43, 0);
-  }
-}
-
-.openToText {
-  margin: 0 0 20px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--ink-2);
 }
 
 .ferris {
@@ -282,21 +260,8 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   }
 }
 
-.sectionHead {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.sectionIndex {
-  font-family: $mono;
-  font-size: 12px;
-  color: var(--accent-text);
-}
-
 .sectionTitle {
-  margin: 0;
+  margin: 0 0 32px;
   font-family: var(--font-sans), sans-serif;
   font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
   font-weight: 500;
@@ -585,38 +550,6 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   }
 }
 
-.numbered {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: award;
-
-  li {
-    counter-increment: award;
-    position: relative;
-    padding: 14px 0 14px 40px;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ink-2);
-    border-top: 1px solid var(--line);
-
-    &::before {
-      content: counter(award, decimal-leading-zero);
-      position: absolute;
-      left: 0;
-      top: 17px;
-      font-family: $mono;
-      font-size: 12px;
-      color: var(--accent-text);
-    }
-  }
-
-  strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-}
-
 .footnote {
   margin: 16px 0 0;
   font-family: $mono;
@@ -631,8 +564,19 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   list-style: none;
 
   li {
-    padding: 14px 0;
+    padding: 12px 0;
     border-top: 1px solid var(--line);
+  }
+}
+
+.awardItem {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+
+  strong {
+    color: var(--ink);
+    font-weight: 600;
   }
 }
 
@@ -665,14 +609,4 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   flex-direction: column;
   gap: 20px;
   max-width: 40rem;
-}
-
-.contactLead {
-  margin: 0;
-  font-family: var(--font-sans), sans-serif;
-  font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2.1rem);
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--ink);
 }
