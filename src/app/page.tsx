@@ -108,15 +108,30 @@ export default function Home() {
           <span>{home.coordinates}</span>
         </div>
 
-        <h1 id="hero-title" className={styles.headline}>
-          {home.headline}
-          <span className={styles.accentDot}>.</span>
-        </h1>
-        <p className={styles.subtitle}>{home.subtitle}</p>
+        <div className={styles.heroMain}>
+          <div className={styles.avatar}>
+            <Image
+              src={person.avatar}
+              alt={`${person.name} pitching at the Falling Walls Lab Global Finale in Berlin`}
+              fill
+              priority
+              sizes="(max-width: 719px) 200px, 280px"
+              className={styles.avatarImg}
+            />
+          </div>
 
-        <hr className={styles.rule} />
+          <div className={styles.heroText}>
+            <h1 id="hero-title" className={styles.headline}>
+              {home.headline}
+              <span className={styles.accentDot}>.</span>
+            </h1>
+            <p className={styles.subtitle}>{home.subtitle}</p>
 
-        {home.credentials && <DotList items={home.credentials} label="Credentials" />}
+            <hr className={styles.rule} />
+
+            {home.credentials && <DotList items={home.credentials} label="Credentials" />}
+          </div>
+        </div>
 
         <div className={styles.heroBottom}>
           <div className={styles.openTo}>
@@ -156,20 +171,7 @@ export default function Home() {
       <section id="about" className={styles.section} aria-labelledby="about-title">
         <SectionHeader title="About" id="about" />
 
-        <div className={styles.aboutGrid}>
-          <div className={styles.avatar}>
-            <Image
-              src={person.avatar}
-              alt={`Portrait of ${person.name}`}
-              fill
-              sizes="(max-width: 719px) 120px, 200px"
-              className={styles.avatarImg}
-            />
-          </div>
-          <div className={styles.aboutText}>
-            <p className={styles.lead}>{home.subline}</p>
-          </div>
-        </div>
+        <p className={styles.lead}>{home.subline}</p>
 
         {about.technical.display && (
           <dl className={styles.skills}>
