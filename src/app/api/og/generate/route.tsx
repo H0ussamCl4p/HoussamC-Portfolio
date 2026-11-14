@@ -15,13 +15,13 @@ const ink2 = "#6B6760";
 const red = "#E0262B";
 const grid = "rgba(31, 29, 26, 0.05)";
 
-// Plain-text headline for the image; the home page headline is JSX.
-const homeHeadline = "Securing the systems where AI, industry and health meet";
+// Plain-text headline for the image (the home page headline is JSX), broken where the banner breaks it.
+const homeHeadline = ["Securing the systems where", "AI, industry and health meet"];
 
 export async function GET(request: Request) {
   const requested = new URL(request.url).searchParams.get("title") ?? "";
   const title = allowedTitles.has(requested) ? requested : home.title;
-  const headline = title === home.title ? homeHeadline : designs.label;
+  const lines = title === home.title ? homeHeadline : [designs.label];
   const host = new URL(baseURL).host;
 
   return new ImageResponse(
@@ -61,20 +61,22 @@ export async function GET(request: Request) {
         <div
           style={{
             display: "flex",
-            flexWrap: "wrap",
-            maxWidth: 940,
-            fontSize: 76,
+            flexDirection: "column",
+            fontSize: 70,
             lineHeight: 1.08,
             letterSpacing: "-0.03em",
             fontWeight: 500,
           }}
         >
-          <span>
-            {headline}
-            <span style={{ color: red }}>.</span>
-          </span>
+          {lines.map((line, i) => (
+            // The red full stop sits in the same row as the last line so it can't wrap away.
+            <div key={line} style={{ display: "flex" }}>
+              <span>{line}</span>
+              {i === lines.length - 1 && <span style={{ color: red }}>.</span>}
+            </div>
+          ))}
         </div>
-        <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: ink2 }}>
+        <div style={{ display: "flex", marginTop: 24, fontSize: 26, color: ink2 }}>
           {home.subtitle}
         </div>
         <div
