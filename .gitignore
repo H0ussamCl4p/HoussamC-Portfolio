@@ -25,3 +25,8 @@ Thumbs.db
 
 # local tooling
 .claude/
+
+# credential files (never commit keys)
+*service-account*.json
+*credentials*.json
+*.p12
