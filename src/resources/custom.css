@@ -12,7 +12,7 @@ html[data-theme="light"] {
   --ink-3: #8a857c;
   --line: rgba(31, 29, 26, 0.14);
   --line-strong: rgba(31, 29, 26, 0.28);
-  --grid: rgba(31, 29, 26, 0.045);
+  --grid: rgba(31, 29, 26, 0.035);
   --accent: #e0262b;
   /* Accent for small text on the page background (4.5:1 or better) */
   --accent-text: #c21f24;
@@ -27,7 +27,7 @@ html[data-theme="dark"] {
   --ink-3: #7d786f;
   --line: rgba(236, 232, 225, 0.13);
   --line-strong: rgba(236, 232, 225, 0.26);
-  --grid: rgba(236, 232, 225, 0.04);
+  --grid: rgba(236, 232, 225, 0.035);
   --accent: #e0262b;
   --accent-text: #f0464c;
   --accent-soft: rgba(224, 38, 43, 0.12);
@@ -46,7 +46,8 @@ html[data-theme] {
   --neutral-on-background-medium: var(--ink-2);
   --neutral-on-background-weak: var(--ink-2);
   --brand-on-background-strong: var(--ink);
-  --brand-on-background-medium: var(--accent-text);
+  /* Once UI colours every link with this; keep links ink and use red only on hover. */
+  --brand-on-background-medium: var(--ink);
   --brand-on-background-weak: var(--accent-text);
   --neutral-alpha-weak: var(--line);
   --neutral-alpha-medium: var(--line);
@@ -125,6 +126,10 @@ textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+a:not(.button):hover {
+  color: var(--accent-text);
 }
 
 /* Sections are flex children of the page column: never let content widen them. */

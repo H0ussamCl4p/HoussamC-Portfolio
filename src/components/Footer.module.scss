@@ -12,7 +12,8 @@
   gap: 8px 24px;
   max-width: 64rem;
   margin: 0 auto;
-  padding: 16px;
+  /* Room on the right for the scroll-to-top button */
+  padding: 16px 72px 16px 16px;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 12px;
   color: var(--ink-2);
@@ -30,6 +31,7 @@
     color: var(--ink-3);
   }
 
+  &.links a,
   a {
     display: inline-flex;
     align-items: center;
