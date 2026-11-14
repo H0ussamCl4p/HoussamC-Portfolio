@@ -35,19 +35,6 @@ export type Person = {
 };
 
 /**
- * Newsletter Section
- * @description The below information will be displayed on the Home page in Newsletter block
- */
-export type Newsletter = {
-  /** Whether to display the newsletter section */
-  display: boolean;
-  /** Title of the newsletter   */
-  title: React.ReactNode;
-  /** Description of the newsletter */
-  description: React.ReactNode;
-};
-
-/**
  * Social link configuration.
  */
 export type Social = Array<{
@@ -110,16 +97,16 @@ export interface Home extends BasePageConfig {
   image?: `/images/${string}` | string;
   /** The headline of the home page */
   headline: React.ReactNode;
-  /** Short subtitle shown under the name in the hero */
+  /** Short subtitle shown under the headline in the hero */
   subtitle: string;
-  /** Credibility chips shown under the subtitle */
-  badges?: string[];
-  /** Featured badge, which appears above the headline */
-  featured: {
-    display: boolean;
-    title: React.ReactNode;
-    href: string;
-  };
+  /** Small mono label, top-left of the hero (e.g. "~/casablanca") */
+  eyebrow?: string;
+  /** Small mono label, top-right of the hero (e.g. coordinates) */
+  coordinates?: string;
+  /** Mono credentials line under the divider, joined with "·" */
+  credentials?: string[];
+  /** "Open to opportunities" line shown in the hero and contact section */
+  openTo?: React.ReactNode;
   /** Featured LinkedIn posts section */
   featuredPosts?: {
     display: boolean;
@@ -345,4 +332,6 @@ export interface Awards {
   items: React.ReactNode[];
   /** Small line under the list */
   footnote?: React.ReactNode;
+  /** Certifications, shown as a short list */
+  certifications?: string[];
 }
