@@ -13,7 +13,7 @@
     "postinstall": "node -e \"const fs=require('fs'),p='node_modules/fast-equals/dist';if(fs.existsSync(p+'/es')&&!fs.existsSync(p+'/esm')){fs.mkdirSync(p+'/esm',{recursive:true});fs.readdirSync(p+'/es').forEach(f=>fs.copyFileSync(p+'/es/'+f,p+'/esm/'+f));}\""
   },
   "dependencies": {
-    "@once-ui-system/core": "^1.4.27",
+    "@once-ui-system/core": "^2.8.0",
     "classnames": "^2.5.1",
     "fast-equals": "5.4.0",
     "googleapis": "^157.0.0",
