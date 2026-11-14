@@ -58,7 +58,7 @@ const home: Home = {
       {
         name: "Falling Walls Lab Global Finale, Berlin 2026",
         image: "/images/featured/FWL-Berlin-2026.jpg",
-        link: "https://lnkd.in/p/eqdt_k9z",
+        link: "https://www.linkedin.com/posts/houssam-choubik_fallingwalls-fallingwallslab-sciencesummit26-ugcPost-7526710991519154176-brSD",
         description: "Represented Morocco among 100 finalists, 6 November 2026.",
       },
       {
@@ -255,7 +255,7 @@ const projects: Projects = {
       highlight: "1st Falling Walls Lab Morocco · 1st AGIOS v2 · Capgemini Techathon finalist",
       tags: ["Next.js", "FastAPI", "MQTT", "InfluxDB", "Anomaly detection"],
       image: "/images/featured/Techathon.jpg",
-      imageAlt: "Smart Energy Guardian team at the Capgemini Engineering Techathon 2025",
+      imageAlt: "Presenting Smart Energy Guardian at the Capgemini Engineering Techathon 2025",
       // TODO(houssam): the SEG-S repo is private. Add a public GitHub or demo URL if you have one.
       links: {},
     },
