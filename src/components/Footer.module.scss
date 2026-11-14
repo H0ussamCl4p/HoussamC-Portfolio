@@ -1,7 +1,44 @@
-@use "./breakpoints.scss" as breakpoints;
+.footer {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  margin-top: 32px;
+}
 
-@media (max-width: breakpoints.$s) {
-    .mobile {
-        text-align: center;
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.links {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li + li::before {
+    content: "·";
+    padding: 0 10px;
+    color: var(--ink-3);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-2);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--accent-text);
     }
+  }
 }
