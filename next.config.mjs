@@ -54,10 +54,6 @@ const nextConfig = {
   images: {
     remotePatterns: [],
   },
-  // The OG image route reads the avatar from disk instead of fetching it.
-  outputFileTracingIncludes: {
-    "/api/og/generate": ["./public/images/avatar.jpg"],
-  },
   sassOptions: {
     compiler: "modern",
     silenceDeprecations: ["legacy-js-api"],
