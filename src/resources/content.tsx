@@ -1,14 +1,4 @@
-import {
-  About,
-  Awards,
-  Designs,
-  Home,
-  Newsletter,
-  Person,
-  Projects,
-  Social,
-} from "@/types";
-import { Line, Row, Text } from "@once-ui-system/core";
+import { About, Awards, Designs, Home, Person, Projects, Social } from "@/types";
 
 const person: Person = {
   firstName: "Houssam",
@@ -24,12 +14,6 @@ const person: Person = {
   cv: "/cv/Houssam_Choubik_CV.pdf",
   location: "Africa/Casablanca", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["Arabic (native)", "French (C1, DALF C1)", "English (C1)"],
-};
-
-const newsletter: Newsletter = {
-  display: false,
-  title: <>Subscribe to {person.firstName}&apos;s Newsletter</>,
-  description: <>My weekly newsletter about creativity and engineering</>,
 };
 
 const social: Social = [
@@ -51,39 +35,33 @@ const social: Social = [
 const home: Home = {
   path: "/",
   label: "Home",
-  title: `${person.name} · Cloud Security & DevSecOps`,
+  title: `${person.name} · Cybersecurity & Cloud Engineering Student`,
   description:
-    "Houssam Choubik, Cybersecurity & Cloud Computing engineering student at ENSAM Casablanca. Cloud security and DevSecOps, CTF player, Falling Walls Lab Morocco winner.",
-  headline: <>Hello World !</>,
-  subtitle: `${person.role} · Cloud Security & DevSecOps`,
-  badges: [
-    "Falling Walls Lab Morocco Winner",
-    "OlympICTs CTF 1st worldwide",
-    "GDG on Campus Lead",
-  ],
-  featured: {
-    display: false,
-    title: (
-      <Row gap="12" vertical="center">
-        <strong className="ml-4">Welcome</strong>{" "}
-        <Line background="brand-alpha-strong" vert height="20" />
-        <Text marginRight="4" onBackground="brand-medium">
-          Featured
-        </Text>
-      </Row>
-    ),
-    href: "/#projects",
-  },
+    "Cybersecurity & Cloud Computing engineering student at ENSAM Casablanca and Falling Walls Lab 2026 Global Finalist. Secure cloud, DevSecOps and Industrial IoT.",
+  image: `/api/og/generate?title=${encodeURIComponent(`${person.name} · Cybersecurity & Cloud Engineering Student`)}`,
+  eyebrow: "~/casablanca",
+  coordinates: "33.57° N · 7.59° W",
+  headline: <>Securing the systems where AI, industry and health meet</>,
+  subtitle: "Cybersecurity & Cloud Computing Engineering Student · ENSAM Casablanca",
+  credentials: ["Falling Walls Lab Global Finalist 2026", "Fortinet NSE 4", "GDG on Campus Lead"],
+  openTo: (
+    <>
+      Summer 2027 internships (industry or research) and part-time remote roles during my studies,
+      in Germany, Australia or Japan.
+    </>
+  ),
   featuredPosts: {
     display: true,
     title: "Highlights",
     // Newest first. Posts with an empty link are hidden until you paste the URL.
     posts: [
       {
-        name: "Falling Walls Lab Morocco 2026",
-        // TODO(houssam): paste the LinkedIn post URL (and optionally add an image in public/images/featured/).
+        name: "Falling Walls Lab Global Finale, Berlin 2026",
+        // TODO(houssam): add the photo at public/images/featured/FWL-Berlin-2026.jpg and set image.
+        // TODO(houssam): paste the LinkedIn post URL below; the card stays hidden until then.
         link: "",
-        description: "Won the national Falling Walls Lab in Rabat with Smart Energy Guardian.",
+        description:
+          "Pitched “Breaking the Wall of Industrial Energy Waste” for Morocco at the Global Finale.",
       },
       {
         name: "OlympICTs CTF 2026",
@@ -120,12 +98,10 @@ const home: Home = {
   },
   subline: (
     <>
-      I&apos;m an engineering student in Cybersecurity and Cloud Computing at ENSAM Casablanca
-      (Hassan II University), graduating in 2028. I work on cloud and software supply-chain
-      security: this summer at Dataprotect I built a DevSecOps pipeline with signed, verifiable
-      container images and an LLM-assisted vulnerability triage tool. Outside of that I play CTFs,
-      build systems projects in Rust and C, and lead the Google Developer Group on Campus at my
-      school.
+      Cybersecurity &amp; Cloud Computing engineering student at ENSAM Casablanca (Hassan II
+      University, class of 2028) and Falling Walls Lab 2026 Global Finalist representing Morocco in
+      Berlin. I build secure cloud and Industrial IoT systems, from DevSecOps pipelines to Smart
+      Energy Guardian, an AI platform that cuts industrial energy waste.
     </>
   ),
 };
@@ -157,31 +133,35 @@ const about: About = {
     experiences: [
       {
         id: "experience-dataprotect",
-        company: "Dataprotect, Cloud Security Business Unit",
+        company: "Dataprotect",
         // TODO(houssam): add public/images/logo/dataprotect.png and set logo: "/images/logo/dataprotect.png"
         timeframe: "Jul 2026 – Sep 2026",
-        role: "Cloud Security Intern (PFA)",
-        type: "Internship",
-        location: "Casablanca, Morocco · On-site",
+        role: "Cloud Security Intern (DevSecOps)",
+        type: "Internship (PFA) · Cloud Security Business Unit",
+        location: "Casablanca, Morocco",
         featured: true,
         current: false,
         description:
-          "Built a DevSecOps CI/CD pipeline aligned with the EU Cyber Resilience Act, covering SBOM generation, image signing and provenance, and policy enforcement on Kubernetes.",
+          "Software supply-chain security: provenance with SBOMs and artifact signatures, and LLM-assisted vulnerability triage.",
         achievements: [
-          "Integrated Semgrep, Trivy, cosign and Kyverno into the pipeline, deploying to AWS EKS provisioned with Terraform.",
-          "Cut container image components from 89 to 31 by hardening base images.",
-          "Raised the cluster's Kubescape security score from 67.6 to 73.3.",
-          "Built an LLM-assisted vulnerability triage tool to prioritise scanner findings.",
+          "Built a CI/CD pipeline for a Kubernetes microservices app with the EU Cyber Resilience Act in mind: Semgrep and Trivy scans block critical issues, every image gets an SBOM and a keyless cosign signature, and Kyverno refuses unsigned images.",
+          "Wrote a Python tool that uses an LLM to help triage vulnerabilities (SSVC, EPSS, CISA KEV). The final decision stays in a fixed rule table, inputs are cleaned against prompt injection and sensitive cases go to a human. It handled 25 real findings with no failures and is covered by 78 unit tests.",
+          "Cut the container image from 89 to 31 components (190 MB to 83 MB) and raised the cluster's Kubescape NSA score from 67.6 to 73.3.",
+          "Automated a test run on AWS EKS with Terraform and Prowler, and wrote a cost study for a security-as-a-service offer.",
         ],
         skills: [
+          "DevSecOps",
+          "SBOM",
+          "Supply-chain security",
+          "LLMs",
+          "Docker",
           "Kubernetes",
           "AWS EKS",
           "Terraform",
-          "Sigstore",
+          "cosign",
           "Kyverno",
           "Trivy",
           "Semgrep",
-          "LLMs",
         ],
         links: {},
       },
@@ -198,8 +178,8 @@ const about: About = {
         description:
           "Built a full-stack web application to manage vaccination at border points, with Spring Boot, React and MySQL.",
         achievements: [
-          // TODO(houssam): confirm Spring Security/JWT before adding it to this line.
-          "Implemented authenticated, role-based API endpoints for health data.",
+          "Built secure REST API endpoints for health data on a Spring Boot back-end, with a React front-end.",
+          "Designed the MySQL database and looked after its data model and day-to-day management.",
         ],
         skills: ["Spring Boot", "React", "MySQL"],
         links: {},
@@ -213,17 +193,13 @@ const about: About = {
       {
         name: "ENSAM Casablanca, Hassan II University",
         description: (
-          <>Engineering degree (Ingénieur d&apos;État), Cybersecurity &amp; Cloud Computing</>
+          <>
+            Engineering degree (Ingénieur d&apos;État), Cybersecurity &amp; Cloud Computing.
+            Integrated preparatory cycle 2023 – 2025, engineering cycle 2025 – 2028.
+          </>
         ),
         logo: "/images/logo/logoENsam.png",
-        timeframe: "2025 – 2028 (expected)",
-        location: "Casablanca, Morocco",
-      },
-      {
-        name: "ENSAM Casablanca",
-        description: <>Integrated preparatory cycle</>,
-        logo: "/images/logo/logoENsam.png",
-        timeframe: "2023 – 2025",
+        timeframe: "2023 – 2028 (expected)",
         location: "Casablanca, Morocco",
       },
     ],
@@ -234,20 +210,37 @@ const about: About = {
     activities: [
       {
         role: "Organizer (Lead)",
-        name: "Google Developer Group on Campus ENSAM Casablanca",
+        name: "GDG on Campus ENSAM Casablanca",
         timeframe: "2026 – 2027",
         description: "Previously Outreach Manager, 2025 – 2026.",
       },
       {
+        role: "Founder",
+        name: "Smart Energy Guardian",
+        timeframe: "2025 – present",
+        description:
+          "AI and Industrial IoT platform for predictive maintenance and energy optimisation in manufacturing SMEs.",
+      },
+      {
         role: "Founder & President",
         name: "ENSAMIEN Parrainage",
-        // TODO(houssam): add the start year, e.g. timeframe: "2025 – Present"
+        timeframe: "2025 – present",
         description: "Student mentoring program at ENSAM Casablanca.",
+      },
+      {
+        role: "Extracurricular Activities Manager",
+        name: "Students' Association, ENSAM Casablanca",
+        timeframe: "2024 – 2026",
       },
       {
         role: "Organizing committee",
         name: "Forum ENSAM Casablanca Entreprises 2025",
         timeframe: "2025",
+      },
+      {
+        role: "Dinghy Sailing Instructor",
+        name: "Yacht Club of Mohammedia",
+        timeframe: "2018 – 2025",
       },
     ],
   },
@@ -257,61 +250,55 @@ const about: About = {
     spokenLanguages: person.languages,
     skills: [
       {
-        title: "Cloud & DevSecOps",
-        tags: [
-          { name: "AWS", icon: "aws" },
-          { name: "Azure", icon: "azure" },
-          { name: "Docker", icon: "docker" },
-          { name: "Kubernetes", icon: "kubernetes" },
-          { name: "Terraform", icon: "terraform" },
-          { name: "GitHub Actions", icon: "githubactions" },
-          { name: "Kyverno" },
-          { name: "cosign/Sigstore" },
-          { name: "Trivy", icon: "trivy" },
-          { name: "Semgrep" },
-          { name: "Kubescape" },
-        ],
-      },
-      {
         title: "Security",
         tags: [
-          { name: "Burp Suite", icon: "burpsuite" },
+          { name: "Penetration testing" },
           { name: "Nmap" },
-          { name: "Metasploit", icon: "metasploit" },
-          { name: "Wireshark", icon: "wireshark" },
-          { name: "Ghidra" },
-          { name: "x64dbg" },
-          { name: "FLARE-VM" },
-          { name: "Fortinet (FortiGate/FortiAnalyzer)", icon: "fortinet" },
+          { name: "Metasploit" },
+          { name: "Burp Suite" },
+          { name: "Threat modeling (STRIDE)" },
+          { name: "Vulnerability triage (SSVC, EPSS, KEV)" },
+          { name: "SBOM & supply-chain security" },
+          { name: "OSINT" },
+          { name: "CTFs" },
+          { name: "Fortinet NSE 4" },
         ],
       },
       {
-        title: "Languages",
+        title: "Cloud & DevOps",
         tags: [
-          { name: "Python", icon: "python" },
-          { name: "Rust", icon: "rust" },
-          { name: "Go", icon: "go" },
-          { name: "C", icon: "c" },
-          { name: "C++", icon: "cpp" },
-          { name: "Java", icon: "java" },
-          { name: "TypeScript", icon: "typescript" },
+          { name: "AWS (EKS, IAM, ECR, S3)" },
+          { name: "Azure" },
+          { name: "Kubernetes" },
+          { name: "Docker" },
+          { name: "Terraform" },
+          { name: "GitHub Actions" },
+          { name: "Trivy" },
+          { name: "Semgrep" },
+          { name: "cosign" },
+          { name: "Kyverno" },
+          { name: "Prowler" },
+          { name: "Linux" },
         ],
       },
       {
-        title: "Web & data",
+        title: "Development",
         tags: [
-          { name: "Spring Boot", icon: "springboot" },
-          { name: "React", icon: "react" },
-          { name: "Next.js", icon: "nextjs" },
-          { name: "MySQL", icon: "mysql" },
-          { name: "PostgreSQL", icon: "postgresql" },
-        ],
-      },
-      {
-        title: "Systems",
-        tags: [
-          { name: "Linux", icon: "linux" },
-          { name: "Git", icon: "git" },
+          { name: "Python" },
+          { name: "TypeScript" },
+          { name: "Go" },
+          { name: "Rust" },
+          { name: "Java" },
+          { name: "C/C++" },
+          { name: "Bash" },
+          { name: "Next.js" },
+          { name: "React" },
+          { name: "Spring Boot" },
+          { name: "FastAPI" },
+          { name: "PostgreSQL" },
+          { name: "MySQL" },
+          { name: "Git" },
+          { name: "LLMs & RAG" },
         ],
       },
     ],
@@ -325,10 +312,19 @@ const projects: Projects = {
     {
       title: "Smart Energy Guardian",
       description:
-        "AI and IoT predictive maintenance and energy optimisation for industrial sites. Reduced energy consumption by 20% in an industrial simulation.",
+        "AI and Industrial IoT platform for predictive maintenance and energy optimisation in manufacturing SMEs. Sensors feed unsupervised anomaly detection (Isolation Forest, LOF, One-Class SVM) that estimates time to failure with 90% accuracy, with a RAG assistant that suggests fixes. Reduced energy use by 20% in an industrial simulation.",
       highlight:
-        "Won Falling Walls Lab Morocco 2026 and AGIOS v2. 3rd at ENSEM Hackathon. Finalist at JNITI 2026, Ramadan AI and Capgemini Engineering Techathon 2025.",
-      tags: ["AI", "IoT", "Predictive maintenance", "Energy optimisation"],
+        "1st place Falling Walls Lab Morocco and AGIOS v2 (2026). 3rd at ENSEM Hackathon. Finalist at JNITI 2026, Ramadan AI and Capgemini Engineering Techathon 2025.",
+      tags: [
+        "Next.js",
+        "FastAPI",
+        "Docker",
+        "MQTT",
+        "InfluxDB",
+        "PostgreSQL",
+        "JWT/RBAC",
+        "Anomaly detection",
+      ],
       image: "/images/featured/Techathon.jpg",
       imageAlt: "Smart Energy Guardian team at the Capgemini Engineering Techathon 2025",
       // TODO(houssam): the SEG-S repo is private. Add a public GitHub or demo URL if you have one.
@@ -337,8 +333,8 @@ const projects: Projects = {
     {
       title: "DevSecOps supply-chain pipeline (Dataprotect)",
       description:
-        "CI/CD pipeline aligned with the EU Cyber Resilience Act: SBOMs, signed images with provenance, and policy enforcement on AWS EKS. Internal work, so no public code.",
-      tags: ["Kubernetes", "AWS EKS", "Terraform", "Sigstore", "Kyverno", "Trivy", "Semgrep"],
+        "CI/CD pipeline aligned with the EU Cyber Resilience Act: SBOMs, keyless-signed images with provenance, and policy enforcement on Kubernetes. Internal work, so no public code.",
+      tags: ["Kubernetes", "AWS EKS", "Terraform", "cosign", "Kyverno", "Trivy", "Semgrep"],
       links: {
         details: "#experience-dataprotect",
       },
@@ -383,38 +379,38 @@ const projects: Projects = {
 
 const awards: Awards = {
   display: true,
-  title: "Honors & Awards",
+  title: "Awards & Leadership",
   items: [
     // Update this single entry with the Berlin result after the Global Finale.
     <>
-      <strong>Falling Walls Lab 2026, Global Finalist for Morocco.</strong> Won the national Lab in
-      Rabat; pitching &quot;Breaking the Wall of Industrial Energy Waste&quot; at the Global Finale
-      in Berlin, November 2026.
+      <strong>Falling Walls Lab 2026, Global Finalist for Morocco.</strong> 1st place at Falling
+      Walls Lab Morocco, then the Global Finale in Berlin (November 2026) with the pitch
+      &ldquo;Breaking the Wall of Industrial Energy Waste&rdquo;. Recognised at the Hassan II
+      University Forum of Excellence (July 2026).
     </>,
     <>
-      <strong>OlympICTs CTF 2026 (MWCapital), 1st place worldwide</strong> in the qualifier (1,500
-      points); qualified for the Barcelona final.
+      <strong>OlympICTs CTF 2026 (MWCapital), 1st place worldwide</strong> in the qualifier with
+      1,500 points; qualified for the Barcelona final.
+    </>,
+    <>
+      <strong>Smart Energy Guardian:</strong> 1st prize AGIOS v2 2026, 3rd place ENSEM Hackathon,
+      finalist at Capgemini Engineering Techathon 2025, JNITI 2026 and Ramadan AI.
     </>,
     <>
       <strong>HackerRank Orchestrate Hackathon 2026, 1st in Morocco</strong>, 106th of 1,983
       worldwide.
     </>,
     <>
-      <strong>AGIOS v2 2026, 1st prize</strong> with Smart Energy Guardian.
-    </>,
-    <>
       <strong>Award of Excellence in Extracurricular Activities 2025/2026</strong>, Hassan II
-      University of Casablanca, for the Falling Walls and AGIOS wins.
-    </>,
-    <>
-      <strong>ENSEM Hackathon, 3rd prize</strong> with Smart Energy Guardian.
+      University of Casablanca.
     </>,
   ],
   footnote: (
     <>
-      Also competed in: AKASEC CTF 2025, Cipher Challenge (UM6P), MCPC 2025 (UM6P), ECPC (ENSAM).
+      Also competed in: MCPC 2025 (UM6P), AKASEC CTF 2025, Cipher Challenge (UM6P), ECPC (ENSAM).
     </>
   ),
+  certifications: ["Fortinet NSE 4", "Security Blue Team OSINT", "TryHackMe Pre Security"],
 };
 
 const designs: Designs = {
@@ -425,4 +421,4 @@ const designs: Designs = {
   images: [],
 };
 
-export { person, social, newsletter, home, about, projects, awards, designs };
+export { person, social, home, about, projects, awards, designs };
