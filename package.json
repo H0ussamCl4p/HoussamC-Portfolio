@@ -15,7 +15,7 @@
   "dependencies": {
     "@once-ui-system/core": "^1.4.27",
     "classnames": "^2.5.1",
-    "fast-equals": "5.4.0",
+    "fast-equals": "6.2.2",
     "googleapis": "^157.0.0",
     "next": "^15.5.28",
     "react": "^19.3.1",
