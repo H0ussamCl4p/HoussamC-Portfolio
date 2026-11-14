@@ -5,9 +5,7 @@
   top: 0;
   z-index: 10;
   width: 100%;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 
