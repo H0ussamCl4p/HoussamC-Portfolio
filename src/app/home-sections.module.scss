@@ -153,15 +153,61 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 
 @media (min-width: 720px) {
   .heroMeta {
-    margin-bottom: 56px;
+    margin-bottom: 48px;
   }
+}
+
+/* Photo on the left, headline on the right; stacked on phones. */
+.heroMain {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+@media (min-width: 720px) {
+  .heroMain {
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
+  }
+}
+
+.avatar {
+  position: relative;
+  flex: none;
+  width: 200px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  /* Thin ink ring with a paper gap, instead of a glow */
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 0 0 6px var(--bg),
+    0 0 0 7px var(--line-strong);
+  margin: 7px;
+}
+
+@media (min-width: 720px) {
+  .avatar {
+    width: 280px;
+  }
+}
+
+.avatarImg {
+  object-fit: cover;
+  /* Keep the face in the circle; the full photo is stored uncropped. */
+  object-position: 40% 30%;
+}
+
+.heroText {
+  min-width: 0;
 }
 
 .headline {
   max-width: 20ch;
   margin: 0;
   font-family: var(--font-sans), sans-serif;
-  font-size: clamp(2.1rem, 1.4rem + 3.6vw, 3.9rem);
+  font-size: clamp(2.1rem, 1.2rem + 2.8vw, 3.4rem);
   font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -270,43 +316,6 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 /* ---------- About ---------- */
-
-.aboutGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width: 720px) {
-  .aboutGrid {
-    grid-template-columns: 200px 1fr;
-    gap: 40px;
-  }
-}
-
-.avatar {
-  position: relative;
-  width: 120px;
-  aspect-ratio: 1;
-  border: 1px solid var(--line-strong);
-  overflow: hidden;
-}
-
-@media (min-width: 720px) {
-  .avatar {
-    width: 200px;
-  }
-}
-
-.avatarImg {
-  object-fit: cover;
-}
-
-.aboutText {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
 
 .lead {
   margin: 0;
