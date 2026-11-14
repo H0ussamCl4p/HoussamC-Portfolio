@@ -1,36 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-
 const buttonBase: React.CSSProperties = {
   position: "fixed",
-  right: "2rem",
-  bottom: "2rem",
-  zIndex: 2147483647,
-  background: "#0096ff",
-  color: "#fff",
-  border: "none",
-  borderRadius: "50%",
-  width: "56px",
-  height: "56px",
+  right: "1rem",
+  bottom: "1rem",
+  zIndex: 20,
+  background: "var(--bg)",
+  color: "var(--ink)",
+  border: "1px solid var(--line-strong)",
+  borderRadius: "4px",
+  width: "44px",
+  height: "44px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: "2rem",
-  boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
   cursor: "pointer",
-  transition: "transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s, background 0.2s, opacity 0.2s",
-  opacity: 0.85,
-  outline: "none",
+  transition: "color 0.15s, border-color 0.15s",
 };
 
 const buttonHover: React.CSSProperties = {
-  transform: "scale(1.12)",
-  boxShadow: "0 8px 24px rgba(0,150,255,0.25)",
-  background: "#0070c9",
-  opacity: 1,
+  color: "var(--accent-text)",
+  borderColor: "var(--accent)",
 };
-
 
 const ScrollToTopButton = () => {
   const [visible, setVisible] = useState(false);
@@ -38,9 +30,9 @@ const ScrollToTopButton = () => {
 
   useEffect(() => {
     const onScroll = () => {
-      setVisible(window.scrollY > 200);
+      setVisible(window.scrollY > 400);
     };
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -52,13 +44,24 @@ const ScrollToTopButton = () => {
 
   return (
     <button
+      type="button"
       style={{ ...buttonBase, ...(hovered ? buttonHover : {}) }}
       onClick={handleClick}
       aria-label="Scroll to top"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
         <polyline points="6 15 12 9 18 15" />
       </svg>
     </button>

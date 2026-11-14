@@ -1,57 +1,70 @@
-/* :root {
-  /*
-  /* Example setup for custom colors */
-/* Generate at: https://once-ui.com/customize */
-/*
-  --scheme-brand-100: #08002f;
-  --scheme-brand-200:  #04025c;
-  --scheme-brand-300:  #1f398e;
-  --scheme-brand-400:  #3856ae;
-  --scheme-brand-500:  #5071cc;
-  --scheme-brand-600:  #6f94f1;
-  --scheme-brand-700:  #8db3ff;
-  --scheme-brand-800:  #b2dbff;
-  --scheme-brand-900:  #bfe8ff;
-  --scheme-brand-1000: #ccf6ff;
-  --scheme-brand-1100: #d2fcff;
-  --scheme-brand-1200: #d2fcff;
-  --scheme-brand-600-10: rgba(111,148,241,0.1);
-  --scheme-brand-600-30: rgba(111,148,241,0.3);
-  --scheme-brand-600-50: rgba(111,148,241,0.5);
+/* ========== Banner theme ==========
+ * Matches the LinkedIn banner: warm off-white paper with a faint square grid,
+ * near-black ink, one red accent used sparingly. Dark mode keeps the grid and red.
+ */
 
-  --scheme-accent-100:  #030b10;
-  --scheme-accent-200:  #0d181d;
-  --scheme-accent-300:  #364248;
-  --scheme-accent-400:  #505d64;
-  --scheme-accent-500:  #69777e;
-  --scheme-accent-600:  #8a989f;
-  --scheme-accent-700:  #a8b7bf;
-  --scheme-accent-800:  #c8d7df;
-  --scheme-accent-900:  #d5e4ec;
-  --scheme-accent-1000: #e2f1f9;
-  --scheme-accent-1100: #e9f8ff;
-  --scheme-accent-1200: #efffff;
-  --scheme-accent-600-10: rgba(138,152,159,0.1);
-  --scheme-accent-600-30: rgba(138,152,159,0.3);
-  --scheme-accent-600-50: rgba(138,152,159,0.5);
+:root,
+html[data-theme="light"] {
+  --bg: #f3f0ea;
+  --surface: #f8f6f1;
+  --ink: #1f1d1a;
+  --ink-2: #6b6760;
+  --ink-3: #8a857c;
+  --line: rgba(31, 29, 26, 0.14);
+  --line-strong: rgba(31, 29, 26, 0.28);
+  --grid: rgba(31, 29, 26, 0.045);
+  --accent: #e0262b;
+  /* Accent for small text on the page background (4.5:1 or better) */
+  --accent-text: #c21f24;
+  --accent-soft: rgba(224, 38, 43, 0.08);
+}
 
-  --scheme-neutral-100:  #020b10;
-  --scheme-neutral-200:  #0b181d;
-  --scheme-neutral-300:  #344248;
-  --scheme-neutral-400:  #4f5d64;
-  --scheme-neutral-500:  #68777e;
-  --scheme-neutral-600:  #89989f;
-  --scheme-neutral-700:  #a7b7be;
-  --scheme-neutral-800:  #c7d7df;
-  --scheme-neutral-900:  #d4e4ec;
-  --scheme-neutral-1000: #e1f2f9;
-  --scheme-neutral-1100: #e7f8ff;
-  --scheme-neutral-1200: #eeffff;
-  --scheme-neutral-600-10: rgba(137,152,159,0.1);
-  --scheme-neutral-600-30: rgba(137,152,159,0.3);
-  --scheme-neutral-600-50: rgba(137,152,159,0.5);
-  /*
-}*/
+html[data-theme="dark"] {
+  --bg: #131211;
+  --surface: #1a1917;
+  --ink: #ece8e1;
+  --ink-2: #a29d94;
+  --ink-3: #7d786f;
+  --line: rgba(236, 232, 225, 0.13);
+  --line-strong: rgba(236, 232, 225, 0.26);
+  --grid: rgba(236, 232, 225, 0.04);
+  --accent: #e0262b;
+  --accent-text: #f0464c;
+  --accent-soft: rgba(224, 38, 43, 0.12);
+}
+
+/* Map the palette and fonts onto Once UI tokens, so its components follow along. */
+html[data-theme] {
+  --font-heading: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-label: var(--font-mono);
+  --font-code: var(--font-mono);
+
+  --page-background: var(--bg);
+  --surface-background: var(--surface);
+  --neutral-on-background-strong: var(--ink);
+  --neutral-on-background-medium: var(--ink-2);
+  --neutral-on-background-weak: var(--ink-2);
+  --brand-on-background-strong: var(--ink);
+  --brand-on-background-medium: var(--accent-text);
+  --brand-on-background-weak: var(--accent-text);
+  --neutral-alpha-weak: var(--line);
+  --neutral-alpha-medium: var(--line);
+  --neutral-border-medium: var(--line-strong);
+
+  /* Older names still used by the designs page */
+  --portfolio-accent: var(--accent);
+  --portfolio-accent-text: var(--accent-text);
+  --portfolio-border: var(--line);
+  --portfolio-border-strong: var(--line-strong);
+  --portfolio-card-bg: var(--surface);
+  --portfolio-card-bg-strong: var(--bg);
+  --portfolio-text-muted: var(--ink-2);
+  --portfolio-text-strong: var(--ink);
+  --portfolio-pill-bg: transparent;
+  --portfolio-pill-border: var(--line-strong);
+  --portfolio-pill-text: var(--ink);
+}
 
 /* ========== Global Mobile-First Styles ========== */
 
@@ -59,6 +72,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -67,6 +81,19 @@ body {
   overscroll-behavior-y: contain;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--ink);
+  background-color: var(--bg);
+  /* Faint square grid, as on the banner */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
 }
 
 /* Safe area for notched devices */
@@ -74,19 +101,6 @@ body {
   body {
     padding-bottom: env(safe-area-inset-bottom);
   }
-}
-
-/* Prevent layout shift on scrollbar */
-html {
-  scrollbar-gutter: stable;
-}
-
-/* Touch-friendly tap targets */
-button,
-a,
-[role="button"] {
-  min-height: 44px;
-  min-width: 44px;
 }
 
 /* Reduce motion for accessibility */
@@ -101,189 +115,6 @@ a,
   }
 }
 
-/* ========== Portfolio Theme Variables ========== */
-
-:root {
-  --portfolio-accent: rgb(59 130 246);
-  --portfolio-accent-soft: rgba(59, 130, 246, 0.18);
-  --portfolio-accent-glow: rgba(59, 130, 246, 0.35);
-  /* Accent for text and outlines on the page background (4.5:1 or better) */
-  --portfolio-accent-text: rgb(96 165 250);
-
-  --portfolio-border: rgba(255, 255, 255, 0.10);
-  --portfolio-border-strong: rgba(255, 255, 255, 0.14);
-
-  --portfolio-card-bg: rgba(2, 6, 23, 0.55);
-  --portfolio-card-bg-strong: rgba(2, 6, 23, 0.72);
-
-  --portfolio-hero-bg:
-    radial-gradient(1200px 600px at 20% 40%, rgba(59, 130, 246, 0.18), transparent 60%),
-    radial-gradient(900px 500px at 80% 20%, rgba(59, 130, 246, 0.10), transparent 55%),
-    radial-gradient(700px 500px at 70% 85%, rgba(255, 255, 255, 0.06), transparent 55%),
-    linear-gradient(180deg, rgba(2, 6, 23, 0.92), rgba(2, 6, 23, 0.78));
-
-  --portfolio-stars-opacity: 0.8;
-
-  /* Pill/badge colors */
-  --portfolio-pill-bg: rgba(59, 130, 246, 0.14);
-  --portfolio-pill-border: rgba(59, 130, 246, 0.35);
-  --portfolio-pill-text: rgba(255, 255, 255, 0.9);
-
-  /* Text colors */
-  --portfolio-text-muted: rgba(255, 255, 255, 0.7);
-  --portfolio-text-strong: rgba(255, 255, 255, 0.95);
-}
-
-/* Mobile-optimized hero gradient */
-@media (max-width: 767px) {
-  :root {
-    --portfolio-hero-bg:
-      radial-gradient(600px 400px at 50% 30%, rgba(59, 130, 246, 0.2), transparent 60%),
-      radial-gradient(400px 300px at 50% 70%, rgba(59, 130, 246, 0.08), transparent 55%),
-      linear-gradient(180deg, rgba(2, 6, 23, 0.95), rgba(2, 6, 23, 0.85));
-  }
-}
-
-html[data-theme="light"] {
-  --portfolio-border: rgba(15, 23, 42, 0.12);
-  --portfolio-border-strong: rgba(15, 23, 42, 0.16);
-
-  --portfolio-card-bg: rgba(255, 255, 255, 0.72);
-  --portfolio-card-bg-strong: rgba(255, 255, 255, 0.88);
-
-  --portfolio-hero-bg:
-    radial-gradient(1100px 600px at 20% 35%, rgba(59, 130, 246, 0.15), transparent 58%),
-    radial-gradient(900px 500px at 80% 20%, rgba(59, 130, 246, 0.08), transparent 55%),
-    radial-gradient(700px 500px at 70% 85%, rgba(2, 6, 23, 0.04), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.90));
-
-  --portfolio-stars-opacity: 0.25;
-
-  /* Pill/badge colors - higher contrast for light */
-  --portfolio-pill-bg: rgba(59, 130, 246, 0.12);
-  --portfolio-pill-border: rgba(59, 130, 246, 0.28);
-  --portfolio-pill-text: rgb(30, 64, 175);
-  --portfolio-accent-text: rgb(29 78 216);
-
-  /* Text colors */
-  --portfolio-text-muted: rgba(15, 23, 42, 0.65);
-  --portfolio-text-strong: rgba(15, 23, 42, 0.92);
-}
-
-/* Mobile-optimized light mode hero gradient */
-@media (max-width: 767px) {
-  html[data-theme="light"] {
-    --portfolio-hero-bg:
-      radial-gradient(500px 400px at 50% 30%, rgba(59, 130, 246, 0.12), transparent 60%),
-      radial-gradient(400px 300px at 50% 70%, rgba(59, 130, 246, 0.06), transparent 55%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
-  }
-}
-
-/* ========== Custom Cursor for Desktop ========== */
-
-/* Hide default cursor when custom cursor is active */
-@media (hover: hover) and (pointer: fine) {
-  html.custom-cursor-active,
-  html.custom-cursor-active * {
-    cursor: none !important;
-  }
-
-  /* Keep specific cursors for text inputs */
-  html.custom-cursor-active input[type="text"],
-  html.custom-cursor-active input[type="email"],
-  html.custom-cursor-active input[type="password"],
-  html.custom-cursor-active input[type="search"],
-  html.custom-cursor-active textarea,
-  html.custom-cursor-active [contenteditable="true"] {
-    cursor: text !important;
-  }
-}
-
-/* ========== Desktop Hover Effects ========== */
-
-@media (hover: hover) and (pointer: fine) {
-  /* Button hover effects */
-  button,
-  a,
-  [role="button"],
-  [class*="Button"] {
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.2s ease,
-                background 0.2s ease,
-                border-color 0.2s ease;
-  }
-
-  button:hover,
-  [role="button"]:hover,
-  [class*="Button"]:hover {
-    transform: translateY(-2px);
-  }
-
-  button:active,
-  [role="button"]:active,
-  [class*="Button"]:active {
-    transform: translateY(0) scale(0.98);
-  }
-
-  /* Link hover effects */
-  a:not([class*="Button"]):hover {
-    opacity: 0.85;
-  }
-
-  /* Card hover effects */
-  [class*="Card"],
-  .card {
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.25s ease,
-                border-color 0.25s ease;
-  }
-
-  [class*="Card"]:hover,
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.12),
-                0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: rgba(59, 130, 246, 0.25);
-  }
-
-  /* Icon button hover */
-  [class*="IconButton"] {
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-                background 0.2s ease,
-                box-shadow 0.2s ease;
-  }
-
-  [class*="IconButton"]:hover {
-    transform: scale(1.1);
-    background: rgba(59, 130, 246, 0.15);
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
-  }
-
-  [class*="IconButton"]:active {
-    transform: scale(0.95);
-  }
-
-  /* Badge hover */
-  [class*="Badge"]:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-  }
-
-  /* Image hover effects */
-  .image-hover-zoom {
-    overflow: hidden;
-  }
-
-  .image-hover-zoom img {
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .image-hover-zoom:hover img {
-    transform: scale(1.05);
-  }
-}
-
 /* ========== Focus States for Accessibility ========== */
 
 button:focus-visible,
@@ -292,90 +123,8 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--portfolio-accent);
-  outline-offset: 2px;
-}
-
-/* ========== Interactive Element Shine Effect ========== */
-
-@media (hover: hover) and (pointer: fine) {
-  .shine-effect {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .shine-effect::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.15),
-      transparent
-    );
-    transition: left 0.5s ease;
-  }
-
-  .shine-effect:hover::before {
-    left: 100%;
-  }
-}
-
-/* ========== Glow Effect on Hover ========== */
-
-@media (hover: hover) and (pointer: fine) {
-  .glow-on-hover {
-    transition: box-shadow 0.3s ease;
-  }
-
-  .glow-on-hover:hover {
-    box-shadow: 0 0 24px rgba(59, 130, 246, 0.35),
-                0 0 48px rgba(59, 130, 246, 0.15);
-  }
-}
-
-/* ========== Interactive Utility Classes ========== */
-
-.interactive {
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .interactive:hover {
-    transform: translateY(-2px);
-  }
-
-  .interactive:active {
-    transform: translateY(0) scale(0.98);
-  }
-}
-
-/* ========== Disable effects on touch devices ========== */
-
-@media (hover: none), (pointer: coarse) {
-  button,
-  a,
-  [role="button"],
-  [class*="Button"],
-  [class*="Card"],
-  [class*="IconButton"],
-  .card,
-  .interactive {
-    transition: none !important;
-    transform: none !important;
-  }
-
-  /* Keep active states for touch feedback */
-  button:active,
-  a:active,
-  [role="button"]:active {
-    opacity: 0.7;
-  }
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* Sections are flex children of the page column: never let content widen them. */
@@ -384,15 +133,8 @@ section[id] {
   max-width: 100%;
 }
 
-/* Keep anchored sections clear of the sticky header (bottom bar on mobile). */
+/* Keep anchored sections clear of the sticky header. */
 section[id],
 [id^="experience-"] {
-  scroll-margin-top: 96px;
-}
-
-@media (max-width: 768px) {
-  section[id],
-  [id^="experience-"] {
-    scroll-margin-top: 24px;
-  }
+  scroll-margin-top: 112px;
 }

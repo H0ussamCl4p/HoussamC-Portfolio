@@ -71,58 +71,6 @@ export type DataStyleConfig = {
 };
 
 /**
- * Effects configuration for UI visuals.
- */
-export type EffectsConfig = {
-  mask: {
-    cursor: boolean;
-    x: number;
-    y: number;
-    radius: number;
-  };
-  gradient: {
-    display: boolean;
-    opacity: number;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    tilt: number;
-    colorStart: string;
-    colorEnd: string;
-  };
-  dots: {
-    display: boolean;
-    opacity: number;
-    size: string;
-    color: string;
-  };
-  grid: {
-    display: boolean;
-    opacity: number;
-    color: string;
-    width: string;
-    height: string;
-  };
-  lines: {
-    display: boolean;
-    opacity: number;
-    color: string;
-    size: string;
-    thickness: number;
-    angle: number;
-  };
-};
-
-/**
- * Mailchimp configuration for newsletter forms.
- */
-export type MailchimpConfig = {
-  action: string;
-  effects: EffectsConfig;
-};
-
-/**
  * Schema data for SEO/meta tags.
  */
 export type SchemaConfig = {
@@ -143,13 +91,11 @@ export type SameAsConfig = Record<string, string>;
  */
 export type OnceUIConfig = {
   display: DisplayConfig;
-  mailchimp: MailchimpConfig;
   routes: RoutesConfig;
   baseURL: string;
   fonts: FontsConfig;
   style: StyleConfig;
   schema: SchemaConfig;
   sameAs: SameAsConfig;
-  effects: EffectsConfig;
   dataStyle: DataStyleConfig;
 };
