@@ -115,7 +115,7 @@ export default async function RootLayout({
         >
           <ScrollToTopButton />
           <Header />
-          <Flex zIndex={0} fillWidth padding="l" horizontal="center" flex={1}>
+          <Flex as="main" zIndex={0} fillWidth horizontal="center" flex={1}>
             <Flex horizontal="center" fillWidth minHeight="0">
               {children}
             </Flex>
