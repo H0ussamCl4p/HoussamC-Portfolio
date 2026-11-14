@@ -47,6 +47,7 @@ export default async function RootLayout({
           nonce={nonce}
           // Browsers hide the nonce attribute after load, so it never matches on hydration.
           suppressHydrationWarning
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static theme bootstrap script, CSP nonce-protected
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

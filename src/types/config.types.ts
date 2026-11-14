@@ -1,4 +1,4 @@
-import {
+import type {
   BorderStyle,
   ChartMode,
   ChartVariant,
@@ -11,7 +11,7 @@ import {
   Theme,
   TransitionStyle,
 } from "@once-ui-system/core";
-import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+import type { NextFontWithVariable } from "next/dist/compiled/@next/font";
 
 /**
  * Display configuration for UI elements.

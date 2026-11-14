@@ -3,7 +3,7 @@
 import { Button, Column, Heading, Text } from "@once-ui-system/core";
 
 // Generic error page: no error message, digest or stack trace is shown.
-export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <Column as="section" fill center paddingBottom="160" gap="16">
       <Text variant="display-strong-xl">Oops</Text>

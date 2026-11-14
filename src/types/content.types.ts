@@ -1,5 +1,5 @@
-import { IconName } from "@/resources/icons";
-import { zones } from "tzdata";
+import type { IconName } from "@/resources/icons";
+import type { zones } from "tzdata";
 
 /**
  * IANA time zone string (e.g., 'Asia/Calcutta', 'Europe/Vienna').
@@ -328,8 +328,8 @@ export interface Projects {
 export interface Awards {
   display: boolean;
   title: string;
-  /** Each entry is a single field so it can be swapped in one place */
-  items: React.ReactNode[];
+  /** Each entry: bold title, then a short detail */
+  items: Array<{ title: string; detail: React.ReactNode }>;
   /** Small line under the list */
   footnote?: React.ReactNode;
   /** Certifications, shown as a short list */

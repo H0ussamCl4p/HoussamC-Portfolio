@@ -1,4 +1,4 @@
-import { About, Awards, Designs, Home, Person, Projects, Social } from "@/types";
+import type { About, Awards, Designs, Home, Person, Projects, Social } from "@/types";
 
 const person: Person = {
   firstName: "Houssam",
@@ -301,22 +301,12 @@ const awards: Awards = {
   display: true,
   title: "Awards & Leadership",
   items: [
-    // Update this single entry with the Berlin result after the Global Finale.
-    <>
-      <strong>Falling Walls Lab 2026</strong> · 1st in Morocco, Global Finalist in Berlin
-    </>,
-    <>
-      <strong>OlympICTs CTF 2026</strong> · 1st worldwide in the qualifier
-    </>,
-    <>
-      <strong>AGIOS v2 2026</strong> · 1st prize with Smart Energy Guardian
-    </>,
-    <>
-      <strong>HackerRank Orchestrate 2026</strong> · 1st in Morocco, 106th of 1,983
-    </>,
-    <>
-      <strong>Award of Excellence 2025/26</strong> · Hassan II University
-    </>,
+    // Update this entry with the Berlin result after the Global Finale.
+    { title: "Falling Walls Lab 2026", detail: "1st in Morocco, Global Finalist in Berlin" },
+    { title: "OlympICTs CTF 2026", detail: "1st worldwide in the qualifier" },
+    { title: "AGIOS v2 2026", detail: "1st prize with Smart Energy Guardian" },
+    { title: "HackerRank Orchestrate 2026", detail: "1st in Morocco, 106th of 1,983" },
+    { title: "Award of Excellence 2025/26", detail: "Hassan II University" },
   ],
   footnote: (
     <>

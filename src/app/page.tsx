@@ -314,9 +314,9 @@ export default function Home() {
             <div>
               <h3 className={styles.label}>Awards</h3>
               <ul className={styles.plainList}>
-                {awards.items.map((item, i) => (
-                  <li key={`award-${i}`} className={styles.awardItem}>
-                    {item}
+                {awards.items.map((item) => (
+                  <li key={item.title} className={styles.awardItem}>
+                    <strong>{item.title}</strong> · {item.detail}
                   </li>
                 ))}
               </ul>
