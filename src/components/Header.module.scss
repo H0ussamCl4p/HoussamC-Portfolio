@@ -57,6 +57,8 @@
   scrollbar-width: none;
   margin: 0 -16px;
   padding: 0 16px;
+  /* Soft edges hint that the row scrolls sideways when it doesn't fit. */
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 24px), transparent);
 
   &::-webkit-scrollbar {
     display: none;
@@ -67,13 +69,16 @@
   .nav {
     margin: 0;
     padding: 0;
+    mask-image: none;
     justify-self: center;
   }
 }
 
 .navList {
   display: flex;
-  gap: 4px;
+  /* "safe" keeps the first link reachable if the row ever overflows. */
+  justify-content: safe center;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -84,7 +89,8 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 10px;
+  padding: 0 7px;
+  font-size: 12px;
   color: var(--ink-2);
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -100,13 +106,14 @@
   }
 }
 
-.navList li:first-child .navLink {
-  padding-left: 0;
-}
-
 @media (min-width: 900px) {
-  .navList li:first-child .navLink {
-    padding-left: 10px;
+  .navList {
+    gap: 4px;
+  }
+
+  .nav .navLink {
+    padding: 0 10px;
+    font-size: 13px;
   }
 }
 

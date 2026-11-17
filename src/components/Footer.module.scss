@@ -8,12 +8,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px 24px;
+  justify-content: center;
+  gap: 0 24px;
   max-width: 64rem;
   margin: 0 auto;
-  /* Room on the right for the scroll-to-top button */
-  padding: 16px 72px 16px 16px;
+  /* Room on both sides so centred text never sits under the scroll-to-top button */
+  padding: 16px 64px;
+  text-align: center;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 12px;
   color: var(--ink-2);
@@ -42,5 +43,13 @@
     &:hover {
       color: var(--accent-text);
     }
+  }
+}
+
+@media (min-width: 720px) {
+  .inner {
+    justify-content: space-between;
+    padding: 16px 72px 16px 24px;
+    text-align: left;
   }
 }

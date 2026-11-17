@@ -67,6 +67,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .dotList {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 4px 0;
   margin: 0;
   padding: 0;
@@ -126,13 +127,15 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .ctaRow {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
 }
 
 /* ---------- Hero ---------- */
 
 .hero {
-  padding: 40px 0 56px;
+  padding: 32px 0 56px;
+  text-align: center;
 }
 
 @media (min-width: 720px) {
@@ -143,9 +146,10 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 
 .heroMeta {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 20px;
+  margin-bottom: 32px;
   font-family: $mono;
   font-size: 12px;
   color: var(--ink-2);
@@ -157,25 +161,27 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   }
 }
 
-/* Photo on the left, headline on the right; stacked on phones. */
+/* Stacked and centred on phones and tablets; photo beside the headline on wide screens. */
 .heroMain {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  align-items: center;
+  gap: 28px;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 960px) {
   .heroMain {
     flex-direction: row;
-    align-items: center;
-    gap: 48px;
+    justify-content: center;
+    gap: 56px;
+    text-align: left;
   }
 }
 
 .avatar {
   position: relative;
   flex: none;
-  width: 200px;
+  width: min(220px, 60vw);
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
@@ -187,7 +193,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   margin: 7px;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 960px) {
   .avatar {
     width: 280px;
   }
@@ -205,7 +211,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 
 .headline {
   max-width: 20ch;
-  margin: 0;
+  margin: 0 auto;
   font-family: var(--font-sans), sans-serif;
   font-size: clamp(2.1rem, 1.2rem + 2.8vw, 3.4rem);
   font-weight: 500;
@@ -225,7 +231,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .rule {
   max-width: 40rem;
   height: 0;
-  margin: 28px 0 20px;
+  margin: 24px auto 18px;
   border: 0;
   border-top: 1px solid var(--line);
 }
@@ -233,20 +239,25 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .heroBottom {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  align-items: center;
+  gap: 36px;
   margin-top: 40px;
 }
 
-@media (min-width: 720px) {
-  .heroBottom {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
+@media (min-width: 960px) {
+  .heroText .headline,
+  .heroText .rule {
+    margin-left: 0;
+  }
+
+  .heroText .dotList {
+    justify-content: flex-start;
   }
 }
 
 .openTo {
   max-width: 34rem;
+  text-align: center;
 }
 
 .status {
@@ -270,12 +281,28 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 
 .section {
   padding: 48px 0;
+  text-align: center;
   border-top: 1px solid var(--line);
 }
 
 @media (min-width: 720px) {
   .section {
     padding: 64px 0;
+    text-align: left;
+  }
+
+  .section .dotList,
+  .section .entryMeta,
+  .section .entryOrg,
+  .section .textLinks {
+    justify-content: flex-start;
+  }
+}
+
+/* Contact stays centred at every size. */
+@media (min-width: 720px) {
+  .sectionCentered {
+    text-align: center;
   }
 }
 
@@ -355,6 +382,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .entryMeta {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 4px 12px;
   font-family: $mono;
   font-size: 12px;
@@ -388,6 +416,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .entryOrg {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   margin: -6px 0 0;
   font-size: 15px;
@@ -399,9 +428,12 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   object-fit: contain;
 }
 
+/* Bullets stay left-aligned for reading, as a block inside the centred column. */
 .bullets {
-  margin: 0;
+  max-width: 34rem;
+  margin: 0 auto;
   padding: 0;
+  text-align: left;
   list-style: none;
   font-size: 14.5px;
   line-height: 1.6;
@@ -487,16 +519,25 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 
 .highlight {
   margin: 0;
-  padding-left: 12px;
+  padding-top: 10px;
   font-size: 14px;
   line-height: 1.55;
   color: var(--ink);
-  border-left: 2px solid var(--accent);
+  border-top: 2px solid var(--accent);
+}
+
+@media (min-width: 720px) {
+  .highlight {
+    padding: 0 0 0 12px;
+    border-top: 0;
+    border-left: 2px solid var(--accent);
+  }
 }
 
 .textLinks {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0 20px;
   margin-top: auto;
 
@@ -588,8 +629,11 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .contact {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
   max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .contactHeadline {
@@ -603,6 +647,7 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 .contactLinks {
+  width: 100%;
   margin: 8px 0 0;
   padding: 0;
   list-style: none;
@@ -612,7 +657,8 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 .contactLink {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 14px;
   width: 100%;
   min-height: 64px;
   padding: 0;
@@ -689,5 +735,11 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 @keyframes caretBlink {
   50% {
     opacity: 0;
+  }
+}
+
+@media (min-width: 720px) {
+  .contactLink {
+    justify-content: space-between;
   }
 }

@@ -135,7 +135,7 @@ export default function Home() {
               alt={`${person.name} pitching at the Falling Walls Lab Global Finale in Berlin`}
               fill
               priority
-              sizes="(max-width: 719px) 200px, 280px"
+              sizes="(max-width: 959px) 220px, 280px"
               className={styles.avatarImg}
             />
           </div>
@@ -432,7 +432,12 @@ export default function Home() {
       )}
 
       {/* ---------- Contact ---------- */}
-      <section id="contact" className={styles.section} data-reveal aria-labelledby="contact-title">
+      <section
+        id="contact"
+        className={`${styles.section} ${styles.sectionCentered}`}
+        data-reveal
+        aria-labelledby="contact-title"
+      >
         <SectionHeader title="Contact" id="contact" />
         <div className={styles.contact}>
           <p className={styles.contactHeadline}>
