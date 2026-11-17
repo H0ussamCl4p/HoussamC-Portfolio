@@ -5,7 +5,7 @@ const person: Person = {
   lastName: "Choubik",
   name: "Houssam Choubik",
   role: "Cybersecurity & Cloud Computing Engineering Student",
-  avatar: "/images/avatar.jpg",
+  avatar: "/images/avatar-berlin.jpg",
   email: {
     user: "choubikhoussam",
     domain: "gmail.com",

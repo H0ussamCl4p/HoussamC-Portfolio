@@ -135,7 +135,9 @@ export default function Home() {
               alt={`${person.name} pitching at the Falling Walls Lab Global Finale in Berlin`}
               fill
               priority
-              sizes="(max-width: 959px) 220px, 280px"
+              // The 3:2 photo covers a square circle, so it renders 1.5x wider than the circle.
+              sizes="(max-width: 959px) 340px, 420px"
+              quality={90}
               className={styles.avatarImg}
             />
           </div>
