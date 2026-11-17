@@ -3,6 +3,7 @@ import Image from "next/image";
 import { home, about, person, baseURL, social, projects, awards, sameAs } from "@/resources";
 import { EmailButton } from "@/components/EmailButton";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { Ferris } from "@/components/motion/Ferris";
 import { MotionController } from "@/components/motion/MotionController";
 import { ScrambleText } from "@/components/motion/ScrambleText";
 import { SectionRail } from "@/components/motion/SectionRail";
@@ -41,25 +42,6 @@ const cvAvailable = process.env.CV_AVAILABLE === "1";
 
 const linkedin = social.find((item) => item.name === "LinkedIn")?.link;
 const github = social.find((item) => item.name === "GitHub")?.link;
-
-// Ferris, as on the banner. Claws are wrapped so they can be drawn in the accent colour.
-function Ferris() {
-  return (
-    <figure className={styles.ferris}>
-      <pre aria-hidden="true">
-        {"    _~^~^~_\n"}
-        <span className={styles.claw}>{"\\)"}</span>
-        {" /  o o  \\ "}
-        <span className={styles.claw}>{"(/"}</span>
-        {"\n  '_   -   _'\n  / '-----' \\"}
-      </pre>
-      <figcaption>
-        <span className={styles.visuallyHidden}>ASCII drawing of Ferris, the Rust crab. </span>
-        {"// cargo run --release"}
-      </figcaption>
-    </figure>
-  );
-}
 
 function SectionHeader({ title, id }: { title: string; id: string }) {
   return (

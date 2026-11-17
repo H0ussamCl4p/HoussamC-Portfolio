@@ -266,33 +266,6 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   background: var(--accent);
 }
 
-.ferris {
-  align-self: flex-end;
-  margin: 0;
-  font-family: $mono;
-  color: var(--ink-2);
-  text-align: right;
-
-  pre {
-    margin: 0;
-    font-family: inherit;
-    font-size: 13px;
-    line-height: 1.35;
-    color: var(--ink);
-    text-align: left;
-    display: inline-block;
-  }
-
-  figcaption {
-    margin-top: 8px;
-    font-size: 12px;
-  }
-}
-
-.claw {
-  color: var(--accent);
-}
-
 /* ---------- Sections ---------- */
 
 .section {

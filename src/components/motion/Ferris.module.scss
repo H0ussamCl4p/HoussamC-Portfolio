@@ -1,0 +1,40 @@
+$mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+
+.ferris {
+  align-self: flex-end;
+  margin: 0;
+  font-family: $mono;
+  color: var(--ink-2);
+  text-align: right;
+
+  figcaption {
+    margin-top: 8px;
+    font-size: 12px;
+  }
+}
+
+.crab {
+  display: inline-block;
+  padding: 4px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  /* Small steps so the walk reads as a scuttle, not a glide. */
+  transition: transform 0.16s steps(2, end);
+
+  pre {
+    margin: 0;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+}
+
+.claw {
+  color: var(--accent);
+}
