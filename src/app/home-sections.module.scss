@@ -618,3 +618,103 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   gap: 20px;
   max-width: 40rem;
 }
+
+.contactHeadline {
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.contactLinks {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.contactLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 64px;
+  padding: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-align: left;
+  text-decoration: none;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &::after {
+    content: "\2197";
+    font-family: $mono;
+    font-size: 0.8em;
+    color: var(--ink-2);
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease;
+  }
+
+  &:hover {
+    color: var(--accent-text);
+
+    &::after {
+      color: var(--accent-text);
+      transform: translate(3px, -3px);
+    }
+  }
+}
+
+.contactMail::after {
+  content: "\2192";
+}
+
+.contactMail:hover::after {
+  transform: translateX(4px);
+}
+
+/* ---------- Typed eyebrow ---------- */
+
+.typed {
+  display: inline-flex;
+  align-items: center;
+}
+
+.typedText {
+  display: inline-block;
+  width: calc(var(--n) * 1ch);
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing calc(var(--n) * 70ms) steps(var(--n), end) 0.2s both;
+}
+
+.caret {
+  width: 0.55em;
+  height: 1.15em;
+  margin-left: 3px;
+  background: var(--accent);
+  animation: caretBlink 1s steps(1) infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes caretBlink {
+  50% {
+    opacity: 0;
+  }
+}

@@ -3,6 +3,9 @@ import Image from "next/image";
 import { home, about, person, baseURL, social, projects, awards, sameAs } from "@/resources";
 import { EmailButton } from "@/components/EmailButton";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { MotionController } from "@/components/motion/MotionController";
+import { ScrambleText } from "@/components/motion/ScrambleText";
+import { SectionRail } from "@/components/motion/SectionRail";
 import styles from "@/app/home-sections.module.scss";
 
 export async function generateMetadata() {
@@ -25,7 +28,10 @@ const personJsonLd = {
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "ENSAM Casablanca",
-    parentOrganization: { "@type": "CollegeOrUniversity", name: "Hassan II University of Casablanca" },
+    parentOrganization: {
+      "@type": "CollegeOrUniversity",
+      name: "Hassan II University of Casablanca",
+    },
   },
   sameAs: Object.values(sameAs),
 };
@@ -58,7 +64,7 @@ function Ferris() {
 function SectionHeader({ title, id }: { title: string; id: string }) {
   return (
     <h2 id={`${id}-title`} className={styles.sectionTitle}>
-      {title}
+      <ScrambleText text={title} />
     </h2>
   );
 }
@@ -77,8 +83,31 @@ export default function Home() {
   const highlights = (home.featuredPosts?.posts ?? []).filter((post) => Boolean(post.link));
   const leadership = about.parascolaire;
 
+  // Order matches the page; sections that are switched off are left out.
+  const railSections = [
+    { id: "about", label: "About", show: true },
+    { id: "experience", label: about.work.title, show: about.work.display },
+    { id: "projects", label: projects.title, show: projects.display && projects.items.length > 0 },
+    { id: "awards", label: awards.title, show: awards.display },
+    {
+      id: "education",
+      label: about.studies.title,
+      show: about.studies.display && about.studies.institutions.length > 0,
+    },
+    {
+      id: "highlights",
+      label: home.featuredPosts?.title ?? "Highlights",
+      show: Boolean(home.featuredPosts?.display && highlights.length > 0),
+    },
+    { id: "contact", label: "Contact", show: true },
+  ]
+    .filter((section) => section.show)
+    .map(({ id, label }) => ({ id, label }));
+
   return (
     <div className={styles.page}>
+      <MotionController />
+      <SectionRail sections={railSections} />
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -104,7 +133,15 @@ export default function Home() {
       {/* ---------- Hero ---------- */}
       <section id="hero" className={styles.hero} aria-labelledby="hero-title">
         <div className={styles.heroMeta}>
-          <span>{home.eyebrow}</span>
+          <span className={styles.typed}>
+            <span
+              className={styles.typedText}
+              style={{ "--n": home.eyebrow?.length ?? 0 } as React.CSSProperties}
+            >
+              {home.eyebrow}
+            </span>
+            <span className={styles.caret} aria-hidden="true" />
+          </span>
           <span>{home.coordinates}</span>
         </div>
 
@@ -142,12 +179,7 @@ export default function Home() {
             <div className={styles.ctaRow}>
               <EmailButton label="Email me" className={styles.btnPrimary} />
               {linkedin && (
-                <a
-                  href={linkedin}
-                  className={styles.btn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={linkedin} className={styles.btn} target="_blank" rel="noopener noreferrer">
                   LinkedIn ↗
                 </a>
               )}
@@ -168,7 +200,7 @@ export default function Home() {
       </section>
 
       {/* ---------- About ---------- */}
-      <section id="about" className={styles.section} aria-labelledby="about-title">
+      <section id="about" className={styles.section} data-reveal aria-labelledby="about-title">
         <SectionHeader title="About" id="about" />
 
         <p className={styles.lead}>{home.subline}</p>
@@ -197,12 +229,23 @@ export default function Home() {
 
       {/* ---------- Experience ---------- */}
       {about.work.display && (
-        <section id="experience" className={styles.section} aria-labelledby="experience-title">
+        <section
+          id="experience"
+          className={styles.section}
+          data-reveal
+          aria-labelledby="experience-title"
+        >
           <SectionHeader title={about.work.title} id="experience" />
 
           <ol className={styles.timeline}>
-            {about.work.experiences.map((exp) => (
-              <li key={exp.company} id={exp.id} className={styles.entry}>
+            {about.work.experiences.map((exp, i) => (
+              <li
+                key={exp.company}
+                id={exp.id}
+                className={styles.entry}
+                data-reveal
+                style={{ "--reveal-i": i % 3 } as React.CSSProperties}
+              >
                 <div className={styles.entryMeta}>
                   <span>{exp.timeframe}</span>
                   {exp.location && <span>{exp.location}</span>}
@@ -244,13 +287,20 @@ export default function Home() {
 
       {/* ---------- Projects ---------- */}
       {projects.display && projects.items.length > 0 && (
-        <section id="projects" className={styles.section} aria-labelledby="projects-title">
+        <section
+          id="projects"
+          className={styles.section}
+          data-reveal
+          aria-labelledby="projects-title"
+        >
           <SectionHeader title={projects.title} id="projects" />
 
           <div className={styles.projectGrid}>
-            {projects.items.map((project) => (
+            {projects.items.map((project, i) => (
               <article
                 key={project.title}
+                data-reveal
+                style={{ "--reveal-i": i % 3 } as React.CSSProperties}
                 className={`${styles.project} ${project.image ? styles.projectFeatured : ""}`}
               >
                 {project.image && (
@@ -309,7 +359,7 @@ export default function Home() {
 
       {/* ---------- Awards & Leadership ---------- */}
       {awards.display && (
-        <section id="awards" className={styles.section} aria-labelledby="awards-title">
+        <section id="awards" className={styles.section} data-reveal aria-labelledby="awards-title">
           <SectionHeader title={awards.title} id="awards" />
 
           <div className={styles.twoCol}>
@@ -331,7 +381,7 @@ export default function Home() {
                   <h3 className={styles.label}>Leadership</h3>
                   <ul className={styles.plainList}>
                     {leadership.activities.map((activity) => (
-                      <li key={activity.name}>
+                      <li key={`${activity.role}-${activity.name}`}>
                         <p className={styles.itemTitle}>
                           {activity.role}, {activity.name}
                         </p>
@@ -360,7 +410,12 @@ export default function Home() {
 
       {/* ---------- Education ---------- */}
       {about.studies.display && about.studies.institutions.length > 0 && (
-        <section id="education" className={styles.section} aria-labelledby="education-title">
+        <section
+          id="education"
+          className={styles.section}
+          data-reveal
+          aria-labelledby="education-title"
+        >
           <SectionHeader title={about.studies.title} id="education" />
 
           <ol className={styles.timeline}>
@@ -382,34 +437,73 @@ export default function Home() {
 
       {/* ---------- Highlights (LinkedIn posts) ---------- */}
       {home.featuredPosts?.display && highlights.length > 0 && (
-        <section id="highlights" className={styles.section} aria-labelledby="highlights-title">
+        <section
+          id="highlights"
+          className={styles.section}
+          data-reveal
+          aria-labelledby="highlights-title"
+        >
           <SectionHeader title={home.featuredPosts.title} id="highlights" />
           <FeaturedCarousel posts={highlights} />
         </section>
       )}
 
       {/* ---------- Contact ---------- */}
-      <section id="contact" className={styles.section} aria-labelledby="contact-title">
+      <section id="contact" className={styles.section} data-reveal aria-labelledby="contact-title">
         <SectionHeader title="Contact" id="contact" />
         <div className={styles.contact}>
+          <p className={styles.contactHeadline}>
+            Let&apos;s build something secure together
+            <span className={styles.accentDot}>.</span>
+          </p>
           {home.openTo && (
             <p className={styles.body}>
               <strong>Open to:</strong> {home.openTo}
             </p>
           )}
-          <div className={styles.ctaRow}>
-            <EmailButton label="Email me" className={styles.btnPrimary} />
+          <ul className={styles.contactLinks}>
+            <li>
+              <EmailButton
+                label="Email"
+                className={`${styles.contactLink} ${styles.contactMail}`}
+              />
+            </li>
             {linkedin && (
-              <a href={linkedin} className={styles.btn} target="_blank" rel="noopener noreferrer">
-                LinkedIn ↗
-              </a>
+              <li>
+                <a
+                  href={linkedin}
+                  className={styles.contactLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>
+              </li>
             )}
             {github && (
-              <a href={github} className={styles.btn} target="_blank" rel="noopener noreferrer">
-                GitHub ↗
-              </a>
+              <li>
+                <a
+                  href={github}
+                  className={styles.contactLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub
+                </a>
+              </li>
             )}
-          </div>
+            {cvAvailable && person.cv && (
+              <li>
+                <a
+                  href={person.cv}
+                  className={`${styles.contactLink} ${styles.contactMail}`}
+                  download
+                >
+                  CV (PDF)
+                </a>
+              </li>
+            )}
+          </ul>
         </div>
       </section>
     </div>
