@@ -35,6 +35,48 @@ $mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   }
 }
 
+/* Hero crab gives way to the side crab once there's room in the left margin. */
+@media (min-width: 1280px) {
+  .ferris {
+    display: none;
+  }
+}
+
+/* Bigger companion pinned to the left margin. Sized to fit the space beside the
+   64rem content column: about 15 characters at 0.6em each, plus breathing room. */
+.side {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .side {
+    position: fixed;
+    top: 50%;
+    left: 16px;
+    z-index: 10;
+    display: block;
+    margin: 0;
+    font-family: $mono;
+    font-size: clamp(12px, calc((100vw - 64rem - 48px) / 20), 26px);
+    color: var(--ink-2);
+    transform: translateY(-50%);
+
+    .crab {
+      transition: none;
+
+      pre {
+        font-size: 1em;
+      }
+    }
+
+    figcaption {
+      margin-top: 0.6em;
+      padding-left: 4px;
+      font-size: max(11px, 0.5em);
+    }
+  }
+}
+
 .claw {
   color: var(--accent);
 }

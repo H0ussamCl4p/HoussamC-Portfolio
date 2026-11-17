@@ -90,6 +90,7 @@ export default function Home() {
     <div className={styles.page}>
       <MotionController />
       <SectionRail sections={railSections} />
+      <Ferris variant="side" />
       <Schema
         as="webPage"
         baseURL={baseURL}
