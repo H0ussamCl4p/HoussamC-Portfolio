@@ -44,12 +44,7 @@ const home: Home = {
   headline: <>Securing the systems where AI, industry and health meet</>,
   subtitle: "Cybersecurity & Cloud Computing Engineering Student · ENSAM Casablanca",
   credentials: ["Falling Walls Lab Global Finalist 2026", "Fortinet NSE 4", "GDG on Campus Lead"],
-  openTo: (
-    <>
-      Summer 2027 internships (industry or research) and part-time remote roles · Germany,
-      Australia or Japan.
-    </>
-  ),
+  openTo: <>Summer 2027 internships (industry or research) and part-time remote roles.</>,
   featuredPosts: {
     display: true,
     title: "Highlights",
