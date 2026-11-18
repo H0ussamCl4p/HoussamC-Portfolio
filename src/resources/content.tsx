@@ -10,7 +10,6 @@ const person: Person = {
     user: "choubikhoussam",
     domain: "gmail.com",
   },
-  // TODO(houssam): drop your CV at public/cv/Houssam_Choubik_CV.pdf. The button is hidden until the file exists.
   cv: "/cv/Houssam_Choubik_CV.pdf",
   location: "Africa/Casablanca", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["Arabic (native)", "French (C1, DALF C1)", "English (C1)"],
@@ -58,13 +57,11 @@ const home: Home = {
       },
       {
         name: "OlympICTs CTF 2026",
-        // TODO(houssam): paste the LinkedIn post URL (and optionally add an image in public/images/featured/).
         link: "",
         description: "1st worldwide in the qualifier.",
       },
       {
         name: "HackerRank Orchestrate Hackathon 2026",
-        // TODO(houssam): paste the LinkedIn post URL (and optionally add an image in public/images/featured/).
         link: "",
         description: "1st in Morocco, 106th of 1,983 worldwide.",
       },
@@ -125,7 +122,6 @@ const about: About = {
       {
         id: "experience-dataprotect",
         company: "Dataprotect",
-        // TODO(houssam): add public/images/logo/dataprotect.png and set logo: "/images/logo/dataprotect.png"
         timeframe: "Jul 2026 – Sep 2026",
         role: "Cloud Security Intern (DevSecOps)",
         type: "Internship (PFA) · Cloud Security Business Unit",
@@ -251,7 +247,6 @@ const projects: Projects = {
       tags: ["Next.js", "FastAPI", "MQTT", "InfluxDB", "Anomaly detection"],
       image: "/images/featured/Techathon.jpg",
       imageAlt: "Presenting Smart Energy Guardian at the Capgemini Engineering Techathon 2025",
-      // TODO(houssam): the SEG-S repo is private. Add a public GitHub or demo URL if you have one.
       links: {},
     },
     {

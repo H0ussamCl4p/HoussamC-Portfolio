@@ -10,7 +10,7 @@ import type {
 import { home } from "./content";
 
 // Used for canonical URLs, Open Graph tags, JSON-LD, robots.txt and sitemap.xml.
-// Must be a domain you control (see SECURITY_AUDIT.md F-02).
+// Must be a domain you control.
 const baseURL: string = "https://houssamc-portfolio.vercel.app";
 
 const routes: RoutesConfig = {
